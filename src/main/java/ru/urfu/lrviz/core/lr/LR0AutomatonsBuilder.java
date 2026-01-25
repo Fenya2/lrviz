@@ -4,44 +4,57 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.core.automaton.DFA;
 import ru.urfu.lrviz.core.grammar.*;
+import ru.urfu.lrviz.core.lr.operations.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.urfu.lrviz.core.lr.AutomatonType.LR_0;
+
 @Service
-public class LRAutomatonsBuilderImpl implements LRAutomatonsBuilder {
+public class LR0AutomatonsBuilder implements LRAutomatonsBuilder<LR0AutomatonState> {
     private static final String INIT_AUTOMATON_STATE_NAME = "∇";
     private static final String TEMPORAL_AUTOMATON_STATE_NAME = "tmp";
 
     private final GrammarService grammarService;
-    private final StatesNamesServiceGenerator statesNamesGenerator;
+    private final StateNamesCounter stateNamesCounter;
 
     @Autowired
-    public LRAutomatonsBuilderImpl(
+    public LR0AutomatonsBuilder(
             GrammarService grammarService,
-            StatesNamesServiceGenerator statesNamesGenerator) {
+            StateNamesCounter stateNamesCounter) {
         this.grammarService = grammarService;
-        this.statesNamesGenerator = statesNamesGenerator;
+        this.stateNamesCounter = stateNamesCounter;
     }
 
     @Override
-    public LR0AutomataBuildResult buildLR0Automata(Grammar grammar) {
-        Grammar extendedGrammar = new Grammar(grammar);
-        grammarService.extendGrammar(extendedGrammar);
-        DFA<LR0AutomatonState, GrammarSymbol> automaton = initLR0Automaton(extendedGrammar);
-        Queue<LR0AutomatonState> processingStates = initStatesProcessingQueue(automaton);
-        statesNamesGenerator.execute(() -> {
-            while (!processingStates.isEmpty()) {
-                LR0AutomatonState currentState = processingStates.poll();
-                closureState(currentState, extendedGrammar);
-                processingStates.addAll(tryAddNewTransitions(currentState, extendedGrammar, automaton));
-            }
-        });
-        return new LR0AutomataBuildResult(null, automaton);
+    public AutomatonType getBuildType() {
+        return LR_0;
     }
 
-    private DFA<LR0AutomatonState, GrammarSymbol> initLR0Automaton(Grammar grammar) {
+    @Override
+    public DFA<LR0AutomatonState, GrammarSymbol> build(Grammar grammar, BuildContext context) {
+        BuildLog log = context.buildLog();
+        Grammar extendedGrammar = new Grammar(grammar);
+        log.append(new ExtendGrammarOperation());
+        grammarService.extendGrammar(extendedGrammar);
+        DFA<LR0AutomatonState, GrammarSymbol> automaton = initLR0Automaton(extendedGrammar, log);
+        Queue<LR0AutomatonState> processingStates = initStatesProcessingQueue(automaton);
+        stateNamesCounter.execute(() -> {
+            while (!processingStates.isEmpty()) {
+                LR0AutomatonState currentState = processingStates.poll();
+                log.append(new StartAddNewTransitions(currentState));
+                processingStates.addAll(tryAddNewTransitions(currentState, extendedGrammar, automaton, log));
+            }
+        });
+        return automaton;
+    }
+
+    private DFA<LR0AutomatonState, GrammarSymbol> initLR0Automaton(Grammar grammar, BuildLog log) {
         LR0AutomatonState startState = initStartState(grammar);
+        log.append(new AddStateOperation(startState));
+        log.append(new AddItemInStateOperation(startState, startState.items().stream().findFirst().orElseThrow()));
+        closureState(startState, grammar, log);
         Set<GrammarSymbol> dfaAlphabet = initAlphabet(grammar);
         return new DFA<>(Collections.singleton(startState), dfaAlphabet, Collections.emptyMap(), startState,
                 Collections.emptySet());
@@ -78,7 +91,7 @@ public class LRAutomatonsBuilderImpl implements LRAutomatonsBuilder {
     /**
      * @return новые добавленные в автомат состояния
      */
-    private Set<LR0AutomatonState> tryAddNewTransitions(LR0AutomatonState fromState, Grammar grammar, DFA<LR0AutomatonState, GrammarSymbol> automaton) {
+    private Set<LR0AutomatonState> tryAddNewTransitions(LR0AutomatonState fromState, Grammar grammar, DFA<LR0AutomatonState, GrammarSymbol> automaton, BuildLog log) {
         HashSet<LR0AutomatonState> newStates = new HashSet<>();
 
         Set<LR0Item> stateItems = fromState.items();
@@ -86,19 +99,27 @@ public class LRAutomatonsBuilderImpl implements LRAutomatonsBuilder {
         for (Map.Entry<GrammarSymbol, Set<LR0Item>> entry : groupedByDotSymbol.entrySet()) {
             GrammarSymbol transitionSymbol = entry.getKey();
             LR0AutomatonState newTargetStateCandidate = new LR0AutomatonState(TEMPORAL_AUTOMATON_STATE_NAME, createShiftedItems(entry.getValue()));
-            closureState(newTargetStateCandidate, grammar);
+            log.append(new CheckForNewStateOperation(transitionSymbol));
+            closureState(newTargetStateCandidate, grammar, new BuildLog());
             Optional<LR0AutomatonState> possibleState = automaton.getStates().stream()
                     .filter(s -> newTargetStateCandidate.items().equals(s.items())).findFirst();
             if (possibleState.isPresent()) {
                 LR0AutomatonState alreadyDefinedState = possibleState.get();
                 automaton.addTransition(fromState, alreadyDefinedState, transitionSymbol);
-            } else {
-                int newStateNumber = statesNamesGenerator.nextNumber(transitionSymbol.lexicalValue);
-                LR0AutomatonState newState = new LR0AutomatonState(transitionSymbol.lexicalValue + newStateNumber, newTargetStateCandidate.items());
-                automaton.addState(newState);
-                automaton.addTransition(fromState, newState, transitionSymbol);
-                newStates.add(newState);
+                log.append(new ConfirmStateAlreadyExist(alreadyDefinedState));
+                log.append(new AddTransitionOperation(fromState, alreadyDefinedState, transitionSymbol));
+                continue;
             }
+            int newStateNumber = stateNamesCounter.nextNumber(transitionSymbol.lexicalValue);
+            Set<LR0Item> newStateItems = newTargetStateCandidate.items();
+            LR0AutomatonState newState = new LR0AutomatonState(transitionSymbol.lexicalValue + newStateNumber, newStateItems);
+            automaton.addState(newState);
+            log.append(new ConfirmNeedNewStateOperation());
+            log.append(new AddStateOperation(newState));
+            logNewItemsAddition(newState, newStateItems, log);
+            automaton.addTransition(fromState, newState, transitionSymbol);
+            log.append(new AddTransitionOperation(fromState, newState, transitionSymbol));
+            newStates.add(newState);
         }
         return newStates;
     }
@@ -127,8 +148,8 @@ public class LRAutomatonsBuilderImpl implements LRAutomatonsBuilder {
         return shiftedItems;
     }
 
-
-    private void closureState(LR0AutomatonState state, Grammar grammar) {
+    private void closureState(LR0AutomatonState state, Grammar grammar, BuildLog log) {
+        log.append(new StartStateClosureOperation(state));
         HashSet<LR0Item> processedItems = new HashSet<>();
         Queue<LR0Item> processingItems = new ArrayDeque<>(state.items());
         while (!processingItems.isEmpty()) {
@@ -142,10 +163,17 @@ public class LRAutomatonsBuilderImpl implements LRAutomatonsBuilder {
                 Set<LR0Item> newItems = grammar.getAlternativesFor(nonTerminal).stream()
                         .map(LR0Item::ofInitial).collect(Collectors.toSet());
                 newItems.removeAll(processedItems);
+                logNewItemsAddition(state, newItems, log);
                 state.addItems(newItems);
                 processingItems.addAll(newItems);
                 processedItems.add(item);
             }
+        }
+    }
+
+    private static void logNewItemsAddition(LR0AutomatonState state, Set<LR0Item> newItems, BuildLog log) {
+        for (LR0Item item : newItems) {
+            log.append(new AddItemInStateOperation(state, item));
         }
     }
 }

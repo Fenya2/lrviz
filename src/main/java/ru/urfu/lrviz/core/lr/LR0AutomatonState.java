@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public record LR0AutomatonState(String name, Set<LR0Item> items) {
+public record LR0AutomatonState(String name, Set<LR0Item> items) implements LRAutomatonState {
 
     public LR0AutomatonState(String name, Set<LR0Item> items) {
         this.name = name;
