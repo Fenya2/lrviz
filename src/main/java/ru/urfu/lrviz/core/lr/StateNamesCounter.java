@@ -9,11 +9,8 @@ import java.util.Map;
  * Генератор имен состояний автомата
  */
 @Service
-public class StatesNamesServiceGenerator {
+public class StateNamesCounter {
     private final ScopedValue<Map<String, Integer>> nextNumbers = ScopedValue.newInstance();
-
-    public StatesNamesServiceGenerator() {
-    }
 
     public void execute(Runnable runnable) {
         ScopedValue.where(nextNumbers, new HashMap<>()).run(runnable);

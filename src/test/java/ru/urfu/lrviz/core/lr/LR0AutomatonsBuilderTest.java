@@ -13,10 +13,10 @@ import java.util.Map;
 import java.util.Set;
 
 @SpringBootTest
-class LRAutomatonsBuilderImplIntegrationTest {
+class LR0AutomatonsBuilderTest {
 
     @Autowired
-    private LRAutomatonsBuilderImpl service;
+    private LR0AutomatonsBuilder service;
 
     /**
      * D => T L;
@@ -24,7 +24,7 @@ class LRAutomatonsBuilderImplIntegrationTest {
      * L => L : a | a;
      */
     @Test
-    void buildLR0Automata() {
+    void build() {
         Terminal INT = new Terminal("int");
         Terminal REAL = new Terminal("real");
         Terminal SEMICOLON = new Terminal(";");
@@ -50,7 +50,8 @@ class LRAutomatonsBuilderImplIntegrationTest {
 
         Grammar grammar = new Grammar(terminals, nonTerminals, rules, D);
 
-        LR0AutomataBuildResult actual = service.buildLR0Automata(grammar);
+        BuildContext buildContext = new BuildContext(new BuildLog());
+        DFA<LR0AutomatonState, GrammarSymbol> actual = (DFA<LR0AutomatonState, GrammarSymbol>) service.build(grammar, buildContext);
 
         LR0Item i0 = new LR0Item(r0, 0);
         LR0Item i1 = new LR0Item(r1, 0);
@@ -103,9 +104,6 @@ class LRAutomatonsBuilderImplIntegrationTest {
 
         DFA<LR0AutomatonState, GrammarSymbol> expected = new DFA<>(states, alphabet, transitions, s0, Set.of());
 
-        Assertions.assertEquals(expected, actual.lr0Automata());
+        Assertions.assertEquals(expected, actual);
     }
-
-
-
 }
