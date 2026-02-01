@@ -11,11 +11,11 @@ public final class DFA<State, Symbol> {
 
     private final Set<State> states;
     private final Set<Symbol> alphabet;
-    private final Map<DFATransitionMapKey<State, Symbol>, State> transitionMap;
+    private final Map<AutomatonTransitionMapKey<State, Symbol>, State> transitionMap;
     private final State startState;
     private final Set<State> finalStates;
 
-    public DFA(Set<State> states, Set<Symbol> alphabet, Map<DFATransitionMapKey<State, Symbol>, State> transitionMap, State startState, Set<State> finalStates) {
+    public DFA(Set<State> states, Set<Symbol> alphabet, Map<AutomatonTransitionMapKey<State, Symbol>, State> transitionMap, State startState, Set<State> finalStates) {
         checkTransitionMapValid(states, alphabet, transitionMap);
         checkStartStateValid(states, startState);
         checkFinalStatesValid(states, finalStates);
@@ -26,12 +26,12 @@ public final class DFA<State, Symbol> {
         this.finalStates = finalStates;
     }
 
-    private void checkTransitionMapValid(Set<State> states, Set<Symbol> alphabet, Map<DFATransitionMapKey<State, Symbol>, State> transitionMap) {
-        Set<State> keyStates = transitionMap.keySet().stream().map(key -> key.state()).collect(Collectors.toSet());
+    private void checkTransitionMapValid(Set<State> states, Set<Symbol> alphabet, Map<AutomatonTransitionMapKey<State, Symbol>, State> transitionMap) {
+        Set<State> keyStates = transitionMap.keySet().stream().map(AutomatonTransitionMapKey::state).collect(Collectors.toSet());
         if (!states.containsAll(keyStates) || !states.containsAll(transitionMap.values())) {
             throw new IllegalArgumentException("Transition map contains state not defined in states set");
         }
-        Set<Symbol> keySymbols = transitionMap.keySet().stream().map(key -> key.symbol()).collect(Collectors.toSet());
+        Set<Symbol> keySymbols = transitionMap.keySet().stream().map(AutomatonTransitionMapKey::symbol).collect(Collectors.toSet());
         if (!alphabet.containsAll(keySymbols)) {
             throw new IllegalArgumentException("Transition map contains symbol not defined in alphabet set");
         }
@@ -57,7 +57,7 @@ public final class DFA<State, Symbol> {
         return Collections.unmodifiableSet(alphabet);
     }
 
-    public Map<DFATransitionMapKey<State, Symbol>, State> getTransitionMap() {
+    public Map<AutomatonTransitionMapKey<State, Symbol>, State> getTransitionMap() {
         return Collections.unmodifiableMap(transitionMap);
     }
 
@@ -77,7 +77,7 @@ public final class DFA<State, Symbol> {
         checkStateIsValid(from);
         checkStateIsValid(to);
         checkSymbolIsValid(through);
-        transitionMap.put(new DFATransitionMapKey<>(from, through), to);
+        transitionMap.put(new AutomatonTransitionMapKey<>(from, through), to);
     }
 
     private void checkStateIsValid(State state) {
@@ -105,12 +105,12 @@ public final class DFA<State, Symbol> {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        DFA<?, ?> dfa = (DFA<?, ?>) o;
-        return Objects.equals(states, dfa.states)
-                && Objects.equals(alphabet, dfa.alphabet)
-                && Objects.equals(transitionMap, dfa.transitionMap)
-                && Objects.equals(startState, dfa.startState)
-                && Objects.equals(finalStates, dfa.finalStates);
+        DFA<?, ?> DFA = (DFA<?, ?>) o;
+        return Objects.equals(states, DFA.states)
+                && Objects.equals(alphabet, DFA.alphabet)
+                && Objects.equals(transitionMap, DFA.transitionMap)
+                && Objects.equals(startState, DFA.startState)
+                && Objects.equals(finalStates, DFA.finalStates);
     }
 
     @Override

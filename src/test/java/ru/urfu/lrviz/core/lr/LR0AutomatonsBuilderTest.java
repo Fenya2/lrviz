@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.urfu.lrviz.core.automaton.AutomatonTransitionMapKey;
 import ru.urfu.lrviz.core.automaton.DFA;
-import ru.urfu.lrviz.core.automaton.DFATransitionMapKey;
 import ru.urfu.lrviz.core.grammar.*;
 
 import java.util.HashMap;
@@ -89,18 +89,18 @@ class LR0AutomatonsBuilderTest {
 
         Set<GrammarSymbol> alphabet = Set.of(a, SEMICOLON, REAL, INT, D, T, L, D_prime);
 
-        Map<DFATransitionMapKey<LR0AutomatonState, GrammarSymbol>, LR0AutomatonState> transitions = new HashMap<>();
+        Map<AutomatonTransitionMapKey<LR0AutomatonState, GrammarSymbol>, LR0AutomatonState> transitions = new HashMap<>();
 
-        transitions.put(new DFATransitionMapKey<>(s0, D), s1);
-        transitions.put(new DFATransitionMapKey<>(s0, T), s2);
-        transitions.put(new DFATransitionMapKey<>(s0, REAL), s3);
-        transitions.put(new DFATransitionMapKey<>(s0, INT), s4);
+        transitions.put(new AutomatonTransitionMapKey<>(s0, D), s1);
+        transitions.put(new AutomatonTransitionMapKey<>(s0, T), s2);
+        transitions.put(new AutomatonTransitionMapKey<>(s0, REAL), s3);
+        transitions.put(new AutomatonTransitionMapKey<>(s0, INT), s4);
 
-        transitions.put(new DFATransitionMapKey<>(s2, L), s6);
-        transitions.put(new DFATransitionMapKey<>(s2, a), s5);
+        transitions.put(new AutomatonTransitionMapKey<>(s2, L), s6);
+        transitions.put(new AutomatonTransitionMapKey<>(s2, a), s5);
 
-        transitions.put(new DFATransitionMapKey<>(s6, SEMICOLON), s7);
-        transitions.put(new DFATransitionMapKey<>(s7, a), s8);
+        transitions.put(new AutomatonTransitionMapKey<>(s6, SEMICOLON), s7);
+        transitions.put(new AutomatonTransitionMapKey<>(s7, a), s8);
 
         DFA<LR0AutomatonState, GrammarSymbol> expected = new DFA<>(states, alphabet, transitions, s0, Set.of());
 

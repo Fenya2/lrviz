@@ -11,7 +11,7 @@ public final class AddItemInStateOperation extends BuildOperation {
     public final LR0Item item;
 
     public AddItemInStateOperation(LR0AutomatonState state, LR0Item item) {
-        super("Добавляем в состояние '%s' LR(0)-пункт '%s'.".formatted(state.name(), item), ACTION);
+        super("Добавляем в состояние '%s' LR(0)-пункт '%s'.".formatted(state.getName(), item), ACTION);
         this.state = state;
         this.item = item;
     }
