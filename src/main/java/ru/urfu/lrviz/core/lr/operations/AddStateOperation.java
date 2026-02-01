@@ -9,7 +9,7 @@ public final class AddStateOperation extends BuildOperation {
     public final LR0AutomatonState state;
 
     public AddStateOperation(LR0AutomatonState state) {
-        super("Добавляем состояние '%s'".formatted(state.name()), ACTION);
+        super("Добавляем состояние '%s'".formatted(state.getName()), ACTION);
         this.state = state;
     }
 }

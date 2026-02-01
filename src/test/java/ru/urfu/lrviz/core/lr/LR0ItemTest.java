@@ -18,7 +18,7 @@ class LR0ItemTest {
                 new Terminal("a"), new NonTerminal("A"));
         int dotIndex = 1;
         LR0Item item = new LR0Item(rule, dotIndex);
-        assertEquals(rule, item.rule());
+        assertEquals(rule, item.getRule());
         assertEquals(dotIndex, item.dotIndex());
         assertFalse(item.isFinal());
     }
@@ -55,7 +55,7 @@ class LR0ItemTest {
     }
 
     @Test
-    void createLR0ItemWithEmptyRuleDot() {
+    void createLR0ItemWithEmptyGetRuleDot() {
         Rule emptyRule = Rule.ofEmpty(new NonTerminal("S"));
 
         LR0Item item = new LR0Item(emptyRule, 0);

@@ -4,11 +4,19 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public record LR0AutomatonState(String name, Set<LR0Item> items) implements LRAutomatonState {
+public final class LR0AutomatonState implements LRAutomatonState {
+    private final String name;
+    private final Set<LR0Item> items;
+
 
     public LR0AutomatonState(String name, Set<LR0Item> items) {
         this.name = name;
         this.items = new HashSet<>(items);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     public void addItems(Set<LR0Item> newItems) {
@@ -30,5 +38,9 @@ public record LR0AutomatonState(String name, Set<LR0Item> items) implements LRAu
     @Override
     public String toString() {
         return "(" + name + ", " + items + ")";
+    }
+
+    public Set<LR0Item> getItems() {
+        return items;
     }
 }
