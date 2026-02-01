@@ -38,22 +38,22 @@ public class LR0AutomatonsBuilder implements LRAutomatonsBuilder<LR0AutomatonSta
         Grammar extendedGrammar = new Grammar(grammar);
         log.append(new ExtendGrammarOperation());
         grammarService.extendGrammar(extendedGrammar);
-        DFA<LR0AutomatonState, GrammarSymbol> automaton = initLR0Automaton(extendedGrammar, log);
-        Queue<LR0AutomatonState> processingStates = initStatesProcessingQueue(automaton);
+        DFA<LR0AutomatonState, GrammarSymbol> DFA = initLR0Automaton(extendedGrammar, log);
+        Queue<LR0AutomatonState> processingStates = initStatesProcessingQueue(DFA);
         stateNamesCounter.execute(() -> {
             while (!processingStates.isEmpty()) {
                 LR0AutomatonState currentState = processingStates.poll();
                 log.append(new StartAddNewTransitions(currentState));
-                processingStates.addAll(tryAddNewTransitions(currentState, extendedGrammar, automaton, log));
+                processingStates.addAll(tryAddNewTransitions(currentState, extendedGrammar, DFA, log));
             }
         });
-        return automaton;
+        return DFA;
     }
 
     private DFA<LR0AutomatonState, GrammarSymbol> initLR0Automaton(Grammar grammar, BuildLog log) {
         LR0AutomatonState startState = initStartState(grammar);
         log.append(new AddStateOperation(startState));
-        log.append(new AddItemInStateOperation(startState, startState.items().stream().findFirst().orElseThrow()));
+        log.append(new AddItemInStateOperation(startState, startState.getItems().stream().findFirst().orElseThrow()));
         closureState(startState, grammar, log);
         Set<GrammarSymbol> dfaAlphabet = initAlphabet(grammar);
         return new DFA<>(Collections.singleton(startState), dfaAlphabet, Collections.emptyMap(), startState,
@@ -91,33 +91,33 @@ public class LR0AutomatonsBuilder implements LRAutomatonsBuilder<LR0AutomatonSta
     /**
      * @return новые добавленные в автомат состояния
      */
-    private Set<LR0AutomatonState> tryAddNewTransitions(LR0AutomatonState fromState, Grammar grammar, DFA<LR0AutomatonState, GrammarSymbol> automaton, BuildLog log) {
+    private Set<LR0AutomatonState> tryAddNewTransitions(LR0AutomatonState fromState, Grammar grammar, DFA<LR0AutomatonState, GrammarSymbol> DFA, BuildLog log) {
         HashSet<LR0AutomatonState> newStates = new HashSet<>();
 
-        Set<LR0Item> stateItems = fromState.items();
+        Set<LR0Item> stateItems = fromState.getItems();
         Map<GrammarSymbol, Set<LR0Item>> groupedByDotSymbol = groupItemsByDotSymbol(stateItems);
         for (Map.Entry<GrammarSymbol, Set<LR0Item>> entry : groupedByDotSymbol.entrySet()) {
             GrammarSymbol transitionSymbol = entry.getKey();
             LR0AutomatonState newTargetStateCandidate = new LR0AutomatonState(TEMPORAL_AUTOMATON_STATE_NAME, createShiftedItems(entry.getValue()));
             log.append(new CheckForNewStateOperation(transitionSymbol));
             closureState(newTargetStateCandidate, grammar, new BuildLog());
-            Optional<LR0AutomatonState> possibleState = automaton.getStates().stream()
-                    .filter(s -> newTargetStateCandidate.items().equals(s.items())).findFirst();
+            Optional<LR0AutomatonState> possibleState = DFA.getStates().stream()
+                    .filter(s -> newTargetStateCandidate.getItems().equals(s.getItems())).findFirst();
             if (possibleState.isPresent()) {
                 LR0AutomatonState alreadyDefinedState = possibleState.get();
-                automaton.addTransition(fromState, alreadyDefinedState, transitionSymbol);
+                DFA.addTransition(fromState, alreadyDefinedState, transitionSymbol);
                 log.append(new ConfirmStateAlreadyExist(alreadyDefinedState));
                 log.append(new AddTransitionOperation(fromState, alreadyDefinedState, transitionSymbol));
                 continue;
             }
             int newStateNumber = stateNamesCounter.nextNumber(transitionSymbol.lexicalValue);
-            Set<LR0Item> newStateItems = newTargetStateCandidate.items();
+            Set<LR0Item> newStateItems = newTargetStateCandidate.getItems();
             LR0AutomatonState newState = new LR0AutomatonState(transitionSymbol.lexicalValue + newStateNumber, newStateItems);
-            automaton.addState(newState);
+            DFA.addState(newState);
             log.append(new ConfirmNeedNewStateOperation());
             log.append(new AddStateOperation(newState));
             logNewItemsAddition(newState, newStateItems, log);
-            automaton.addTransition(fromState, newState, transitionSymbol);
+            DFA.addTransition(fromState, newState, transitionSymbol);
             log.append(new AddTransitionOperation(fromState, newState, transitionSymbol));
             newStates.add(newState);
         }
@@ -130,7 +130,7 @@ public class LR0AutomatonsBuilder implements LRAutomatonsBuilder<LR0AutomatonSta
             if (item.isFinal()) {
                 continue;
             }
-            Rule rule = item.rule();
+            Rule rule = item.getRule();
             GrammarSymbol dotSymbol = rule.right().get(item.dotIndex());
             if (!grouped.containsKey(dotSymbol)) {
                 grouped.put(dotSymbol, new HashSet<>());
@@ -143,7 +143,7 @@ public class LR0AutomatonsBuilder implements LRAutomatonsBuilder<LR0AutomatonSta
     private Set<LR0Item> createShiftedItems(Set<LR0Item> items) {
         Set<LR0Item> shiftedItems = new HashSet<>(items.size());
         for (LR0Item item : items) {
-            shiftedItems.add(new LR0Item(item.rule(), item.dotIndex() + 1));
+            shiftedItems.add(new LR0Item(item.getRule(), item.dotIndex() + 1));
         }
         return shiftedItems;
     }
@@ -151,13 +151,13 @@ public class LR0AutomatonsBuilder implements LRAutomatonsBuilder<LR0AutomatonSta
     private void closureState(LR0AutomatonState state, Grammar grammar, BuildLog log) {
         log.append(new StartStateClosureOperation(state));
         HashSet<LR0Item> processedItems = new HashSet<>();
-        Queue<LR0Item> processingItems = new ArrayDeque<>(state.items());
+        Queue<LR0Item> processingItems = new ArrayDeque<>(state.getItems());
         while (!processingItems.isEmpty()) {
             LR0Item item = processingItems.poll();
             if (processedItems.contains(item) || item.isFinal()) {
                 continue;
             }
-            Rule rule = item.rule();
+            Rule rule = item.getRule();
             GrammarSymbol nextSymbol = rule.right().get(item.dotIndex());
             if (nextSymbol instanceof NonTerminal nonTerminal) {
                 Set<LR0Item> newItems = grammar.getAlternativesFor(nonTerminal).stream()

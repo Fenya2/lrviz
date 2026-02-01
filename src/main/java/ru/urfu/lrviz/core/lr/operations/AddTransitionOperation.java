@@ -13,7 +13,7 @@ public final class AddTransitionOperation extends BuildOperation {
 
     public AddTransitionOperation(LR0AutomatonState from, LR0AutomatonState to, GrammarSymbol through) {
         super("Добавляем переход из состояния '%s' в состояние '%s' по символу '%s'"
-                .formatted(from.name(), to.name(), through.lexicalValue), ACTION);
+                .formatted(from.getName(), to.getName(), through.lexicalValue), ACTION);
         this.from = from;
         this.to = to;
         this.through = through;

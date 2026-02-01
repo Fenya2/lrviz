@@ -1,14 +1,27 @@
 package ru.urfu.lrviz.core.lr;
 
 import ru.urfu.lrviz.core.grammar.Rule;
+import ru.urfu.lrviz.core.lr.lrnew.LRItem;
 
-public record LR0Item(Rule rule, int dotIndex) {
+import java.util.Objects;
+
+public final class LR0Item implements LRItem {
+    private final Rule rule;
+    private final int dotIndex;
+
     public static LR0Item ofInitial(Rule rule) {
         return new LR0Item(rule, 0);
     }
 
-    public LR0Item {
+    public LR0Item(Rule rule, int dotIndex) {
         checkSeparatorIsValidForRule(dotIndex, rule);
+        this.rule = rule;
+        this.dotIndex = dotIndex;
+    }
+
+    @Override
+    public Rule getRule() {
+        return rule;
     }
 
     private void checkSeparatorIsValidForRule(int separator, Rule rule) {
@@ -29,4 +42,24 @@ public record LR0Item(Rule rule, int dotIndex) {
     public boolean isFinal() {
         return dotIndex == rule.right().size();
     }
+
+
+    public int dotIndex() {
+        return dotIndex;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (LR0Item) obj;
+        return Objects.equals(this.rule, that.rule) &&
+                this.dotIndex == that.dotIndex;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rule, dotIndex);
+    }
+
 }
