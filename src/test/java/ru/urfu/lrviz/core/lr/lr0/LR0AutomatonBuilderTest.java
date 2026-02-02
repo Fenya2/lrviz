@@ -1,4 +1,4 @@
-package ru.urfu.lrviz.core.lr.lrnew.lr0;
+package ru.urfu.lrviz.core.lr.lr0;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,9 +8,9 @@ import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.grammar.NonTerminal;
 import ru.urfu.lrviz.core.grammar.Rule;
 import ru.urfu.lrviz.core.grammar.Terminal;
-import ru.urfu.lrviz.core.lr.lrnew.BuildContext;
-import ru.urfu.lrviz.core.lr.lrnew.LRAutomaton;
-import ru.urfu.lrviz.core.lr.lrnew.LRState;
+import ru.urfu.lrviz.core.lr.BuildContext;
+import ru.urfu.lrviz.core.lr.LRAutomaton;
+import ru.urfu.lrviz.core.lr.LRState;
 
 import java.util.Collections;
 import java.util.HashMap;

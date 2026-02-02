@@ -1,13 +1,8 @@
-package ru.urfu.lrviz.core.lr.lrnew.lr0;
+package ru.urfu.lrviz.core.lr.lr0;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.core.grammar.*;
-import ru.urfu.lrviz.core.lr.BuildLog;
-import ru.urfu.lrviz.core.lr.lrnew.BuildContext;
-import ru.urfu.lrviz.core.lr.lrnew.LRAutomaton;
-import ru.urfu.lrviz.core.lr.lrnew.LRItem;
-import ru.urfu.lrviz.core.lr.lrnew.LRState;
+import ru.urfu.lrviz.core.lr.*;
 import ru.urfu.lrviz.core.lr.operations.*;
 
 import java.util.*;
@@ -30,8 +25,8 @@ public class LR0AutomatonBuilder {
 
     public LRAutomaton build(Grammar grammar, BuildContext context) {
         Grammar extendedGrammar = new Grammar(grammar);
-        context.buildLog().append(new ExtendGrammarOperation());
         grammarService.extendGrammar(extendedGrammar);
+        context.buildLog().append(new ExtendGrammarOperation());
         String startState = initStartState(extendedGrammar, context);
         Queue<String> processingStates = new ArrayDeque<>(Collections.singleton(startState));
         while (!processingStates.isEmpty()) {
@@ -94,7 +89,7 @@ public class LR0AutomatonBuilder {
         return newStates;
     }
 
-    private @NonNull LRState buildToState(Grammar grammar, Set<LRItem> initialItems) {
+    private LRState buildToState(Grammar grammar, Set<LRItem> initialItems) {
         return closureState(new LRState(shiftItems(initialItems)), grammar);
     }
 

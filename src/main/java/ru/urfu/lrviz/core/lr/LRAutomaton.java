@@ -1,4 +1,4 @@
-package ru.urfu.lrviz.core.lr.lrnew;
+package ru.urfu.lrviz.core.lr;
 
 import ru.urfu.lrviz.core.grammar.GrammarSymbol;
 
