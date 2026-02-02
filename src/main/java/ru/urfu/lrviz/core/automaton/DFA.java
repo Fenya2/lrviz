@@ -29,7 +29,7 @@ public final class DFA<State, Symbol> {
     private void checkTransitionMapValid(Set<State> states, Set<Symbol> alphabet, Map<AutomatonTransitionMapKey<State, Symbol>, State> transitionMap) {
         Set<State> keyStates = transitionMap.keySet().stream().map(AutomatonTransitionMapKey::state).collect(Collectors.toSet());
         if (!states.containsAll(keyStates) || !states.containsAll(transitionMap.values())) {
-            throw new IllegalArgumentException("Transition map contains state not defined in states set");
+            throw new IllegalArgumentException("Transition map contains state not defined in namedStates set");
         }
         Set<Symbol> keySymbols = transitionMap.keySet().stream().map(AutomatonTransitionMapKey::symbol).collect(Collectors.toSet());
         if (!alphabet.containsAll(keySymbols)) {
@@ -39,13 +39,13 @@ public final class DFA<State, Symbol> {
 
     private void checkStartStateValid(Set<State> states, State startState) {
         if (!states.contains(startState)) {
-            throw new IllegalArgumentException("Start state is not defined in states set");
+            throw new IllegalArgumentException("Start state is not defined in namedStates set");
         }
     }
 
     private void checkFinalStatesValid(Set<State> states, Set<State> finalStates) {
         if (!states.containsAll(finalStates)) {
-            throw new IllegalArgumentException("Final states contains state not defined in states set");
+            throw new IllegalArgumentException("Final namedStates contains state not defined in namedStates set");
         }
     }
 
@@ -82,7 +82,7 @@ public final class DFA<State, Symbol> {
 
     private void checkStateIsValid(State state) {
         if (!states.contains(state)) {
-            throw new IllegalArgumentException("State is not defined in states set.");
+            throw new IllegalArgumentException("State is not defined in namedStates set.");
         }
     }
 
@@ -95,7 +95,7 @@ public final class DFA<State, Symbol> {
     @Override
     public String toString() {
         return "DFA[" +
-                "states=" + states + ", " +
+                "namedStates=" + states + ", " +
                 "alphabet=" + alphabet + ", " +
                 "transitionMap=" + transitionMap + ", " +
                 "startState=" + startState + ", " +

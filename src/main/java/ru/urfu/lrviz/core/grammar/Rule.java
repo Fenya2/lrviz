@@ -15,7 +15,7 @@ public record Rule(NonTerminal left, List<GrammarSymbol> right) {
     }
 
     public Rule(NonTerminal nonTerminal, GrammarSymbol... right) {
-        this(nonTerminal, Arrays.asList(right));
+        this(nonTerminal, List.copyOf(Arrays.asList(right)));
     }
 
     @Override

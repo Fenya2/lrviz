@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.urfu.lrviz.core.grammar.NonTerminal;
 import ru.urfu.lrviz.core.grammar.Rule;
 import ru.urfu.lrviz.core.grammar.Terminal;
+import ru.urfu.lrviz.core.lr.lrnew.lr0.LR0Item;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ class LR0ItemTest {
         int dotIndex = 1;
         LR0Item item = new LR0Item(rule, dotIndex);
         assertEquals(rule, item.getRule());
-        assertEquals(dotIndex, item.dotIndex());
+        assertEquals(dotIndex, item.getDotIndex());
         assertFalse(item.isFinal());
     }
 
@@ -61,7 +62,7 @@ class LR0ItemTest {
         LR0Item item = new LR0Item(emptyRule, 0);
 
         assertNotNull(item);
-        assertEquals(0, item.dotIndex());
+        assertEquals(0, item.getDotIndex());
         assertTrue(item.isFinal());
     }
 }
