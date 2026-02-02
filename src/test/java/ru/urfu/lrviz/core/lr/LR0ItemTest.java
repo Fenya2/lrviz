@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.urfu.lrviz.core.grammar.NonTerminal;
 import ru.urfu.lrviz.core.grammar.Rule;
 import ru.urfu.lrviz.core.grammar.Terminal;
-import ru.urfu.lrviz.core.lr.lrnew.lr0.LR0Item;
+import ru.urfu.lrviz.core.lr.lr0.LR0Item;
 
 import java.util.List;
 

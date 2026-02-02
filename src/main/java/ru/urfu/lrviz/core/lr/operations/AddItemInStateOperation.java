@@ -1,6 +1,6 @@
 package ru.urfu.lrviz.core.lr.operations;
 
-import ru.urfu.lrviz.core.lr.lrnew.LRItem;
+import ru.urfu.lrviz.core.lr.LRItem;
 
 import static ru.urfu.lrviz.core.lr.operations.OperationLevel.ACTION;
 
