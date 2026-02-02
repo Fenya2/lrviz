@@ -1,7 +1,4 @@
-package ru.urfu.lrviz.core.lr.lrnew;
-
-import ru.urfu.lrviz.core.lr.BuildLog;
-import ru.urfu.lrviz.core.lr.StateNamesCounter;
+package ru.urfu.lrviz.core.lr;
 
 import java.util.HashMap;
 import java.util.Map;

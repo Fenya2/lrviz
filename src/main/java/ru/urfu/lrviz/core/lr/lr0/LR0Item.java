@@ -1,7 +1,7 @@
-package ru.urfu.lrviz.core.lr.lrnew.lr0;
+package ru.urfu.lrviz.core.lr.lr0;
 
 import ru.urfu.lrviz.core.grammar.Rule;
-import ru.urfu.lrviz.core.lr.lrnew.LRItem;
+import ru.urfu.lrviz.core.lr.LRItem;
 
 import java.util.Objects;
 

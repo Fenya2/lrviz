@@ -1,6 +1,6 @@
-package ru.urfu.lrviz.core.lr.lrnew;
+package ru.urfu.lrviz.core.lr;
 
-import ru.urfu.lrviz.core.lr.lrnew.lr0.LR0Item;
+import ru.urfu.lrviz.core.lr.lr0.LR0Item;
 
 import java.util.Arrays;
 import java.util.HashSet;
