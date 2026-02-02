@@ -2,9 +2,9 @@ package ru.urfu.lrviz.api.dto.convert;
 
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
-import ru.urfu.lrviz.api.LrBuildResultDto;
 import ru.urfu.lrviz.api.dto.BuildLogDto;
 import ru.urfu.lrviz.api.dto.LRAutomatonDto;
+import ru.urfu.lrviz.api.dto.LrBuildResultDto;
 import ru.urfu.lrviz.core.lr.BuildContext;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 
