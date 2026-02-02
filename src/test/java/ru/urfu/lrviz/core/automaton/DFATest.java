@@ -40,14 +40,14 @@ class DFATest {
         Set<String> alphabet = Set.of("a", "b");
         Map<AutomatonTransitionMapKey<String, String>, String> transitionMap = Map.of(
                 new AutomatonTransitionMapKey<>("q0", "a"), "q1",
-                new AutomatonTransitionMapKey<>("q2", "b"), "q0");// q2 нет в states);
+                new AutomatonTransitionMapKey<>("q2", "b"), "q0");// q2 нет в namedStates);
         String startState = "q0";
         Set<String> finalStates = Set.of("q1");
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> new DFA<>(states, alphabet, transitionMap, startState, finalStates));
-        assertTrue(exception.getMessage().contains("Transition map contains state not defined in states set"));
+        assertTrue(exception.getMessage().contains("Transition map contains state not defined in namedStates set"));
     }
 
     @Test
@@ -73,13 +73,13 @@ class DFATest {
         Map<AutomatonTransitionMapKey<String, String>, String> transitionMap = Map.of(
                 new AutomatonTransitionMapKey<>("A", "0"), "B",
                 new AutomatonTransitionMapKey<>("A", "1"), "C");
-        String startState = "D"; // нет в states
+        String startState = "D"; // нет в namedStates
         Set<String> finalStates = Set.of("C");
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> new DFA<>(states, alphabet, transitionMap, startState, finalStates));
-        assertTrue(exception.getMessage().contains("Start state is not defined in states set"));
+        assertTrue(exception.getMessage().contains("Start state is not defined in namedStates set"));
     }
 
     @Test
@@ -89,12 +89,12 @@ class DFATest {
         Map<AutomatonTransitionMapKey<String, String>, String> transitionMap = Map.of(
                 new AutomatonTransitionMapKey<>("q0", "a"), "q1");
         String startState = "q0";
-        Set<String> finalStates = new HashSet<>(Set.of("q1", "q2")); // q2 нет в states
+        Set<String> finalStates = new HashSet<>(Set.of("q1", "q2")); // q2 нет в namedStates
 
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> new DFA<>(states, alphabet, transitionMap, startState, finalStates));
-        assertTrue(exception.getMessage().contains("Final states contains state not defined in states set"));
+        assertTrue(exception.getMessage().contains("Final namedStates contains state not defined in namedStates set"));
     }
 
     @Test
@@ -110,6 +110,6 @@ class DFATest {
                 IllegalArgumentException.class,
                 () -> new DFA<>(states, alphabet, transitionMap, startState, finalStates)
         );
-        assertTrue(exception.getMessage().contains("Transition map contains state not defined in states set"));
+        assertTrue(exception.getMessage().contains("Transition map contains state not defined in namedStates set"));
     }
 }

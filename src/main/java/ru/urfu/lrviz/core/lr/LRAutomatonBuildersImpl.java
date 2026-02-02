@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.core.automaton.DFA;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.grammar.GrammarSymbol;
+import ru.urfu.lrviz.core.lr.lrnew.BuildContext;
 
 import java.util.EnumMap;
 import java.util.List;
