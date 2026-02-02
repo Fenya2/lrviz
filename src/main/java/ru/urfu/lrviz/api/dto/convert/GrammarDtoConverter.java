@@ -11,8 +11,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @author fenya
+ * @since 02.02.2026
+ */
 @Component
-public class GrammarConverter implements Converter<GrammarDto, Grammar> {
+public class GrammarDtoConverter implements Converter<GrammarDto, Grammar> {
 
     @Override
     public Grammar convert(GrammarDto dto) {

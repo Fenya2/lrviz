@@ -10,7 +10,7 @@ public final class AddItemInStateOperation extends BuildOperation {
     public final LRItem item;
 
     public AddItemInStateOperation(String stateName, LRItem item) {
-        super("Добавляем в состояние '%s' LR(0)-пункт '%s'.".formatted(stateName, item), ACTION);
+        super("Добавляем в состояние '%s' пункт '%s'.".formatted(stateName, item), ACTION);
         this.stateName = stateName;
         this.item = item;
     }
