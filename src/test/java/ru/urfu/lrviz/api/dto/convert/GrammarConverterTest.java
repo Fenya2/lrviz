@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GrammarConverterTest {
 
-    private final GrammarConverter mapper = new GrammarConverter();
+    private final GrammarDtoConverter mapper = new GrammarDtoConverter();
 
     @Test
     void convert_basicGrammar_success() {

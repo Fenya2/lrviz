@@ -27,12 +27,12 @@ public class LR0AutomatonBuilder {
         Grammar extendedGrammar = new Grammar(grammar);
         grammarService.extendGrammar(extendedGrammar);
         context.buildLog().append(new ExtendGrammarOperation());
-        String startState = initStartState(extendedGrammar, context);
-        Queue<String> processingStates = new ArrayDeque<>(Collections.singleton(startState));
+        String startStateName = initStartState(extendedGrammar, context);
+        Queue<String> processingStates = new ArrayDeque<>(Collections.singleton(startStateName));
         while (!processingStates.isEmpty()) {
-            String processingStateName = processingStates.poll();
-            context.buildLog().append(new StartAddNewTransitions(processingStateName));
-            processingStates.addAll(tryAddNewTransitions(processingStateName, extendedGrammar, context));
+            String stateName = processingStates.poll();
+            context.buildLog().append(new StartAddNewTransitions(stateName));
+            processingStates.addAll(processState(stateName, extendedGrammar, context));
         }
         return new LRAutomaton(Map.copyOf(context.namedStates()), Map.copyOf(context.definedTransitions()));
     }
@@ -59,31 +59,28 @@ public class LR0AutomatonBuilder {
     }
 
     /**
-     * @return новые добавленные в автомат состояния
+     * @return имена новых добавленных в автомат состояний при обработке состояния с именем {@code stateName}
      */
-    private Set<String> tryAddNewTransitions(String fromStateName, Grammar grammar, BuildContext context) {
+    private Set<String> processState(String stateName, Grammar grammar, BuildContext context) {
         HashSet<String> newStates = new HashSet<>();
-        LRState fromState = context.namedStates().get(fromStateName);
-        Set<LRItem> stateItems = fromState.items();
+        LRState state = context.namedStates().get(stateName);
+        Set<LRItem> stateItems = state.items();
         Map<GrammarSymbol, Set<LRItem>> groupedByDotSymbol = groupItemsByDotSymbol(stateItems);
         for (Map.Entry<GrammarSymbol, Set<LRItem>> entry : groupedByDotSymbol.entrySet()) {
             GrammarSymbol transitionSymbol = entry.getKey();
-            context.buildLog().append(new CheckForNewStateOperation(transitionSymbol, fromStateName));
             LRState toState = buildToState(grammar, entry.getValue());
             if (context.namedStates().containsValue(toState)) {
                 String toStateName = getToStateName(toState, context.namedStates());
-                context.definedTransitions().put(new LRAutomaton.TransitionKey(fromStateName, transitionSymbol), toStateName);
-                context.buildLog().append(new AddTransitionOperation(fromStateName, toStateName, transitionSymbol));
+                context.definedTransitions().put(new LRAutomaton.TransitionKey(stateName, transitionSymbol), toStateName);
+                context.buildLog().append(new AddTransitionOperation(stateName, toStateName, transitionSymbol));
                 continue;
             }
-            int newStateNumber = context.stateNamesCounter().nextNumber(transitionSymbol.lexicalValue);
-            String newStateName = transitionSymbol.lexicalValue + newStateNumber;
+            String newStateName = context.stateNamesCounter().generate(state, toState, transitionSymbol);
             context.namedStates().put(newStateName, toState);
-            context.buildLog().append(new ConfirmNeedNewStateOperation());
             context.buildLog().append(new AddStateOperation(newStateName));
             logNewItemsAddition(newStateName, toState.items(), context.buildLog());
-            context.definedTransitions().put(new LRAutomaton.TransitionKey(fromStateName, transitionSymbol), newStateName);
-            context.buildLog().append(new AddTransitionOperation(fromStateName, newStateName, transitionSymbol));
+            context.definedTransitions().put(new LRAutomaton.TransitionKey(stateName, transitionSymbol), newStateName);
+            context.buildLog().append(new AddTransitionOperation(stateName, newStateName, transitionSymbol));
             newStates.add(newStateName);
         }
         return newStates;
