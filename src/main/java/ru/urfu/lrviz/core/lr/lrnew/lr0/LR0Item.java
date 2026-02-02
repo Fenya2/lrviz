@@ -10,6 +10,10 @@ public final class LR0Item extends LRItem {
         return new LR0Item(rule, 0);
     }
 
+    public static LR0Item ofFinal(Rule rule) {
+        return new LR0Item(rule, rule.right().size());
+    }
+
     public LR0Item(Rule rule, int dotIndex) {
         super(rule, dotIndex);
     }
