@@ -4,7 +4,6 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.core.grammar.*;
 import ru.urfu.lrviz.core.lr.BuildLog;
-import ru.urfu.lrviz.core.lr.StateNamesCounter;
 import ru.urfu.lrviz.core.lr.lrnew.BuildContext;
 import ru.urfu.lrviz.core.lr.lrnew.LRAutomaton;
 import ru.urfu.lrviz.core.lr.lrnew.LRItem;
@@ -23,13 +22,10 @@ import java.util.stream.Collectors;
 public class LR0AutomatonBuilder {
     private static final String INIT_AUTOMATON_STATE_NAME = "∇";
 
-
     private final GrammarService grammarService;
-    private final StateNamesCounter stateNamesCounter;
 
-    public LR0AutomatonBuilder(GrammarService grammarService, StateNamesCounter stateNamesCounter) {
+    public LR0AutomatonBuilder(GrammarService grammarService) {
         this.grammarService = grammarService;
-        this.stateNamesCounter = stateNamesCounter;
     }
 
     public LRAutomaton build(Grammar grammar, BuildContext context) {
@@ -38,13 +34,11 @@ public class LR0AutomatonBuilder {
         grammarService.extendGrammar(extendedGrammar);
         String startState = initStartState(extendedGrammar, context);
         Queue<String> processingStates = new ArrayDeque<>(Collections.singleton(startState));
-        stateNamesCounter.execute(() -> {
-            while (!processingStates.isEmpty()) {
-                String processingStateName = processingStates.poll();
-                context.buildLog().append(new StartAddNewTransitions(processingStateName));
-                processingStates.addAll(tryAddNewTransitions(processingStateName, extendedGrammar, context));
-            }
-        });
+        while (!processingStates.isEmpty()) {
+            String processingStateName = processingStates.poll();
+            context.buildLog().append(new StartAddNewTransitions(processingStateName));
+            processingStates.addAll(tryAddNewTransitions(processingStateName, extendedGrammar, context));
+        }
         return new LRAutomaton(Map.copyOf(context.namedStates()), Map.copyOf(context.definedTransitions()));
     }
 
@@ -60,13 +54,6 @@ public class LR0AutomatonBuilder {
         logNewItemsAddition(INIT_AUTOMATON_STATE_NAME, LRState.diff(startState, closedState), context.buildLog());
         context.namedStates().put(INIT_AUTOMATON_STATE_NAME, closedState);
         return INIT_AUTOMATON_STATE_NAME;
-    }
-
-    private Set<GrammarSymbol> initAlphabet(Grammar grammar) {
-        Set<GrammarSymbol> alphabet = new HashSet<>();
-        alphabet.addAll(grammar.getNonTerminals());
-        alphabet.addAll(grammar.getTerminals());
-        return alphabet;
     }
 
     private void checkGrammarIsExtended(Set<Rule> initRules) {
@@ -94,7 +81,7 @@ public class LR0AutomatonBuilder {
                 context.buildLog().append(new AddTransitionOperation(fromStateName, toStateName, transitionSymbol));
                 continue;
             }
-            int newStateNumber = stateNamesCounter.nextNumber(transitionSymbol.lexicalValue);
+            int newStateNumber = context.stateNamesCounter().nextNumber(transitionSymbol.lexicalValue);
             String newStateName = transitionSymbol.lexicalValue + newStateNumber;
             context.namedStates().put(newStateName, toState);
             context.buildLog().append(new ConfirmNeedNewStateOperation());
