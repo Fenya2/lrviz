@@ -1,0 +1,34 @@
+package ru.urfu.lrviz.core.lr.lrnew.lr0;
+
+import ru.urfu.lrviz.core.grammar.Rule;
+import ru.urfu.lrviz.core.lr.lrnew.LRItem;
+
+import java.util.Objects;
+
+public final class LR0Item extends LRItem {
+    public static LR0Item ofInitial(Rule rule) {
+        return new LR0Item(rule, 0);
+    }
+
+    public LR0Item(Rule rule, int dotIndex) {
+        super(rule, dotIndex);
+    }
+
+    public LR0Item shift() {
+        return new LR0Item(getRule(), getDotIndex() + 1);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (LR0Item) obj;
+        return Objects.equals(this.getRule(), that.getRule()) &&
+                this.getDotIndex() == that.getDotIndex();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getRule(), this.getDotIndex());
+    }
+}
