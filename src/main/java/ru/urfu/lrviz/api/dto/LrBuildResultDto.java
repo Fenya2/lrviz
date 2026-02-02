@@ -1,7 +1,4 @@
-package ru.urfu.lrviz.api;
-
-import ru.urfu.lrviz.api.dto.BuildLogDto;
-import ru.urfu.lrviz.api.dto.LRAutomatonDto;
+package ru.urfu.lrviz.api.dto;
 
 /**
  * Результат построения LR-автомата

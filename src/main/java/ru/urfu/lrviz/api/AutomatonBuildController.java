@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.urfu.lrviz.api.dto.GrammarDto;
+import ru.urfu.lrviz.api.dto.LrBuildResultDto;
 import ru.urfu.lrviz.api.dto.convert.LrBuildResultMapper;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.BuildContext;
@@ -35,7 +36,7 @@ public class AutomatonBuildController {
     public LrBuildResultDto hello(@RequestBody GrammarDto grammar) {
         Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
         BuildContext context = BuildContext.create();
-        LRAutomaton build = lr0Builder.build(targetGrammar, context);
-        return buildResultMapper.map(build, context);
+        LRAutomaton automaton = lr0Builder.build(targetGrammar, context);
+        return buildResultMapper.map(automaton, context);
     }
 }

@@ -15,4 +15,8 @@ public class BuildLog {
     public void append(BuildOperation operation) {
         operations.add(operation);
     }
+
+    public List<BuildOperation> getOperations() {
+        return operations;
+    }
 }
