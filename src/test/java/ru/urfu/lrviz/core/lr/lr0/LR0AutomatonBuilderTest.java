@@ -28,7 +28,7 @@ class LR0AutomatonBuilderTest {
     /**
      * D => T L;
      * T => int | real;
-     * L => L : a | a;
+     * L => L ; a | a;
      */
     @Test
     void build1() {

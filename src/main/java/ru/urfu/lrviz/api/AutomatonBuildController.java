@@ -33,7 +33,7 @@ public class AutomatonBuildController {
     }
 
     @PostMapping("/lr0")
-    public LrBuildResultDto hello(@RequestBody GrammarDto grammar) {
+    public LrBuildResultDto buildLR0(@RequestBody GrammarDto grammar) {
         Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
         BuildContext context = BuildContext.create();
         LRAutomaton automaton = lr0Builder.build(targetGrammar, context);

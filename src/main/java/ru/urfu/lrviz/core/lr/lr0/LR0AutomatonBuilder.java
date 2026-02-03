@@ -31,7 +31,7 @@ public class LR0AutomatonBuilder {
         Queue<String> processingStates = new ArrayDeque<>(Collections.singleton(startStateName));
         while (!processingStates.isEmpty()) {
             String stateName = processingStates.poll();
-            context.buildLog().append(new StartAddNewTransitions(stateName));
+            context.buildLog().append(new StartAddNewTransitionsOperation(stateName));
             processingStates.addAll(processState(stateName, extendedGrammar, context));
         }
         return new LRAutomaton(Map.copyOf(context.namedStates()), Map.copyOf(context.definedTransitions()));
