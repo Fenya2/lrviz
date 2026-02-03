@@ -6,11 +6,15 @@ package ru.urfu.lrviz.api.dto.operations;
  * @author fenya
  * @since 03.02.2026
  */
-public final class AddStateOperationDto extends BuildOperationDtoBase {
+public final class AddStateOperationDto extends BuildOperationDto {
     private final String stateName;
 
     public AddStateOperationDto(String message, String stateName) {
-        super(BuildOperationDtoBase.ACTION_LEVEL, message, "addState");
+        super(BuildOperationDto.ACTION_LEVEL, message, "addState");
         this.stateName = stateName;
+    }
+
+    public String getStateName() {
+        return stateName;
     }
 }

@@ -1,3 +1,8 @@
 spring:
   application:
     name: lrviz-back
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans,health

@@ -4,7 +4,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.BuildLogDto;
-import ru.urfu.lrviz.api.dto.operations.BuildOperationDtoBase;
+import ru.urfu.lrviz.api.dto.operations.BuildOperationDto;
 import ru.urfu.lrviz.core.lr.BuildLog;
 import ru.urfu.lrviz.core.lr.operations.BuildOperation;
 
@@ -28,9 +28,11 @@ public class BuildLogConverter implements Converter<BuildLog, BuildLogDto> {
     @Override
     public BuildLogDto convert(BuildLog log) {
         List<BuildOperation> operations = log.getOperations();
-        List<BuildOperationDtoBase> convertedOperations = new ArrayList<>(operations.size());
+        List<BuildOperationDto> convertedOperations = new ArrayList<>(operations.size());
         for (BuildOperation operation : operations) {
-
+            BuildOperationDto convertedOperation = conversionService.convert(operation, BuildOperationDto.class);
+            convertedOperations.add(convertedOperation);
         }
+        return new BuildLogDto(convertedOperations);
     }
 }
