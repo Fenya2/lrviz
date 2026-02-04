@@ -1,6 +1,8 @@
 package ru.urfu.lrviz.api;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +21,7 @@ import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
  * @since 02.02.2026
  */
 @RestController
-@RequestMapping("/build")
+@RequestMapping("/api/build")
 public class AutomatonBuildController {
 
     private final ConversionService conversionService;
@@ -32,7 +34,8 @@ public class AutomatonBuildController {
         this.buildResultMapper = buildResultMapper;
     }
 
-    @PostMapping("/lr0")
+    @PostMapping(value = "/lr0", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Строит LR(0)-автомат")
     public LrBuildResultDto buildLR0(@RequestBody GrammarDto grammar) {
         Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
         BuildContext context = BuildContext.create();

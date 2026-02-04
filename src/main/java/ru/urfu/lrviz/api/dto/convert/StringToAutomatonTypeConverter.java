@@ -6,7 +6,6 @@ import ru.urfu.lrviz.core.lr.AutomatonType;
 
 @Component
 public class StringToAutomatonTypeConverter implements Converter<String, AutomatonType> {
-
     @Override
     public AutomatonType convert(String source) {
         if ("lr0".equals(source)) {

@@ -5,5 +5,5 @@ import java.util.Map;
 
 public record LRDFADto(
         List<LRStateDto> states,
-        Map<TransitionKeyDto, String> transitions){
+        Map<TransitionDto, String> transitions){
 }
