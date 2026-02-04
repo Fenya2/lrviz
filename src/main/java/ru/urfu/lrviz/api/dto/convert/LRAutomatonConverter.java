@@ -1,16 +1,14 @@
 package ru.urfu.lrviz.api.dto.convert;
 
-import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.api.dto.LRAutomatonDto;
 import ru.urfu.lrviz.api.dto.LRStateDto;
-import ru.urfu.lrviz.api.dto.TransitionKeyDto;
+import ru.urfu.lrviz.api.dto.TransitionDto;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LRState;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +19,12 @@ import java.util.Map;
 @Service
 public class LRAutomatonConverter implements Converter<LRAutomaton, LRAutomatonDto> {
 
-    private final ConversionService conversionService;
     private final LRStateMapper lrStateMapper;
+    private final TransitionMapper transitionMapper;
 
-    public LRAutomatonConverter(ConversionService conversionService, LRStateMapper lrStateMapper) {
-        this.conversionService = conversionService;
+    public LRAutomatonConverter(LRStateMapper lrStateMapper, TransitionMapper transitionMapper) {
         this.lrStateMapper = lrStateMapper;
+        this.transitionMapper = transitionMapper;
     }
 
     @Override
@@ -39,11 +37,11 @@ public class LRAutomatonConverter implements Converter<LRAutomaton, LRAutomatonD
         }
 
         Map<LRAutomaton.TransitionKey, String> transitions = automaton.transitionMap();
-        Map<TransitionKeyDto, String> convertedTransitions = new HashMap<>(transitions.size());
+        List<TransitionDto> convertedTransitions = new ArrayList<>(transitions.size());
         for (Map.Entry<LRAutomaton.TransitionKey, String> transition : transitions.entrySet()) {
             LRAutomaton.TransitionKey transitionKey = transition.getKey();
-            TransitionKeyDto convertedKey = conversionService.convert(transitionKey, TransitionKeyDto.class);
-            convertedTransitions.put(convertedKey, transition.getValue());
+            TransitionDto convertedTransition = transitionMapper.map(transitionKey, transition.getValue());
+            convertedTransitions.add(convertedTransition);
         }
 
         return new LRAutomatonDto(convertedStates, convertedTransitions);

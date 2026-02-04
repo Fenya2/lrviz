@@ -1,8 +1,14 @@
 spring:
   application:
     name: lrviz-back
+  jackson:
+    default-property-inclusion: non_null
 management:
   endpoints:
     web:
       exposure:
         include: beans,health
+
+springdoc:
+  swagger-ui:
+    path: /api/docs/swagger-ui.html

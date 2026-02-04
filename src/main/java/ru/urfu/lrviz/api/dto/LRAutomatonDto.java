@@ -7,6 +7,6 @@ import java.util.Map;
  * @author fenya
  * @since 02.02.2026
  */
-public record LRAutomatonDto(List<LRStateDto> states, Map<TransitionKeyDto, String> transitions) {
+public record LRAutomatonDto(List<LRStateDto> states, List<TransitionDto> transitions) {
 
 }
