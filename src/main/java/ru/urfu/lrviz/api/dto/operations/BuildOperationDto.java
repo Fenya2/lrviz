@@ -32,4 +32,13 @@ public abstract class BuildOperationDto {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "BuildOperationDto{" +
+                "level='" + level + '\'' +
+                ", message='" + message + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

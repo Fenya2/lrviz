@@ -17,4 +17,11 @@ public final class AddStateOperationDto extends BuildOperationDto {
     public String getStateName() {
         return stateName;
     }
+
+    @Override
+    public String toString() {
+        return "AddStateOperationDto{" +
+                "stateName='" + stateName + '\'' +
+                '}';
+    }
 }

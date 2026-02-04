@@ -2,15 +2,12 @@ package ru.urfu.lrviz.api.rest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.client.RestTestClient;
 import ru.urfu.lrviz.api.dto.GrammarDto;
 import ru.urfu.lrviz.api.dto.RuleDto;
-import ru.urfu.lrviz.core.grammar.Grammar;
-import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
 
 import java.util.List;
 
@@ -19,9 +16,6 @@ class AutomatonBuildControllerRestTest {
 
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private LR0AutomatonBuilder builder;
 
     private RestTestClient restClient;
 
@@ -50,7 +44,7 @@ class AutomatonBuildControllerRestTest {
                 "D");
 
         RestTestClient.ResponseSpec response = restClient.post()
-                .uri("/build/lr0")
+                .uri("/api/build/lr0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(grammarDto)
                 .exchange();

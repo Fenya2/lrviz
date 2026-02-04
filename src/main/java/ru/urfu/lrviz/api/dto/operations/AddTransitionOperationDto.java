@@ -27,4 +27,13 @@ public final class AddTransitionOperationDto extends BuildOperationDto {
     public String getThrough() {
         return through;
     }
+
+    @Override
+    public String toString() {
+        return "AddTransitionOperationDto{" +
+                "from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                ", through='" + through + '\'' +
+                '}';
+    }
 }
