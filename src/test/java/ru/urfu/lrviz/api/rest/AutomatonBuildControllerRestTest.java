@@ -2,12 +2,15 @@ package ru.urfu.lrviz.api.rest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.client.RestTestClient;
 import ru.urfu.lrviz.api.dto.GrammarDto;
 import ru.urfu.lrviz.api.dto.RuleDto;
+import ru.urfu.lrviz.core.grammar.Grammar;
+import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
 
 import java.util.List;
 
@@ -16,6 +19,9 @@ class AutomatonBuildControllerRestTest {
 
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private LR0AutomatonBuilder builder;
 
     private RestTestClient restClient;
 
@@ -30,7 +36,7 @@ class AutomatonBuildControllerRestTest {
      * L => L : a | a;
      */
     @Test
-    void buildLR0_shouldReturnResult() throws Exception {
+    void buildLR0() {
         GrammarDto grammarDto = new GrammarDto(
                 List.of("i", "r", "a", ";"),
                 List.of("D", "T", "L"),
@@ -43,11 +49,11 @@ class AutomatonBuildControllerRestTest {
                 ),
                 "D");
 
-        restClient.post()
+        RestTestClient.ResponseSpec response = restClient.post()
                 .uri("/build/lr0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(grammarDto)
-                .exchange()
-                .expectStatus().isOk();
+                .exchange();
+        response.expectStatus().isOk();
     }
 }

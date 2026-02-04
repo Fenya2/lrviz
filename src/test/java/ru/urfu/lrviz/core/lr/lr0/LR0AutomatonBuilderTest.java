@@ -107,7 +107,6 @@ class LR0AutomatonBuilderTest {
                 new LRAutomaton.TransitionKey(SemicolonStateName, a), A2StateName);
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
-
         Assertions.assertEquals(expected, actual);
     }
 
