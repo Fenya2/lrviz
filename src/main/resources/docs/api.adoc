@@ -1,0 +1,42 @@
+= API для построения LR автоматов
+fenya <fenya74.09@gmail.com>
+:toc: left
+:toc-title: Содержание
+:toclevels: 1
+:icons: font
+
+== Введение
+
+Этот документ описывает API для построения LR-автоматов по заданной грамматике.
+
+== POST api/build/lr0
+
+Строит link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(0)-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82[LR(0)-автомат]
+
+=== Тело запроса
+
+include::{snippets}/build/lr0/request-fields.adoc[]
+
+=== Тело Ответа
+
+include::{snippets}/build/lr0/response-fields.adoc[]
+
+=== Пример запроса
+
+include::{snippets}/build/lr0/http-request.adoc[]
+
+=== Пример ответа
+
+include::{snippets}/build/lr0/http-response.adoc[]
+
+=== curl
+
+include::{snippets}/build/lr0/curl-request.adoc[]
+
+== POST api/build/slr1
+
+== POST api/build/lalr1
+
+Строит link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LALR-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82[LALR(1)-автомат]
+
+== POST api/build/lr1
