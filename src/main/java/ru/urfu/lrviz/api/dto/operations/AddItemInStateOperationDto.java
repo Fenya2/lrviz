@@ -24,4 +24,12 @@ public final class AddItemInStateOperationDto extends BuildOperationDto {
     public LRItemDto getItem() {
         return item;
     }
+
+    @Override
+    public String toString() {
+        return "AddItemInStateOperationDto{" +
+                "state='" + state + '\'' +
+                ", item=" + item +
+                '}';
+    }
 }
