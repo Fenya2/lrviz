@@ -89,12 +89,12 @@
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
-                            <backend>pdf</backend>
+                            <backend>html5</backend>
                             <doctype>book</doctype>
                             <attributes>
                                 <snippets>${snippetsDirectory}</snippets>
                             </attributes>
-                            <sourceDirectory>${project.basedir}/src/main/resources/docs</sourceDirectory>
+                            <sourceDirectory>src/main/resources/api/docs</sourceDirectory>
                             <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
                         </configuration>
                     </execution>
@@ -106,6 +106,30 @@
                         <version>${spring-restdocs.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.outputDirectory}/static/api/docs
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${project.build.directory}/generated-docs
+                                    </directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
