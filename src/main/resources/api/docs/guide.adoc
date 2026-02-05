@@ -2,7 +2,7 @@
 fenya <fenya74.09@gmail.com>
 :toc: left
 :toc-title: Содержание
-:toclevels: 1
+:toclevels: 2
 :icons: font
 
 == Введение
@@ -13,11 +13,11 @@ fenya <fenya74.09@gmail.com>
 
 Строит link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(0)-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82[LR(0)-автомат]
 
-=== Тело запроса
+=== Структура запроса
 
 include::{snippets}/build/lr0/request-fields.adoc[]
 
-=== Тело Ответа
+=== Структура Ответа
 
 include::{snippets}/build/lr0/response-fields.adoc[]
 
