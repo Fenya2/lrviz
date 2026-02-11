@@ -3,30 +3,29 @@ package ru.urfu.lrviz.api.rest.docs;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import ru.urfu.lrviz.api.dto.GrammarDto;
 import ru.urfu.lrviz.api.dto.RuleDto;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- *
  * @author fenya
  * @since 05.02.2026
  */
-public class BuildLR0DocsTest extends AbstractDocsTest {
+class BuildLR0DocsTest extends AbstractDocsTest {
 
     @Autowired
     ObjectMapper objectMapper;
 
     @Test
-    public void crudCreateExample() throws Exception {
+    void document() throws Exception {
         GrammarDto grammarDto = new GrammarDto(
                 List.of("(", ")"),
                 List.of("S"),
@@ -39,7 +38,7 @@ public class BuildLR0DocsTest extends AbstractDocsTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(this.objectMapper.writeValueAsString(grammarDto)))
                 .andExpect(status().isOk())
-                .andDo(document("build/lr0", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+                .andDo(MockMvcRestDocumentation.document("build/lr0", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("terminals")
                                         .description("Список терминалов грамматики. Каждый терминал должен состоять из одного символа"),
@@ -48,7 +47,7 @@ public class BuildLR0DocsTest extends AbstractDocsTest {
                                 fieldWithPath("rules[].left")
                                         .description("Нетерминал левой части правила грамматики"),
                                 fieldWithPath("rules[].right")
-                                        .description("Нетерминал правой части правила грамматики"),
+                                        .description("Символы правой части правила грамматики"),
                                 fieldWithPath("startSymbol")
                                         .description("Аксиома грамматики (нетерминал)")),
                         responseFields(
@@ -73,7 +72,7 @@ public class BuildLR0DocsTest extends AbstractDocsTest {
                                 fieldWithPath("automaton.transitions[].through")
                                         .description("Символ перехода"),
                                 fieldWithPath("buildLog")
-                                        .description("Лог построения автомата"),
+                                        .description("Лог построения автомата. Подробнее <<buildLog,ниже>>"),
                                 fieldWithPath("buildLog.operations")
                                         .description("Последовательность операций построения"),
                                 fieldWithPath("buildLog.operations[].message")
