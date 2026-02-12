@@ -41,7 +41,7 @@ class BuildLR0DocsTest extends AbstractDocsTest {
                 .andDo(MockMvcRestDocumentation.document("build/lr0", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("terminals")
-                                        .description("Список терминалов грамматики. Каждый терминал должен состоять из одного символа"),
+                                        .description("Список терминалов <<grammar,грамматики>>. Каждый терминал должен состоять из одного символа"),
                                 fieldWithPath("nonTerminals")
                                         .description("Список нетерминалов грамматики. Каждый нетерминал должен состоять из одного символа"),
                                 fieldWithPath("rules[].left")
@@ -51,7 +51,7 @@ class BuildLR0DocsTest extends AbstractDocsTest {
                                 fieldWithPath("startSymbol")
                                         .description("Аксиома грамматики (нетерминал)")),
                         responseFields(
-                                fieldWithPath("automaton").description("Построенный LR(0)-автомат"),
+                                fieldWithPath("automaton").description("Построенный <<automaton,LR(0)-автомат>>"),
                                 fieldWithPath("automaton.states").description("Список состояний автомата"),
                                 fieldWithPath("automaton.states[].name").description("Имя состояния"),
                                 fieldWithPath("automaton.states[].items").description("LR(0)-пункты в состоянии"),
@@ -72,7 +72,7 @@ class BuildLR0DocsTest extends AbstractDocsTest {
                                 fieldWithPath("automaton.transitions[].through")
                                         .description("Символ перехода"),
                                 fieldWithPath("buildLog")
-                                        .description("Лог построения автомата. Подробнее <<buildLog,ниже>>"),
+                                        .description("<<buildLog,Лог построения автомата>>"),
                                 fieldWithPath("buildLog.operations")
                                         .description("Последовательность операций построения"),
                                 fieldWithPath("buildLog.operations[].message")

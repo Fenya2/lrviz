@@ -2,7 +2,7 @@
 fenya <fenya74.09@gmail.com>
 :toc: left
 :toc-title: Содержание
-:toclevels: 2
+:toclevels: 3
 :icons: font
 
 :requestScheme: Схема запроса
@@ -11,10 +11,39 @@ fenya <fenya74.09@gmail.com>
 :responseExample: Пример Ответа
 :curl: curl
 
+:terminals: terminals
+:nonTerminals: nonTerminals
+:rules: rules
+:rule_left: left
+:rule_right: right
+:startSymbol: startSymbol
+
+:automaton: automaton
+
+:operationLevel: level
+:commentLevelOperation: comment
+:actionLevelOperation: action
+
+:operationMessage: message
+:operationName: name
+
+:addStateOperation: addState
+:addStateOperation_stateName: stateName
+
+:addItemOperation: addItem
+:addItemOperation_state: state
+:addItemOperation_item: item
+
+:addTransitionOperation: addTransition
+:addTransitionOperation_from: from
+:addTransitionOperation_to: to
+:addTransitionOperation_through: through
+
 == Введение
 
 Документ описывает API для построения LR-автоматов по заданной грамматике.
 
+[#lr0]
 == POST api/build/lr0
 
 Строит link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(0)-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82[LR(0)-автомат]
@@ -39,14 +68,136 @@ include::{snippets}/build/lr0/http-response.adoc[]
 
 include::{snippets}/build/lr0/curl-request.adoc[]
 
+[#slr1]
 == POST api/build/slr1
 
+[#lalr1]
 == POST api/build/lalr1
 
 Строит link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LALR-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82[LALR(1)-автомат]
 
+[#lr1]
 == POST api/build/lr1
 
-[[buildLog]]
+[#grammar]
+== Грамматика
+
+Грамматика передаётся в теле запроса при вызове методов построения LR-автоматов (<<lr0>>, <<slr1>>, <<lalr1>>, <<lr1>>).
+
+Грамматика задаётся четвёркой:
+
+* список терминалов (_{terminals}_)
+* список нетерминалов (_{nonTerminals}_)
+* список правил (_{rules}_)
+* аксиома (_{startSymbol}_)
+
+[#terminals]
+=== Терминалы
+
+Терминалы передаются в поле _{terminals}_.
+
+Это список символов, каждый из которых:
+
+* представляет собой строку длины 1
+* не должен совпадать ни с одним нетерминалом
+* не должен совпадать с прочими терминалами
+
+[#nonTerminals]
+=== Нетерминалы
+
+Нетерминалы передаются в поле _{nonTerminals}_.
+
+Это список символов, каждый из которых:
+
+* представляет собой строку длины 1
+* не должен совпадать ни с одним терминалом
+* не должен совпадать с прочими нетерминалами
+
+=== Правила
+
+Правила передаются в поле _{rules}_.
+
+Каждое правило состоит из двух частей:
+
+* _{rule_left}_ - нетерминал левой части (должен содержаться в списке <<nonTerminals, нетерминалов>>)
+* _{rule_right}_ - строка, задающая правую часть правила
+
+Правая часть правила представляет собой последовательность символов, где каждый символ должен находится в объединении списков <<terminals,терминалов>> и <<nonTerminals,нетерминалов>>.
+
+Если _{rule_right}_ - пустая строка, правило считается ε-правилом.
+
+=== Аксиома
+
+Аксиома передаётся в поле _{startSymbol}_.
+
+Это нетерминал из списка нетерминалов, с которого начинается вывод.
+
+Аксиома должна принадлежать множеству <<nonTerminals,нетерминалов>>
+
+[#automaton]
+== LR-автомат
+
+
+[#buildLog]
 == Лог построения LR-автоматов
 
+Вместе с LR-автоматом (<<lr0>>, <<slr1>>, <<lalr1>>, <<lr1>>) в ответе возвращается лог построения автомата.
+
+Лог представляет из себя массив операций, которые нужно произвести, чтобы построить требуемый автомат.
+
+У каждой операции есть имя (_{operationName}_) и пояснительное сообщение (_{operationMessage}_).
+
+=== Уровни операций
+
+Операции различаются по уровню важности (_{operationLevel}_).
+Существует 2 уровня операций:
+
+* _{actionLevelOperation}_
+* _{commentLevelOperation}_
+
+==== {actionLevelOperation}
+
+Операция уровня _{actionLevelOperation}_ - ключевая операция, которую необходимо выполнить для построения автомата.
+Без её выполнения автомат будет построен некорректно или его дальнейшее построение окажется вовсе невозможным.
+
+Таких операций всего 3. Вот их имена:
+
+* _{addStateOperation}_
+* _{addItemOperation}_
+* _{addTransitionOperation}_
+
+Операции уровня _{actionLevelOperation}_ также имеют дополнительные поля (помимо _{operationName}_, _{operationLevel}_, _{operationMessage}_), которые обсуждаются <<actionLevelOperations,ниже>>.
+
+==== {commentLevelOperation}
+
+Операция уровня _{commentLevelOperation}_ - вспомогательная, опциональная операция, помогающая восстановить рассуждения, которые производились, чтобы выполнить очередную операцию уровня _{actionLevelOperation}_.
+
+[#actionLevelOperations]
+=== Поддерживаемые {actionLevelOperation} операции
+
+==== {addStateOperation}
+
+Каждое состояние в автомате имеет уникальное имя.
+
+Операция _{addStateOperation}_ добавляет новое состояние c указанным именем в строящийся LR-автомат.
+В поле _{addStateOperation_stateName}_ операциии _{addStateOperation}_ находится имя добавляемого состояния.
+
+==== {addItemOperation}
+
+В процессе построения LR-автомата прибегают к терминам LR-пунктов (link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(0)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(0)-пункт], link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(1)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(1)-пункт]).
+
+Операция _{addItemOperation}_ добавляет LR-пункт в одно из состояний строящегося автомата.
+
+В поле _{addItemOperation_state}_ находится имя состояния строящегося автомата, в которое добавляется LR-пункт
+
+В поле _{addItemOperation_item}_ находится добавляемый в это состояние LR-пункт
+
+==== {addTransitionOperation}
+
+Операция _{addTransitionOperation}_ добавляет переход из одного состояние строящегося LR-автомата в другое.
+
+В поле _{addTransitionOperation_from}_ находится имя состояния LR-автомата из которого осуществляется переход
+
+В поле _{addTransitionOperation_to}_ находится имя состояния LR-автомата в которое осуществляется переход
+
+В поле _{addTransitionOperation_through}_ находится символ <<grammar, грамматики>> через который осуществляется переход
