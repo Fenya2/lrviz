@@ -41,20 +41,22 @@ class BuildLR0DocsTest extends AbstractDocsTest {
                 .andDo(MockMvcRestDocumentation.document("build/lr0", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("terminals")
-                                        .description("Список терминалов <<grammar,грамматики>>. Каждый терминал должен состоять из одного символа"),
+                                        .description("Список <<terminals,терминалов>> грамматики."),
                                 fieldWithPath("nonTerminals")
-                                        .description("Список нетерминалов грамматики. Каждый нетерминал должен состоять из одного символа"),
+                                        .description("Список <<nonTerminals,нетерминалов>> грамматики."),
+                                fieldWithPath("rules")
+                                        .description("Список <<rules,правил>> грамматики"),
                                 fieldWithPath("rules[].left")
                                         .description("Нетерминал левой части правила грамматики"),
                                 fieldWithPath("rules[].right")
                                         .description("Символы правой части правила грамматики"),
                                 fieldWithPath("startSymbol")
-                                        .description("Аксиома грамматики (нетерминал)")),
+                                        .description("<<startSymbol,Аксиома>> грамматики (нетерминал)")),
                         responseFields(
                                 fieldWithPath("automaton").description("Построенный <<automaton,LR(0)-автомат>>"),
-                                fieldWithPath("automaton.states").description("Список состояний автомата"),
+                                fieldWithPath("automaton.states").description("<<automatonStates,Состояния>> автомата"),
                                 fieldWithPath("automaton.states[].name").description("Имя состояния"),
-                                fieldWithPath("automaton.states[].items").description("LR(0)-пункты в состоянии"),
+                                fieldWithPath("automaton.states[].items").description("<<lrItems,LR(0)-пункты>> в состоянии"),
                                 fieldWithPath("automaton.states[].items[].rule")
                                         .description("Правило грамматики пункта"),
                                 fieldWithPath("automaton.states[].items[].rule.left")
@@ -64,7 +66,7 @@ class BuildLR0DocsTest extends AbstractDocsTest {
                                 fieldWithPath("automaton.states[].items[].dotIndex")
                                         .description("Позиция точки в правой части правила"),
                                 fieldWithPath("automaton.transitions")
-                                        .description("Переходы между состояниями автомата"),
+                                        .description("<<automatonTransitions,Переходы>> между состояниями автомата"),
                                 fieldWithPath("automaton.transitions[].from")
                                         .description("Исходное состояние"),
                                 fieldWithPath("automaton.transitions[].to")

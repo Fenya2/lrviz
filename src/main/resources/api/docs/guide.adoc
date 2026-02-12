@@ -14,11 +14,24 @@ fenya <fenya74.09@gmail.com>
 :terminals: terminals
 :nonTerminals: nonTerminals
 :rules: rules
+:rule: rule
 :rule_left: left
 :rule_right: right
 :startSymbol: startSymbol
 
 :automaton: automaton
+:automaton_states: states
+:automaton_transitions: transitions
+
+:transition_from: from
+:transition_to: to
+:transition_through: through
+
+:state_name: name
+:state_items: items
+
+:item_dotIndex: dotIndex
+:item_lookAheadSymbol: lookAheadSymbol
 
 :operationLevel: level
 :commentLevelOperation: comment
@@ -38,6 +51,9 @@ fenya <fenya74.09@gmail.com>
 :addTransitionOperation_from: from
 :addTransitionOperation_to: to
 :addTransitionOperation_through: through
+
+:extendGrammarOperation: extendGrammar
+:startAddNewTransitionsOperation: startAddNewTransitions
 
 == Введение
 
@@ -113,6 +129,7 @@ include::{snippets}/build/lr0/curl-request.adoc[]
 * не должен совпадать ни с одним терминалом
 * не должен совпадать с прочими нетерминалами
 
+[#rules]
 === Правила
 
 Правила передаются в поле _{rules}_.
@@ -126,6 +143,7 @@ include::{snippets}/build/lr0/curl-request.adoc[]
 
 Если _{rule_right}_ - пустая строка, правило считается ε-правилом.
 
+[#startSymbol]
 === Аксиома
 
 Аксиома передаётся в поле _{startSymbol}_.
@@ -137,6 +155,63 @@ include::{snippets}/build/lr0/curl-request.adoc[]
 [#automaton]
 == LR-автомат
 
+LR-автомат возвращается в поле _{automaton}_ ответа методов построения (<<lr0>>, <<slr1>>, <<lalr1>>, <<lr1>>).
+
+LR-автомат состоит из:
+
+* списка <<automatonStates,состояний>> (_{automaton_states}_)
+* списка <<automatonTransitions,переходов>> между состояниями (_{automaton_transitions}_)
+
+[#automatonStates]
+=== Состояния
+
+Состояния передаются в поле _{automaton_states}_
+
+Каждое состояние содержит:
+
+* _{state_name}_ - уникальное имя состояния
+* _{state_items}_ - список <<stateItems,LR-пунктов>>, принадлежащих состоянию
+
+[#lrItems]
+=== LR-пункты
+
+Каждый элемент списка _{state_items}_ представляет собой LR-пункт.
+
+LR-пункт состоит из:
+
+* _{rule}_ -  <<rules,правила грамматики>>
+* _{item_dotIndex}_ - позиции точки в правой части правила
+
+Поле _{item_dotIndex}_ определяет положение точки в правой части правила:
+
+* `0` - точка стоит перед первым символом правой части правила
+* `length(right)` - точка стоит в конце правой части правила правила
+* `0` < _{item_dotIndex}_ < `length(right)` - точка стоит в середине правой части правила на соответствующей позиции
+
+Если правая часть правила пустая (ε-правило), допустимое значение {item_dotIndex} равно `0`.
+
+Состав LR-пунктов зависит от типа строимого автомата:
+
+* для <<lr0,LR(0)>>, <<slr1,SLR(1)>> и <<lalr1,LALR(1)>> используются link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(0)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(0)-пункт]
+* для <<lr1,LR(1)>> используются link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(1)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(1)-пункты]
+
+В случае использования LR(1)-пунктов, добавляется поле _{item_lookAheadSymbol}_.
+Значением поля является символ из списка рассматриваемых <<terminals,терминалов>> или же символ завершения строки `⊣`.
+
+[#automatonTransitions]
+=== Переходы
+
+Переходы передаются в поле _{automaton_transitions}_.
+
+Каждый переход содержит:
+
+* _{transition_from}_ - имя состояния, из которого осуществляется переход (`Исходное состояние`)
+* _{transition_to}_ - имя состояния, в которое осуществляется переход (`Целевое состояние`)
+* _{transition_through}_ - символ перехода
+
+Символ _{transition_through}_ принадлежит объединению списков <<terminals,терминалов>> и <<nonTerminals,нетерминалов>> исходной грамматики.
+
+IMPORTANT: LR-автомат полностью восстанавливается последовательным применением операций из <<buildLog,лога построения>>.
 
 [#buildLog]
 == Лог построения LR-автоматов
@@ -166,7 +241,7 @@ include::{snippets}/build/lr0/curl-request.adoc[]
 * _{addItemOperation}_
 * _{addTransitionOperation}_
 
-Операции уровня _{actionLevelOperation}_ также имеют дополнительные поля (помимо _{operationName}_, _{operationLevel}_, _{operationMessage}_), которые обсуждаются <<actionLevelOperations,ниже>>.
+Операции уровня _{actionLevelOperation}_ также имеют дополнительные поля (помимо _{operationName}_, _{operationLevel}_, _{operationMessage}_), которые описаны <<actionLevelOperations,ниже>>.
 
 ==== {commentLevelOperation}
 
@@ -184,13 +259,11 @@ include::{snippets}/build/lr0/curl-request.adoc[]
 
 ==== {addItemOperation}
 
-В процессе построения LR-автомата прибегают к терминам LR-пунктов (link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(0)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(0)-пункт], link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(1)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(1)-пункт]).
-
-Операция _{addItemOperation}_ добавляет LR-пункт в одно из состояний строящегося автомата.
+Операция _{addItemOperation}_ добавляет <<lrItems,LR-пункт>> в одно из состояний строящегося автомата.
 
 В поле _{addItemOperation_state}_ находится имя состояния строящегося автомата, в которое добавляется LR-пункт
 
-В поле _{addItemOperation_item}_ находится добавляемый в это состояние LR-пункт
+В поле _{addItemOperation_item}_ находится добавляемый в это состояние <<lrItems,LR-пункт>>
 
 ==== {addTransitionOperation}
 
@@ -201,3 +274,8 @@ include::{snippets}/build/lr0/curl-request.adoc[]
 В поле _{addTransitionOperation_to}_ находится имя состояния LR-автомата в которое осуществляется переход
 
 В поле _{addTransitionOperation_through}_ находится символ <<grammar, грамматики>> через который осуществляется переход
+
+=== Поддерживемые _{commentLevelOperation}_ операции
+
+* _{extendGrammarOperation}_ - расширение исходной грамматики (добавление нового стартового правила).
+* _{startAddNewTransitionsOperation}_ - начало обработки очередного состояния автомата - просмотр LR-пунктов состояния и поиск возможных переходов
