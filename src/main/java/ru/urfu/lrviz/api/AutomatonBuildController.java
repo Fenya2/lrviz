@@ -21,7 +21,7 @@ import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
  * @since 02.02.2026
  */
 @RestController
-@RequestMapping("/api/build")
+@RequestMapping("/build")
 public class AutomatonBuildController {
 
     private final ConversionService conversionService;
