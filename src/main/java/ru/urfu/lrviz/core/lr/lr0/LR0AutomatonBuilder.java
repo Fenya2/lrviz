@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Строит LR(0)-автомат
  *
  * @author fenya
  * @since 01.02.2026
