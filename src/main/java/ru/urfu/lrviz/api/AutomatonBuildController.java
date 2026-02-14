@@ -23,7 +23,6 @@ import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
 @RestController
 @RequestMapping("/build")
 public class AutomatonBuildController {
-
     private final ConversionService conversionService;
     private final LR0AutomatonBuilder lr0Builder;
     private final LrBuildResultMapper buildResultMapper;
