@@ -12,7 +12,7 @@ public abstract class LRItem {
     private final Rule rule;
     private final int dotIndex;
 
-    public LRItem(Rule rule, int dotIndex) {
+    protected LRItem(Rule rule, int dotIndex) {
         checkIndexIsValidForRule(rule, dotIndex);
         this.rule = rule;
         this.dotIndex = dotIndex;
