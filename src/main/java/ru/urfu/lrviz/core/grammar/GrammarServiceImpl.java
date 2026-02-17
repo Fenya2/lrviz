@@ -41,7 +41,7 @@ public class GrammarServiceImpl implements GrammarService {
             for (Rule rule : grammar.getRules()) {
                 Set<FirstSetMember> growingSet = result.get(rule.left());
                 int beforeGrowAttemptSize = growingSet.size();
-                tryToGrowUp(growingSet, rule.right(), result);
+                calculateForChain(growingSet, rule.right(), result);
                 if (beforeGrowAttemptSize < growingSet.size()) {
                     stabilized = false;
                 }
@@ -64,19 +64,21 @@ public class GrammarServiceImpl implements GrammarService {
         }
     }
 
-    private static void tryToGrowUp(Set<FirstSetMember> growingSet, List<GrammarSymbol> right, Map<GrammarSymbol, Set<FirstSetMember>> currentFirstSet) {
+    public static void calculateForChain(Set<FirstSetMember> result,
+                                         List<GrammarSymbol> chain,
+                                         Map<GrammarSymbol, Set<FirstSetMember>> firstSetBase) {
         int i = 0;
-        for (; i < right.size(); i++) {
-            Set<FirstSetMember> firstSetMembers = currentFirstSet.get(right.get(i));
+        for (; i < chain.size(); i++) {
+            Set<FirstSetMember> firstSetMembers = firstSetBase.get(chain.get(i));
             Set<FirstSetMember> newMembers = new HashSet<>(firstSetMembers);
             newMembers.remove(Epsilon.getInstance());
-            growingSet.addAll(newMembers);
+            result.addAll(newMembers);
             if (!firstSetMembers.contains(Epsilon.getInstance())) {
                 break;
             }
         }
-        if (i == right.size()) {
-            growingSet.add(Epsilon.getInstance());
+        if (i == chain.size()) {
+            result.add(Epsilon.getInstance());
         }
     }
 }

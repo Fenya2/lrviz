@@ -55,7 +55,7 @@ class GrammarServiceImplTest {
         assertEquals(newStartSymbol, grammar.getStartSymbol());
         assertTrue(grammar.getRules().contains(new Rule(newStartSymbol, Collections.singletonList(originalStartSymbol))));
     }
-    
+
     @Test
     void getFirst1() {
         Map<GrammarSymbol, Set<FirstSetMember>> actual = grammarService.getFirst(GrammarExamples.get(GrammarExamples.G_1));
