@@ -11,6 +11,14 @@ import ru.urfu.lrviz.core.lr.LRState;
  * @since 02.02.2026
  */
 public interface StateNameGenerator {
+    String DEFAULT_INIT_AUTOMATON_STATE_NAME = "∇";
+
+    /**
+     * @return имя начального состояния lr-автомата
+     */
+    default String getInitAutomatonStateName() {
+        return DEFAULT_INIT_AUTOMATON_STATE_NAME;
+    }
 
     /**
      * @param from    состояние, из которого осуществляется переход

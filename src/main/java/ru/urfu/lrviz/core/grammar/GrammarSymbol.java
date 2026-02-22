@@ -1,11 +1,13 @@
 package ru.urfu.lrviz.core.grammar;
 
+import ru.urfu.lrviz.core.lr.TransitionSymbol;
+
 import java.util.Objects;
 
-public abstract sealed class GrammarSymbol permits Terminal, NonTerminal {
+public abstract sealed class GrammarSymbol implements TransitionSymbol permits Terminal, NonTerminal {
     public final String lexicalValue;
 
-    public GrammarSymbol(String lexicalValue) {
+    protected GrammarSymbol(String lexicalValue) {
         this.lexicalValue = lexicalValue;
     }
 
@@ -17,12 +19,17 @@ public abstract sealed class GrammarSymbol permits Terminal, NonTerminal {
     }
 
     @Override
+    public String asString() {
+        return lexicalValue;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hashCode(lexicalValue);
     }
 
     @Override
     public String toString() {
-        return lexicalValue;
+        return asString();
     }
 }

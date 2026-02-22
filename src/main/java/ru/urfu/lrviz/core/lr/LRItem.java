@@ -1,6 +1,7 @@
 package ru.urfu.lrviz.core.lr;
 
 import ru.urfu.lrviz.core.grammar.Rule;
+import ru.urfu.lrviz.core.lr.lr1.EndOfChainSymbol;
 
 /**
  * LR-пункт
@@ -29,6 +30,16 @@ public abstract class LRItem {
         return rule;
     }
 
+    /**
+     * @return символ, следующий за точкой. Если за точкой ничего нет, возвращает {@link EndOfChainSymbol#getInstance()}
+     */
+    public TransitionSymbol getDotSymbol() {
+        if (isFinal()) {
+            return EndOfChainSymbol.getInstance();
+        }
+        return getRule().right().get(dotIndex);
+    }
+
     public int getDotIndex() {
         return dotIndex;
     }
@@ -41,6 +52,10 @@ public abstract class LRItem {
 
     @Override
     public String toString() {
+        return "[" + ruleToString() + "]";
+    }
+
+    protected String ruleToString() {
         return rule.left() + "→"
                 + String.join("", rule.right().subList(0, dotIndex).stream().map(grammarSymbol -> grammarSymbol.lexicalValue).toList())
                 + "•"

@@ -1,6 +1,7 @@
 package ru.urfu.lrviz.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import ru.urfu.lrviz.api.dto.LrBuildResultDto;
 import ru.urfu.lrviz.api.dto.convert.LrBuildResultMapper;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.BuildContext;
+import ru.urfu.lrviz.core.lr.BuildContextCreator;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
 
@@ -26,18 +28,24 @@ public class AutomatonBuildController {
     private final ConversionService conversionService;
     private final LR0AutomatonBuilder lr0Builder;
     private final LrBuildResultMapper buildResultMapper;
+    private final BuildContextCreator contextCreator;
 
-    public AutomatonBuildController(ConversionService conversionService, LR0AutomatonBuilder lr0Builder, LrBuildResultMapper buildResultMapper) {
+    public AutomatonBuildController(
+            ConversionService conversionService,
+            @Qualifier("LR0AutomatonBuilder") LR0AutomatonBuilder lr0Builder,
+            LrBuildResultMapper buildResultMapper,
+            BuildContextCreator contextCreator) {
         this.conversionService = conversionService;
         this.lr0Builder = lr0Builder;
         this.buildResultMapper = buildResultMapper;
+        this.contextCreator = contextCreator;
     }
 
     @PostMapping(value = "/lr0", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Строит LR(0)-автомат")
     public LrBuildResultDto buildLR0(@RequestBody GrammarDto grammar) {
         Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
-        BuildContext context = BuildContext.create();
+        BuildContext context = contextCreator.createLR0Context();
         LRAutomaton automaton = lr0Builder.build(targetGrammar, context);
         return buildResultMapper.map(automaton, context);
     }

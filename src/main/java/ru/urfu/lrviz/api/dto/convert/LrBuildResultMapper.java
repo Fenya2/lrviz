@@ -30,7 +30,7 @@ public class LrBuildResultMapper {
      */
     public LrBuildResultDto map(LRAutomaton automaton, BuildContext context) {
         LRAutomatonDto convertedAutomaton = conversionService.convert(automaton, LRAutomatonDto.class);
-        BuildLogDto convertedLog = conversionService.convert(context.buildLog(), BuildLogDto.class);
+        BuildLogDto convertedLog = conversionService.convert(context.getBuildLog(), BuildLogDto.class);
         return new LrBuildResultDto(convertedAutomaton, convertedLog);
     }
 }

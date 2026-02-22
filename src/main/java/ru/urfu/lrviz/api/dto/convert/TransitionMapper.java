@@ -11,6 +11,6 @@ import ru.urfu.lrviz.core.lr.LRAutomaton;
 @Service
 public class TransitionMapper {
     public TransitionDto map(LRAutomaton.TransitionKey from, String to) {
-        return new TransitionDto(from.stateName(), to, from.symbol().lexicalValue);
+        return new TransitionDto(from.stateName(), to, from.symbol().asString());
     }
 }

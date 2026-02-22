@@ -3,19 +3,20 @@ package ru.urfu.lrviz.core.lr.lr0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.urfu.lrviz.core.grammar.Grammar;
+import ru.urfu.lrviz.core.GrammarExamples;
 import ru.urfu.lrviz.core.grammar.NonTerminal;
 import ru.urfu.lrviz.core.grammar.Rule;
 import ru.urfu.lrviz.core.grammar.Terminal;
-import ru.urfu.lrviz.core.lr.BuildContext;
+import ru.urfu.lrviz.core.lr.BuildContextCreator;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LRState;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+
+import static ru.urfu.lrviz.core.GrammarExamples.*;
 
 @SpringBootTest
 class LR0AutomatonBuilderTest {
@@ -23,37 +24,30 @@ class LR0AutomatonBuilderTest {
     private static final String INIT_AUTOMATON_STATE_NAME = "∇";
 
     @Autowired
-    private LR0AutomatonBuilder service;
+    @Qualifier("LR0AutomatonBuilder")
+    private LR0AutomatonBuilder builder;
 
-    /**
-     * D => T L;
-     * T => int | real;
-     * L => L ; a | a;
-     */
+    @Autowired
+    private BuildContextCreator contextCreator;
+
     @Test
     void build1() {
+        LRAutomaton actual = builder.build(GrammarExamples.get(G_1), contextCreator.createLR0Context());
+
         Terminal INT = new Terminal("int");
         Terminal REAL = new Terminal("real");
         Terminal SEMICOLON = new Terminal(";");
         Terminal a = new Terminal("a");
-        Set<Terminal> terminals = Set.of(INT, REAL, SEMICOLON, a);
 
         NonTerminal D = new NonTerminal("D");
         NonTerminal T = new NonTerminal("T");
         NonTerminal L = new NonTerminal("L");
-        Set<NonTerminal> nonTerminals = Set.of(D, T, L);
 
         Rule r1 = new Rule(D, T, L);
         Rule r2 = new Rule(T, REAL);
         Rule r3 = new Rule(T, INT);
         Rule r4 = new Rule(L, L, SEMICOLON, a);
         Rule r5 = new Rule(L, a);
-        Set<Rule> rules = Set.of(r1, r2, r3, r4, r5);
-
-        Grammar grammar = new Grammar(terminals, nonTerminals, rules, D);
-
-        BuildContext context = BuildContext.create();
-        LRAutomaton actual = service.build(grammar, context);
 
         NonTerminal D_prime = new NonTerminal("D'");
         Rule r0 = new Rule(D_prime, D);
@@ -116,23 +110,17 @@ class LR0AutomatonBuilderTest {
      */
     @Test
     void build2() {
+        LRAutomaton actual = builder.build(GrammarExamples.get(G_2), contextCreator.createLR0Context());
+
         Terminal a = new Terminal("a");
         Terminal b = new Terminal("b");
-        Set<Terminal> terminals = Set.of(a, b);
 
         NonTerminal S = new NonTerminal("S");
         NonTerminal A = new NonTerminal("A");
-        Set<NonTerminal> nonTerminals = Set.of(S, A);
 
         Rule r1 = new Rule(S, A, A);
         Rule r2 = new Rule(A, a, A);
         Rule r3 = new Rule(A, b);
-        Set<Rule> rules = Set.of(r1, r2, r3);
-
-        Grammar grammar = new Grammar(terminals, nonTerminals, rules, S);
-
-        BuildContext context = BuildContext.create();
-        LRAutomaton actual = service.build(grammar, context);
 
         NonTerminal S_prime = new NonTerminal("S'");
         Rule r0 = new Rule(S_prime, S);
@@ -188,17 +176,17 @@ class LR0AutomatonBuilderTest {
      */
     @Test
     void build3() {
+        LRAutomaton actual = builder.build(GrammarExamples.get(G_3), contextCreator.createLR0Context());
+
         Terminal LPAREN = new Terminal("(");
         Terminal RPAREN = new Terminal(")");
         Terminal b = new Terminal("b");
         Terminal c = new Terminal("c");
-        Set<Terminal> terminals = Set.of(LPAREN, RPAREN, b, c);
 
         NonTerminal S = new NonTerminal("S");
         NonTerminal A = new NonTerminal("A");
         NonTerminal B = new NonTerminal("B");
         NonTerminal C = new NonTerminal("C");
-        Set<NonTerminal> nonTerminals = Set.of(S, A, B, C);
 
         Rule r1 = new Rule(S, S, LPAREN, A, RPAREN, S);
         Rule r2 = new Rule(S);
@@ -207,12 +195,7 @@ class LR0AutomatonBuilderTest {
         Rule r5 = new Rule(B, b);
         Rule r6 = new Rule(C, c);
         Rule r7 = new Rule(C);
-        Set<Rule> rules = Set.of(r1, r2, r3, r4, r5, r6, r7);
 
-        Grammar grammar = new Grammar(terminals, nonTerminals, rules, S);
-
-        BuildContext context = BuildContext.create();
-        LRAutomaton actual = service.build(grammar, context);
 
         NonTerminal S_prime = new NonTerminal("S'");
         Rule r0 = new Rule(S_prime, S);
@@ -294,20 +277,20 @@ class LR0AutomatonBuilderTest {
      */
     @Test
     void build4() {
+        LRAutomaton actual = builder.build(GrammarExamples.get(G_4), contextCreator.createLR0Context());
+
         Terminal v = new Terminal("v");
         Terminal u = new Terminal("u");
         Terminal w = new Terminal("w");
         Terminal x = new Terminal("x");
         Terminal y = new Terminal("y");
         Terminal z = new Terminal("z");
-        Set<Terminal> terminals = Set.of(v, u, w, x, y, z);
 
         NonTerminal S = new NonTerminal("S");
         NonTerminal B = new NonTerminal("B");
         NonTerminal D = new NonTerminal("D");
         NonTerminal E = new NonTerminal("E");
         NonTerminal F = new NonTerminal("F");
-        Set<NonTerminal> nonTerminals = Set.of(S, B, D, E, F);
 
         Rule r1 = new Rule(S, u, B, D, z);
         Rule r2 = new Rule(B, B, v);
@@ -317,11 +300,6 @@ class LR0AutomatonBuilderTest {
         Rule r6 = new Rule(E);
         Rule r7 = new Rule(F, x);
         Rule r8 = Rule.ofEmpty(F);
-        Set<Rule> rules = Set.of(r1, r2, r3, r4, r5, r6, r7, r8);
-        Grammar grammar = new Grammar(terminals, nonTerminals, rules, S);
-
-        BuildContext context = BuildContext.create();
-        LRAutomaton actual = service.build(grammar, context);
 
         NonTerminal S_prime = new NonTerminal("S'");
         Rule r0 = new Rule(S_prime, S);
@@ -410,21 +388,15 @@ class LR0AutomatonBuilderTest {
      */
     @Test
     void build5() {
+        LRAutomaton actual = builder.build(GrammarExamples.get(G_5), contextCreator.createLR0Context());
+
         Terminal LPAREN = new Terminal("(");
         Terminal RPAREN = new Terminal(")");
-        Set<Terminal> terminals = Set.of(LPAREN, RPAREN);
 
         NonTerminal S = new NonTerminal("S");
-        Set<NonTerminal> nonTerminals = Collections.singleton(S);
 
         Rule r1 = new Rule(S, LPAREN, S, RPAREN);
         Rule r2 = new Rule(S);
-        Set<Rule> rules = Set.of(r1, r2);
-
-        Grammar grammar = new Grammar(terminals, nonTerminals, rules, S);
-
-        BuildContext context = BuildContext.create();
-        LRAutomaton actual = service.build(grammar, context);
 
         NonTerminal S_prime = new NonTerminal("S'");
         Rule r0 = new Rule(S_prime, S);
@@ -475,27 +447,21 @@ class LR0AutomatonBuilderTest {
      */
     @Test
     void build6() {
+        LRAutomaton actual = builder.build(GrammarExamples.get(G_6), contextCreator.createLR0Context());
+
         Terminal a = new Terminal("a");
         Terminal b = new Terminal("b");
         Terminal c = new Terminal("c");
         Terminal d = new Terminal("d");
-        Set<Terminal> terminals = Set.of(a, b, c, d);
 
         NonTerminal S = new NonTerminal("S");
         NonTerminal A = new NonTerminal("A");
-        Set<NonTerminal> nonTerminals = Set.of(S, A);
 
         Rule r1 = new Rule(S, A, a);
         Rule r2 = new Rule(S, b, A, c);
         Rule r3 = new Rule(S, b, c);
         Rule r4 = new Rule(S, b, d, a);
         Rule r5 = new Rule(A, d);
-        Set<Rule> rules = Set.of(r1, r2, r3, r4, r5);
-
-        Grammar grammar = new Grammar(terminals, nonTerminals, rules, S);
-
-        BuildContext context = BuildContext.create();
-        LRAutomaton actual = service.build(grammar, context);
 
         NonTerminal S_prime = new NonTerminal("S'");
         Rule r0 = new Rule(S_prime, S);
@@ -582,16 +548,16 @@ class LR0AutomatonBuilderTest {
      */
     @Test
     void build7() {
+        LRAutomaton actual = builder.build(GrammarExamples.get(G_7), contextCreator.createLR0Context());
+
         Terminal a = new Terminal("a");
         Terminal b = new Terminal("b");
         Terminal c = new Terminal("c");
-        Set<Terminal> terminals = Set.of(a, b, c);
 
         NonTerminal S = new NonTerminal("S");
         NonTerminal A = new NonTerminal("A");
         NonTerminal B = new NonTerminal("B");
         NonTerminal C = new NonTerminal("C");
-        Set<NonTerminal> nonTerminals = Set.of(S, A, B, C);
 
         Rule r1 = new Rule(S, A, B, C);
         Rule r2 = new Rule(A, A, a);
@@ -600,12 +566,6 @@ class LR0AutomatonBuilderTest {
         Rule r5 = new Rule(B, b);
         Rule r6 = new Rule(C, C, c);
         Rule r7 = new Rule(C, c);
-        Set<Rule> rules = Set.of(r1, r2, r3, r4, r5, r6, r7);
-
-        Grammar grammar = new Grammar(terminals, nonTerminals, rules, S);
-
-        BuildContext context = BuildContext.create();
-        LRAutomaton actual = service.build(grammar, context);
 
         NonTerminal S_prime = new NonTerminal("S'");
         Rule r0 = new Rule(S_prime, S);
@@ -694,26 +654,20 @@ class LR0AutomatonBuilderTest {
      */
     @Test
     void build8() {
+        LRAutomaton actual = builder.build(GrammarExamples.get(G_8), contextCreator.createLR0Context());
+
         Terminal i = new Terminal("i");
         Terminal plus = new Terminal("+");
         Terminal lParen = new Terminal("(");
         Terminal rParen = new Terminal(")");
-        Set<Terminal> terminals = Set.of(i, plus, lParen, rParen);
 
         NonTerminal E = new NonTerminal("E");
         NonTerminal T = new NonTerminal("T");
-        Set<NonTerminal> nonTerminals = Set.of(E, T);
 
         Rule r1 = new Rule(E, T);
         Rule r2 = new Rule(E, E, plus, T);
         Rule r3 = new Rule(T, i);
         Rule r4 = new Rule(T, lParen, E, rParen);
-        Set<Rule> rules = Set.of(r1, r2, r3, r4);
-
-        Grammar grammar = new Grammar(terminals, nonTerminals, rules, E);
-
-        BuildContext context = BuildContext.create();
-        LRAutomaton actual = service.build(grammar, context);
 
         NonTerminal E_prime = new NonTerminal("E'");
         Rule r0 = new Rule(E_prime, E);
