@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static ru.urfu.lrviz.core.GrammarExamples.*;
 
+@SuppressWarnings("java:S117") // имена переменных здесь оправданы
 @SpringBootTest
 class LR0AutomatonBuilderTest {
 
@@ -49,8 +50,8 @@ class LR0AutomatonBuilderTest {
         Rule r4 = new Rule(L, L, SEMICOLON, a);
         Rule r5 = new Rule(L, a);
 
-        NonTerminal D_prime = new NonTerminal("D'");
-        Rule r0 = new Rule(D_prime, D);
+        NonTerminal DPrime = new NonTerminal("D'");
+        Rule r0 = new Rule(DPrime, D);
 
         LRState startState = new LRState(
                 LR0Item.ofInitial(r0),
@@ -122,8 +123,8 @@ class LR0AutomatonBuilderTest {
         Rule r2 = new Rule(A, a, A);
         Rule r3 = new Rule(A, b);
 
-        NonTerminal S_prime = new NonTerminal("S'");
-        Rule r0 = new Rule(S_prime, S);
+        NonTerminal SPrime = new NonTerminal("S'");
+        Rule r0 = new Rule(SPrime, S);
 
         LR0Item r3Item = LR0Item.ofInitial(r3);
 
@@ -197,8 +198,8 @@ class LR0AutomatonBuilderTest {
         Rule r7 = new Rule(C);
 
 
-        NonTerminal S_prime = new NonTerminal("S'");
-        Rule r0 = new Rule(S_prime, S);
+        NonTerminal SPrime = new NonTerminal("S'");
+        Rule r0 = new Rule(SPrime, S);
 
         LRState startState = new LRState(
                 LR0Item.ofInitial(r0),
@@ -301,8 +302,8 @@ class LR0AutomatonBuilderTest {
         Rule r7 = new Rule(F, x);
         Rule r8 = Rule.ofEmpty(F);
 
-        NonTerminal S_prime = new NonTerminal("S'");
-        Rule r0 = new Rule(S_prime, S);
+        NonTerminal SPrime = new NonTerminal("S'");
+        Rule r0 = new Rule(SPrime, S);
 
         LRState startState = new LRState(
                 LR0Item.ofInitial(r0),
@@ -398,8 +399,8 @@ class LR0AutomatonBuilderTest {
         Rule r1 = new Rule(S, LPAREN, S, RPAREN);
         Rule r2 = new Rule(S);
 
-        NonTerminal S_prime = new NonTerminal("S'");
-        Rule r0 = new Rule(S_prime, S);
+        NonTerminal SPrime = new NonTerminal("S'");
+        Rule r0 = new Rule(SPrime, S);
 
         LRState startState = new LRState(
                 LR0Item.ofInitial(r0),
@@ -463,8 +464,8 @@ class LR0AutomatonBuilderTest {
         Rule r4 = new Rule(S, b, d, a);
         Rule r5 = new Rule(A, d);
 
-        NonTerminal S_prime = new NonTerminal("S'");
-        Rule r0 = new Rule(S_prime, S);
+        NonTerminal SPrime = new NonTerminal("S'");
+        Rule r0 = new Rule(SPrime, S);
 
         LRState startState = new LRState(
                 LR0Item.ofInitial(r0),
@@ -567,8 +568,8 @@ class LR0AutomatonBuilderTest {
         Rule r6 = new Rule(C, C, c);
         Rule r7 = new Rule(C, c);
 
-        NonTerminal S_prime = new NonTerminal("S'");
-        Rule r0 = new Rule(S_prime, S);
+        NonTerminal SPrime = new NonTerminal("S'");
+        Rule r0 = new Rule(SPrime, S);
 
         LRState startState = new LRState(
                 LR0Item.ofInitial(r0),
@@ -669,8 +670,8 @@ class LR0AutomatonBuilderTest {
         Rule r3 = new Rule(T, i);
         Rule r4 = new Rule(T, lParen, E, rParen);
 
-        NonTerminal E_prime = new NonTerminal("E'");
-        Rule r0 = new Rule(E_prime, E);
+        NonTerminal EPrime = new NonTerminal("E'");
+        Rule r0 = new Rule(EPrime, E);
 
         LRState startState = new LRState(
                 LR0Item.ofInitial(r0),

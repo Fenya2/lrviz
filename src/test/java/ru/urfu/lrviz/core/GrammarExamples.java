@@ -12,6 +12,7 @@ import java.util.Set;
  * @author fenya
  * @since 15.02.2026
  */
+@SuppressWarnings("java:S117") // имена переменных здесь оправданы
 public class GrammarExamples {
 
     /**
@@ -99,7 +100,6 @@ public class GrammarExamples {
     public static Grammar get(String name) {
         return EXAMPLES.get(name);
     }
-
 
     private static Grammar createG1() {
         Terminal INT = new Terminal("int");
