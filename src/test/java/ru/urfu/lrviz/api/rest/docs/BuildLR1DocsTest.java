@@ -9,15 +9,16 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.urfu.lrviz.core.GrammarExamples.G_5;
+import static ru.urfu.lrviz.core.GrammarExamples.G_6;
 import static ru.urfu.lrviz.core.GrammarExamples.getJsonDto;
 
 /**
+ *
  * @author fenya
- * @since 05.02.2026
+ * @since 23.02.2026
  */
-class BuildLR0DocsTest extends AbstractMethodDocsTest {
-    private static final String DOCUMENTED_PATH = "/api/build/lr0";
+class BuildLR1DocsTest extends AbstractMethodDocsTest {
+    private static final String DOCUMENTED_PATH = "/api/build/lr1";
 
     @Override
     protected HttpMethod getDocumentedMethod() {
@@ -33,7 +34,7 @@ class BuildLR0DocsTest extends AbstractMethodDocsTest {
     void document() throws Exception {
         this.mockMvc.perform(post(DOCUMENTED_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(getJsonDto(G_5)))
+                        .content(getJsonDto(G_6)))
                 .andExpect(status().isOk())
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestFields(
@@ -62,6 +63,8 @@ class BuildLR0DocsTest extends AbstractMethodDocsTest {
                                         .description("Правая часть правила"),
                                 fieldWithPath("automaton.states[].items[].dotIndex")
                                         .description("Позиция точки в правой части правила"),
+                                fieldWithPath("automaton.states[].items[].lookAheadSymbol")
+                                        .description("Терминальный символ (или символ завершения строки `⊣`)"),
                                 fieldWithPath("automaton.transitions")
                                         .description("<<automatonTransitions,Переходы>> между состояниями автомата"),
                                 fieldWithPath("automaton.transitions[].from")
@@ -98,6 +101,9 @@ class BuildLR0DocsTest extends AbstractMethodDocsTest {
                                 fieldWithPath("buildLog.operations[].item.dotIndex")
                                         .optional()
                                         .description("**Необязательное.** Позиция точки"),
+                                fieldWithPath("buildLog.operations[].item.lookAheadSymbol")
+                                        .optional()
+                                        .description("**Необязательное.** Терминальный символ (или символ завершения строки `⊣`)"),
                                 fieldWithPath("buildLog.operations[].from")
                                         .optional()
                                         .description("**Необязательное.** Исходное состояние перехода"),

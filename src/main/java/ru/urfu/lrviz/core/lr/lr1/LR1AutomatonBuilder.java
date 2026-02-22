@@ -2,6 +2,7 @@ package ru.urfu.lrviz.core.lr.lr1;
 
 import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.core.grammar.*;
+import ru.urfu.lrviz.core.lr.AutomatonType;
 import ru.urfu.lrviz.core.lr.BuildContext;
 import ru.urfu.lrviz.core.lr.LRItem;
 import ru.urfu.lrviz.core.lr.TransitionSymbol;
@@ -20,6 +21,11 @@ import java.util.stream.Stream;
 public class LR1AutomatonBuilder extends LR0AutomatonBuilder {
     public LR1AutomatonBuilder(GrammarService grammarService) {
         super(grammarService);
+    }
+
+    @Override
+    public AutomatonType getBuildType() {
+        return AutomatonType.LR_1;
     }
 
     @Override

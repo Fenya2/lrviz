@@ -5,7 +5,12 @@ import ru.urfu.lrviz.core.grammar.NonTerminal;
 import ru.urfu.lrviz.core.grammar.Rule;
 import ru.urfu.lrviz.core.grammar.Terminal;
 
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -15,10 +20,12 @@ import java.util.Set;
 @SuppressWarnings("java:S117") // имена переменных здесь оправданы
 public class GrammarExamples {
 
+    public static final String JSON_RESOURCES_PATH = "/grammars/api";
+
     /**
      * <pre>
      * D => T L
-     * T => int | real
+     * T => i | r
      * L => L ; a | a
      * </pre>
      */
@@ -101,9 +108,23 @@ public class GrammarExamples {
         return EXAMPLES.get(name);
     }
 
+    public static String getJsonDto(String grammarName) {
+        try {
+            URL resource = Objects.requireNonNull(GrammarExamples.class.getResource(getResourcePath(grammarName)));
+            Path path = Paths.get(resource.toURI());
+            return Files.readString(path);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String getResourcePath(String grammarName) {
+        return JSON_RESOURCES_PATH + "/" + grammarName + ".json";
+    }
+
     private static Grammar createG1() {
-        Terminal INT = new Terminal("int");
-        Terminal REAL = new Terminal("real");
+        Terminal INT = new Terminal("i");
+        Terminal REAL = new Terminal("r");
         Terminal SEMICOLON = new Terminal(";");
         Terminal a = new Terminal("a");
         Set<Terminal> terminals = Set.of(INT, REAL, SEMICOLON, a);
