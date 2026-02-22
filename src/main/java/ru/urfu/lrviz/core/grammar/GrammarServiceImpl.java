@@ -17,6 +17,12 @@ public class GrammarServiceImpl implements GrammarService {
         grammar.addRule(new Rule(newStartSymbol, right));
     }
 
+    public boolean isGrammarExtended(Grammar grammar) {
+        Set<Rule> initRules = grammar.getAlternativesFor(grammar.getStartSymbol());
+        return initRules.size() == 1 && initRules.iterator().next().right().size() == 1;
+    }
+
+
     private NonTerminal prepareNewStartSymbol(Grammar grammar) {
         StringBuilder newStartSymbol = new StringBuilder(grammar.getStartSymbol().lexicalValue);
         Set<NonTerminal> currentNonTerminals = grammar.getNonTerminals();

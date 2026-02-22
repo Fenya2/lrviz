@@ -6,7 +6,6 @@ import ru.urfu.lrviz.core.lr.LRItem;
 import java.util.Objects;
 
 /**
- *
  * @author fenya
  * @since 14.02.2026
  */
@@ -18,9 +17,17 @@ public class LR1Item extends LRItem {
         this.lookAheadSymbol = lookAheadSymbol;
     }
 
+    public static LR1Item ofInitial(Rule rule, LookAheadSymbol lookAheadSymbol) {
+        return new LR1Item(rule, 0, lookAheadSymbol);
+    }
+
     @Override
     public LRItem shift() {
         return new LR1Item(getRule(), getDotIndex() + 1, lookAheadSymbol);
+    }
+
+    public LookAheadSymbol getLookAheadSymbol() {
+        return lookAheadSymbol;
     }
 
     @Override
@@ -36,5 +43,10 @@ public class LR1Item extends LRItem {
     @Override
     public int hashCode() {
         return Objects.hash(this.getRule(), this.getDotIndex());
+    }
+
+    @Override
+    public String toString() {
+        return "[" + ruleToString() + ", " + lookAheadSymbol.asString() + "]";
     }
 }
