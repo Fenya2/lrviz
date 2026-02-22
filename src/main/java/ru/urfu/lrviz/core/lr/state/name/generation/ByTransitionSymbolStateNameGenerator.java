@@ -8,18 +8,15 @@ import java.util.Map;
 
 /**
  * Нумерует состояния с привязкой к грамматическому символу, по которому происходит переход. Переходов может быть
- * несколько. Поэтому имя формируется в формате
+ * несколько. Поэтому имя формируется в формате {@link GrammarSymbol#lexicalValue} + {@code НОМЕР_СОСТОЯНИЯ}. Номер
+ * начинаяется с 1, увеличивается с шагом 1
  */
 public class ByTransitionSymbolStateNameGenerator implements StateNameGenerator {
     private final Map<GrammarSymbol, Integer> counters;
 
     @Override
     public String generate(LRState from, LRState to, GrammarSymbol through) {
-        if (!counters.containsKey(through)) {
-            counters.put(through, 2);
-            return through.lexicalValue + "1";
-        }
-        int result = counters.get(through);
+        int result = counters.getOrDefault(through, 1);
         counters.put(through, result + 1);
         return through.lexicalValue + result;
     }

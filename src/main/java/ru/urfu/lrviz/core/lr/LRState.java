@@ -1,7 +1,5 @@
 package ru.urfu.lrviz.core.lr;
 
-import ru.urfu.lrviz.core.lr.lr0.LR0Item;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +12,7 @@ import java.util.Set;
  */
 public record LRState(Set<LRItem> items) {
 
-    public LRState(LR0Item... items) {
+    public LRState(LRItem... items) {
         this(Set.copyOf(Arrays.asList(items)));
     }
 

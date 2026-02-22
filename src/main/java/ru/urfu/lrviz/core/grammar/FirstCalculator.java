@@ -1,6 +1,9 @@
 package ru.urfu.lrviz.core.grammar;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Вычисляет множества FIRST от произвольных цепочек на основе переданного "Базисного множества"
@@ -20,9 +23,6 @@ public class FirstCalculator {
      * @apiNote если {@code chain.isEmpty()}, считается, что FIRST вычисляется от {@link Epsilon#getInstance()}
      */
     public Set<FirstSetMember> calculateForChain(List<GrammarSymbol> chain) {
-        if (chain.isEmpty()) {
-            return Collections.singleton(Epsilon.getInstance());
-        }
         Set<FirstSetMember> result = new HashSet<>();
         GrammarServiceImpl.calculateForChain(result, chain, base);
         return result;
