@@ -1,16 +1,17 @@
 package ru.urfu.lrviz.api.rest.docs;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.io.File;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
@@ -21,7 +22,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
  */
 @SpringBootTest
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-class AbstractDocsTest {
+public abstract class AbstractMethodDocsTest {
 
     MockMvc mockMvc;
 
@@ -33,8 +34,17 @@ class AbstractDocsTest {
                 .build();
     }
 
-    @Test
-    void exampleTest() {
-        Assertions.assertTrue(true);
+    /**
+     * @return документируемый метод
+     */
+    protected abstract HttpMethod getDocumentedMethod();
+
+    /**
+     * @return документируемый путь
+     */
+    protected abstract String getDocumentedPath();
+
+    protected final String getSnippetPath() {
+        return getDocumentedMethod().name() + File.separator + getDocumentedPath();
     }
 }

@@ -35,8 +35,8 @@ class LR0AutomatonBuilderTest {
     void build1() {
         LRAutomaton actual = builder.build(GrammarExamples.get(G_1), contextCreator.createLR0Context());
 
-        Terminal INT = new Terminal("int");
-        Terminal REAL = new Terminal("real");
+        Terminal INT = new Terminal("i");
+        Terminal REAL = new Terminal("r");
         Terminal SEMICOLON = new Terminal(";");
         Terminal a = new Terminal("a");
 
@@ -74,8 +74,8 @@ class LR0AutomatonBuilderTest {
 
         String DStateName = "D1";
         String TStateName = "T1";
-        String RealStateName = "real1";
-        String IntStateName = "int1";
+        String RealStateName = "r1";
+        String IntStateName = "i1";
         String A1StateName = "a1";
         String LStateName = "L1";
         String SemicolonStateName = ";1";

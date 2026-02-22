@@ -11,6 +11,9 @@ public class StringToAutomatonTypeConverter implements Converter<String, Automat
         if ("lr0".equals(source)) {
             return AutomatonType.LR_0;
         }
-        throw new IllegalArgumentException("Unknown automaton type: " + source);
+        if ("lr1".equals(source)) {
+            return AutomatonType.LR_1;
+        }
+        throw new UnsupportedOperationException("Unsupported automaton type: " + source);
     }
 }

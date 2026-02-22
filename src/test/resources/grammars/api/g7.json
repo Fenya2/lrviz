@@ -1,0 +1,44 @@
+{
+  "terminals": [
+    "a",
+    "b",
+    "c"
+  ],
+  "nonTerminals": [
+    "S",
+    "A",
+    "B",
+    "C"
+  ],
+  "rules": [
+    {
+      "left": "S",
+      "right": "ABC"
+    },
+    {
+      "left": "A",
+      "right": "Aa"
+    },
+    {
+      "left": "A",
+      "right": "a"
+    },
+    {
+      "left": "B",
+      "right": "Bb"
+    },
+    {
+      "left": "B",
+      "right": "b"
+    },
+    {
+      "left": "C",
+      "right": "Cc"
+    },
+    {
+      "left": "C",
+      "right": "c"
+    }
+  ],
+  "startSymbol": "S"
+}

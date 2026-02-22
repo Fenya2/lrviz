@@ -7,9 +7,21 @@ import ru.urfu.lrviz.core.lr.state.name.generation.StateNameGenerator;
 import java.util.Map;
 
 public final class BuildContext {
+    /**
+     * Лош построения автомата
+     */
     private BuildLog buildLog;
+    /**
+     * Генератор имен состояний, использующийся при построении автомата
+     */
     private StateNameGenerator stateNamesGenerator;
+    /**
+     * Состояния и их имена, которые будут заполняться в процессе построения автомата
+     */
     private Map<String, LRState> namedStates;
+    /**
+     * Переходы между состояниями автомата, которые будут заполняться в процессе построения
+     */
     private Map<LRAutomaton.TransitionKey, String> definedTransitions;
     @Nullable
     private FirstCalculator firstCalculator;
