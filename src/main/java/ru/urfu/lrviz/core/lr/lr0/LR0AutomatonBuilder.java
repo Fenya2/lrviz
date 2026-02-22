@@ -15,12 +15,17 @@ import java.util.stream.Collectors;
  * @since 01.02.2026
  */
 @Service
-public class LR0AutomatonBuilder {
+public class LR0AutomatonBuilder implements LrAutomatonBuilder {
 
     private final GrammarService grammarService;
 
     public LR0AutomatonBuilder(GrammarService grammarService) {
         this.grammarService = grammarService;
+    }
+
+    @Override
+    public AutomatonType getBuildType() {
+        return AutomatonType.LR_0;
     }
 
     public LRAutomaton build(Grammar grammar, BuildContext context) {

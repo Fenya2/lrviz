@@ -7,6 +7,7 @@ import ru.urfu.lrviz.api.dto.LRItemDto;
 import ru.urfu.lrviz.api.dto.RuleDto;
 import ru.urfu.lrviz.core.lr.LRItem;
 import ru.urfu.lrviz.core.lr.lr0.LR0Item;
+import ru.urfu.lrviz.core.lr.lr1.LR1Item;
 
 /**
  *
@@ -27,6 +28,9 @@ public class LRItemConverter implements Converter<LRItem, LRItemDto> {
         RuleDto convertedRule = conversionService.convert(item.getRule(), RuleDto.class);
         if (item instanceof LR0Item) {
             return new LRItemDto(convertedRule, item.getDotIndex(), null);
+        }
+        if (item instanceof LR1Item lr1Item) {
+            return new LRItemDto(convertedRule, item.getDotIndex(), lr1Item.getLookAheadSymbol().asString());
         }
         throw new UnsupportedOperationException();
     }

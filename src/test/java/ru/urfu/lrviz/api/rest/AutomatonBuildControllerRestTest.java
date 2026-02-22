@@ -6,10 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.client.RestTestClient;
-import ru.urfu.lrviz.api.dto.GrammarDto;
-import ru.urfu.lrviz.api.dto.RuleDto;
 
-import java.util.List;
+import static ru.urfu.lrviz.core.GrammarExamples.G_1;
+import static ru.urfu.lrviz.core.GrammarExamples.getJsonDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AutomatonBuildControllerRestTest {
@@ -24,29 +23,22 @@ class AutomatonBuildControllerRestTest {
         restClient = RestTestClient.bindToServer().baseUrl("http://localhost:" + port).build();
     }
 
-    /**
-     * D => T L;
-     * T => int | real;
-     * L => L : a | a;
-     */
     @Test
     void buildLR0() {
-        GrammarDto grammarDto = new GrammarDto(
-                List.of("i", "r", "a", ";"),
-                List.of("D", "T", "L"),
-                List.of(
-                        new RuleDto("D", "TL"),
-                        new RuleDto("T", "i"),
-                        new RuleDto("T", "r"),
-                        new RuleDto("L", "L;a"),
-                        new RuleDto("L", "a")
-                ),
-                "D");
-
         RestTestClient.ResponseSpec response = restClient.post()
                 .uri("/api/build/lr0")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(grammarDto)
+                .body(getJsonDto(G_1))
+                .exchange();
+        response.expectStatus().isOk();
+    }
+
+    @Test
+    void buildLR1() {
+        RestTestClient.ResponseSpec response = restClient.post()
+                .uri("/api/build/lr1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(getJsonDto(G_1))
                 .exchange();
         response.expectStatus().isOk();
     }

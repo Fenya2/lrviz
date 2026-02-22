@@ -15,6 +15,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("java:S117") // имена переменных здесь оправданы
 @ExtendWith(MockitoExtension.class)
 class GrammarServiceImplTest {
 
@@ -60,8 +61,8 @@ class GrammarServiceImplTest {
     void getFirst1() {
         Map<GrammarSymbol, Set<FirstSetMember>> actual = grammarService.getFirst(GrammarExamples.get(GrammarExamples.G_1));
 
-        Terminal REAL = new Terminal("real");
-        Terminal INT = new Terminal("int");
+        Terminal REAL = new Terminal("r");
+        Terminal INT = new Terminal("i");
         Terminal a = new Terminal("a");
         Terminal SEMICOLON = new Terminal(";");
         Set<FirstSetMember> aFirst = Collections.singleton(a);

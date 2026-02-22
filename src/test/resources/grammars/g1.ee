@@ -1,3 +1,0 @@
-D => T L
-T => int | real
-L => L ; a | a

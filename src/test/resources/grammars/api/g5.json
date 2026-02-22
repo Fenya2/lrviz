@@ -1,0 +1,20 @@
+{
+  "terminals": [
+    "(",
+    ")"
+  ],
+  "nonTerminals": [
+    "S"
+  ],
+  "rules": [
+    {
+      "left": "S",
+      "right": "(S)"
+    },
+    {
+      "left": "S",
+      "right": ""
+    }
+  ],
+  "startSymbol": "S"
+}
