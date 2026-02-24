@@ -15,8 +15,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class OpenApiConfig {
-
-    public static final String DETAILED_API_DOCS_URL = "/api/docs/guide.html";
+    public static final String DETAILED_API_DOCS_PATH = "/api/docs/guide.html";
 
     @Bean
     public OpenAPI openApi() {
@@ -36,6 +35,6 @@ public class OpenApiConfig {
                                         .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
                 .externalDocs(new ExternalDocumentation()
                         .description("Подробная документация")
-                        .url(DETAILED_API_DOCS_URL));
+                        .url(DETAILED_API_DOCS_PATH));
     }
 }

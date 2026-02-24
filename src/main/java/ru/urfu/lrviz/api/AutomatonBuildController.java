@@ -1,6 +1,8 @@
 package ru.urfu.lrviz.api;
 
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,11 +15,14 @@ import ru.urfu.lrviz.api.dto.convert.LrBuildResultMapper;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.*;
 
+import static ru.urfu.lrviz.api.openapi.OpenApiConfig.DETAILED_API_DOCS_PATH;
+
 /**
  * @author fenya
  * @since 02.02.2026
  */
 @RestController
+@Tag(name = "Построение LR-автоматов")
 @RequestMapping("/build")
 public class AutomatonBuildController {
     private final ConversionService conversionService;
@@ -37,7 +42,9 @@ public class AutomatonBuildController {
     }
 
     @PostMapping(value = "/lr0", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Строит LR(0)-автомат")
+    @Operation(summary = "Строит LR(0)-автомат", externalDocs = @ExternalDocumentation(
+            description = "Подробнее",
+            url = DETAILED_API_DOCS_PATH + "#lr0"))
     public LrBuildResultDto buildLR0(@RequestBody GrammarDto grammar) {
         Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
         BuildContext context = contextCreator.createLR0Context();
@@ -46,7 +53,9 @@ public class AutomatonBuildController {
     }
 
     @PostMapping(value = "/lr1", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Строит LR(0)-автомат")
+    @Operation(summary = "Строит LR(1)-автомат", externalDocs = @ExternalDocumentation(
+            description = "Подробнее",
+            url = DETAILED_API_DOCS_PATH + "#lr1"))
     public LrBuildResultDto buildLR1(@RequestBody GrammarDto grammar) {
         Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
         BuildContext context = contextCreator.createLR1Context(targetGrammar);

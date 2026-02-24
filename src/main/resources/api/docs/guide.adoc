@@ -3,6 +3,7 @@
 :toc-title: Содержание
 :toclevels: 3
 :icons: font
+:stylesheet: guide.css
 
 :openApiSpec: /api/docs/swagger-ui/index.html
 
