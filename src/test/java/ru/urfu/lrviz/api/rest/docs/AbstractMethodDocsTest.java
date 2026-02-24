@@ -27,11 +27,8 @@ public abstract class AbstractMethodDocsTest {
     MockMvc mockMvc;
 
     @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext,
-               RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .apply(documentationConfiguration(restDocumentation))
-                .build();
+    void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(documentationConfiguration(restDocumentation)).build();
     }
 
     /**
@@ -40,11 +37,21 @@ public abstract class AbstractMethodDocsTest {
     protected abstract HttpMethod getDocumentedMethod();
 
     /**
+     * @return документируемая версия
+     */
+    protected abstract String getDocumentedVersion();
+
+    /**
      * @return документируемый путь
      */
     protected abstract String getDocumentedPath();
 
+    /**
+     * Формирует путь к файлу сниппета по документируемому методу, пути и версии
+     *
+     * @return путь, куда будет сохранен снипет
+     */
     protected final String getSnippetPath() {
-        return getDocumentedMethod().name() + File.separator + getDocumentedPath();
+        return getDocumentedMethod().name() + File.separator + getDocumentedVersion() + File.separator + getDocumentedPath();
     }
 }
