@@ -15,6 +15,7 @@ import ru.urfu.lrviz.api.dto.convert.LrBuildResultMapper;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.*;
 
+import static ru.urfu.lrviz.api.VersionsConstants.FROM_V1;
 import static ru.urfu.lrviz.api.openapi.OpenApiConfig.DETAILED_API_DOCS_PATH;
 
 /**
@@ -41,7 +42,7 @@ public class AutomatonBuildController {
         this.contextCreator = contextCreator;
     }
 
-    @PostMapping(value = "/lr0", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/lr0", produces = MediaType.APPLICATION_JSON_VALUE, version = FROM_V1)
     @Operation(summary = "Строит LR(0)-автомат", externalDocs = @ExternalDocumentation(
             description = "Подробнее",
             url = DETAILED_API_DOCS_PATH + "#lr0"))
@@ -52,7 +53,7 @@ public class AutomatonBuildController {
         return buildResultMapper.map(automaton, context);
     }
 
-    @PostMapping(value = "/lr1", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/lr1", produces = MediaType.APPLICATION_JSON_VALUE, version = FROM_V1)
     @Operation(summary = "Строит LR(1)-автомат", externalDocs = @ExternalDocumentation(
             description = "Подробнее",
             url = DETAILED_API_DOCS_PATH + "#lr1"))
