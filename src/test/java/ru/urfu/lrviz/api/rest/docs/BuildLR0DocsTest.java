@@ -9,6 +9,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.core.GrammarExamples.G_5;
 import static ru.urfu.lrviz.core.GrammarExamples.getJsonDto;
 
@@ -17,11 +18,16 @@ import static ru.urfu.lrviz.core.GrammarExamples.getJsonDto;
  * @since 05.02.2026
  */
 class BuildLR0DocsTest extends AbstractMethodDocsTest {
-    private static final String DOCUMENTED_PATH = "/api/build/lr0";
+    private static final String DOCUMENTED_PATH = "/api/{version}/build/lr0";
 
     @Override
     protected HttpMethod getDocumentedMethod() {
         return HttpMethod.POST;
+    }
+
+    @Override
+    protected String getDocumentedVersion() {
+        return V1;
     }
 
     @Override
@@ -31,7 +37,7 @@ class BuildLR0DocsTest extends AbstractMethodDocsTest {
 
     @Test
     void document() throws Exception {
-        this.mockMvc.perform(post(DOCUMENTED_PATH)
+        this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(getJsonDto(G_5)))
                 .andExpect(status().isOk())
