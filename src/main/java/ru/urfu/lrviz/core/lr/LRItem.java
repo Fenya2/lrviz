@@ -50,9 +50,11 @@ public abstract class LRItem {
 
     public abstract LRItem shift();
 
+    public abstract String asString();
+
     @Override
     public String toString() {
-        return "[" + ruleToString() + "]";
+        return asString();
     }
 
     protected String ruleToString() {

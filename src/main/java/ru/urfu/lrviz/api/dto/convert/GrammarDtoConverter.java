@@ -18,6 +18,12 @@ import java.util.stream.Stream;
 @Component
 public class GrammarDtoConverter implements Converter<GrammarDto, Grammar> {
 
+    private final RuleDtoMapper ruleDtoMapper;
+
+    public GrammarDtoConverter(RuleDtoMapper ruleDtoMapper) {
+        this.ruleDtoMapper = ruleDtoMapper;
+    }
+
     @Override
     public Grammar convert(GrammarDto dto) {
         Set<Terminal> terminals = dto.terminals().stream().map(Terminal::new).collect(Collectors.toSet());
@@ -29,18 +35,7 @@ public class GrammarDtoConverter implements Converter<GrammarDto, Grammar> {
 
         Set<Rule> rules = new HashSet<>();
         for (RuleDto ruleDto : dto.rules()) {
-            NonTerminal left = (NonTerminal) alphabet.get(ruleDto.left());
-
-            String rightPart = ruleDto.right();
-            if (rightPart.isEmpty()) {
-                rules.add(new Rule(left, Collections.emptyList()));
-                continue;
-            }
-            List<GrammarSymbol> right = new ArrayList<>();
-            for (String symbol : rightPart.split("")) {
-                right.add(alphabet.get(symbol));
-            }
-            rules.add(new Rule(left, right));
+            rules.add(ruleDtoMapper.map(ruleDto, alphabet));
         }
         return new Grammar(terminals, nonTerminals, rules, new NonTerminal(dto.startSymbol()));
     }

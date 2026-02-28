@@ -22,12 +22,18 @@ public class BuildContextCreator {
         this.grammarService = grammarService;
     }
 
+    /**
+     * @return контекст для построения LR(1)-автомата
+     */
     public BuildContext createLR1Context(Grammar grammar) {
         BuildContext context = createLR0Context();
         context.setFirstCalculator(new FirstCalculator(grammarService.getFirst(grammar)));
         return context;
     }
 
+    /**
+     * @return контекст для построения LR(0)-автомата
+     */
     public BuildContext createLR0Context() {
         BuildContext buildContext = new BuildContext();
         buildContext.setBuildLog(new BuildLog());
