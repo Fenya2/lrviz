@@ -1,18 +1,17 @@
 package ru.urfu.lrviz.api.dto.convert;
 
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.RuleDto;
 import ru.urfu.lrviz.core.grammar.Rule;
 
 import java.util.stream.Collectors;
 
 /**
- *
  * @author fenya
  * @since 03.02.2026
  */
-@Service
+@Component
 public class RuleConverter implements Converter<Rule, RuleDto> {
     @Override
     public RuleDto convert(Rule rule) {

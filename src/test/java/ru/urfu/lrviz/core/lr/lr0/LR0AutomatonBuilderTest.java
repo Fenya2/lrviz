@@ -24,12 +24,14 @@ class LR0AutomatonBuilderTest {
 
     private static final String INIT_AUTOMATON_STATE_NAME = "∇";
 
-    @Autowired
-    @Qualifier("LR0AutomatonBuilder")
-    private LR0AutomatonBuilder builder;
+    private final LR0AutomatonBuilder builder;
+    private final BuildContextCreator contextCreator;
 
     @Autowired
-    private BuildContextCreator contextCreator;
+    LR0AutomatonBuilderTest(@Qualifier("LR0AutomatonBuilder") LR0AutomatonBuilder builder, BuildContextCreator contextCreator) {
+        this.builder = builder;
+        this.contextCreator = contextCreator;
+    }
 
     @Test
     void build1() {
