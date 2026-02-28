@@ -46,7 +46,7 @@ public class LR1Item extends LRItem {
     }
 
     @Override
-    public String toString() {
+    public String asString() {
         return "[" + ruleToString() + ", " + lookAheadSymbol.asString() + "]";
     }
 }

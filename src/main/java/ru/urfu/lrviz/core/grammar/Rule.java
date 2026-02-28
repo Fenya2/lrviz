@@ -9,7 +9,6 @@ import java.util.List;
  * только из одного нетерминального символа
  */
 public record Rule(NonTerminal left, List<GrammarSymbol> right) {
-
     public static Rule ofEmpty(NonTerminal left) {
         return new Rule(left, Collections.emptyList());
     }

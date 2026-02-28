@@ -1,7 +1,7 @@
 package ru.urfu.lrviz.api.dto.convert;
 
 import org.springframework.core.convert.ConversionService;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.BuildLogDto;
 import ru.urfu.lrviz.api.dto.LRAutomatonDto;
 import ru.urfu.lrviz.api.dto.LrBuildResultDto;
@@ -12,7 +12,7 @@ import ru.urfu.lrviz.core.lr.LRAutomaton;
  * @author fenya
  * @since 02.02.2026
  */
-@Service
+@Component
 public class LrBuildResultMapper {
 
     private final ConversionService conversionService;

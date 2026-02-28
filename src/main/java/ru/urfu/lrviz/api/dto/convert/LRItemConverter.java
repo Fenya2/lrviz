@@ -2,7 +2,7 @@ package ru.urfu.lrviz.api.dto.convert;
 
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.LRItemDto;
 import ru.urfu.lrviz.api.dto.RuleDto;
 import ru.urfu.lrviz.core.lr.LRItem;
@@ -14,7 +14,7 @@ import ru.urfu.lrviz.core.lr.lr1.LR1Item;
  * @author fenya
  * @since 03.02.2026
  */
-@Service
+@Component
 public class LRItemConverter implements Converter<LRItem, LRItemDto> {
 
     private final ConversionService conversionService;

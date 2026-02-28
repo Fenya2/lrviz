@@ -34,6 +34,8 @@
         <spring-restdocs.version>4.0.0</spring-restdocs.version>
         <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
         <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
+        <graphviz-java.version>0.18.1</graphviz-java.version>
+        <j2html.version>1.6.0</j2html.version>
     </properties>
     <dependencies>
         <dependency>
@@ -57,6 +59,16 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>guru.nidi</groupId>
+            <artifactId>graphviz-java</artifactId>
+            <version>${graphviz-java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.j2html</groupId>
+            <artifactId>j2html</artifactId>
+            <version>${j2html.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.restdocs</groupId>

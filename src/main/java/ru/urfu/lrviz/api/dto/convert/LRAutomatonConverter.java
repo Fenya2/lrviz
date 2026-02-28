@@ -1,7 +1,7 @@
 package ru.urfu.lrviz.api.dto.convert;
 
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.LRAutomatonDto;
 import ru.urfu.lrviz.api.dto.LRStateDto;
 import ru.urfu.lrviz.api.dto.TransitionDto;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author fenya
  * @since 03.02.2026
  */
-@Service
+@Component
 public class LRAutomatonConverter implements Converter<LRAutomaton, LRAutomatonDto> {
 
     private final LRStateMapper lrStateMapper;

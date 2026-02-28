@@ -35,4 +35,9 @@ public final class LR0Item extends LRItem {
     public int hashCode() {
         return Objects.hash(this.getRule(), this.getDotIndex());
     }
+
+    @Override
+    public String asString() {
+        return "[" + ruleToString() + "]";
+    }
 }
