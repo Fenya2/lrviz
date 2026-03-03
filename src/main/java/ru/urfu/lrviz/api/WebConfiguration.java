@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.regex.Pattern;
 
+import static ru.urfu.lrviz.api.VersionsConstants.LAST_VERSION;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 
 /**
@@ -26,7 +27,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         configurer
                 .useVersionResolver(WebConfiguration::resolveVersion)
                 .addSupportedVersions(V1)
-                .setVersionRequired(false);
+                .setDefaultVersion(LAST_VERSION);
     }
 
     private static @Nullable String resolveVersion(HttpServletRequest request) {
