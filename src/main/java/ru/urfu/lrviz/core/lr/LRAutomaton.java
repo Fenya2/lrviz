@@ -8,7 +8,7 @@ import java.util.Map;
  * @author fenya
  * @since 01.02.2026
  */
-public record LRAutomaton(Map<String, LRState> namedStates, Map<TransitionKey, String> transitionMap) {
+public record LRAutomaton(Map<String, LRState> namedStates, Map<TransitionKey, String> transitions) {
     public record TransitionKey(String stateName, TransitionSymbol symbol) {
         @Override
         public String toString() {

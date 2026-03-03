@@ -1,6 +1,6 @@
-package ru.urfu.lrviz.api.dto.convert;
+package ru.urfu.lrviz.api.dto.map;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.api.dto.RuleDto;
 import ru.urfu.lrviz.core.grammar.GrammarSymbol;
 import ru.urfu.lrviz.core.grammar.NonTerminal;
@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author fenya
  * @since 28.02.2026
  */
-@Component
+@Service
 public class RuleDtoMapper {
     public Rule map(RuleDto ruleDto, Map<String, GrammarSymbol> alphabet) {
         NonTerminal left = (NonTerminal) Objects.requireNonNull(alphabet.get(ruleDto.left()));
