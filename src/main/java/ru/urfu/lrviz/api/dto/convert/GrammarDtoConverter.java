@@ -4,6 +4,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.GrammarDto;
 import ru.urfu.lrviz.api.dto.RuleDto;
+import ru.urfu.lrviz.api.dto.map.RuleDtoMapper;
 import ru.urfu.lrviz.core.grammar.*;
 
 import java.util.*;

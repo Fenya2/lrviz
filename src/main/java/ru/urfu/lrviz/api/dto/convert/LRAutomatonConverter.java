@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.LRAutomatonDto;
 import ru.urfu.lrviz.api.dto.LRStateDto;
 import ru.urfu.lrviz.api.dto.TransitionDto;
+import ru.urfu.lrviz.api.dto.map.LRStateMapper;
+import ru.urfu.lrviz.api.dto.map.TransitionMapper;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LRState;
 
@@ -36,7 +38,7 @@ public class LRAutomatonConverter implements Converter<LRAutomaton, LRAutomatonD
             convertedStates.add(convertedState);
         }
 
-        Map<LRAutomaton.TransitionKey, String> transitions = automaton.transitionMap();
+        Map<LRAutomaton.TransitionKey, String> transitions = automaton.transitions();
         List<TransitionDto> convertedTransitions = new ArrayList<>(transitions.size());
         for (Map.Entry<LRAutomaton.TransitionKey, String> transition : transitions.entrySet()) {
             LRAutomaton.TransitionKey transitionKey = transition.getKey();
