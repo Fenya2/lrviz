@@ -47,11 +47,16 @@ public abstract class AbstractMethodDocsTest {
     protected abstract String getDocumentedPath();
 
     /**
-     * Формирует путь к файлу сниппета по документируемому методу, пути и версии
+     * @return тип возвращаемого контента
+     */
+    protected abstract String getProduces();
+
+    /**
+     * Формирует путь к файлу сниппета по документируемому методу, пути и версии и возвращаемому типу
      *
      * @return путь, куда будет сохранен снипет
      */
     protected final String getSnippetPath() {
-        return getDocumentedMethod().name() + File.separator + getDocumentedVersion() + File.separator + getDocumentedPath();
+        return String.join(File.separator, getDocumentedMethod().name(), getDocumentedVersion(), getProduces(), getDocumentedPath());
     }
 }
