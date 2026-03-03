@@ -1,15 +1,18 @@
 package ru.urfu.lrviz.api.rest.docs;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
+import static ru.urfu.lrviz.api.rest.docs.DocumentationConstants.GRAMMAR_DTO;
 import static ru.urfu.lrviz.core.GrammarExamples.G_6;
 import static ru.urfu.lrviz.core.GrammarExamples.getJsonDto;
 
@@ -39,23 +42,18 @@ class BuildLR1DocsTest extends AbstractMethodDocsTest {
     @Test
     void document() throws Exception {
         this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
+                        .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(getJsonDto(G_6)))
                 .andExpect(status().isOk())
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("terminals")
-                                        .description("Список <<terminals,терминалов>> грамматики."),
-                                fieldWithPath("nonTerminals")
-                                        .description("Список <<nonTerminals,нетерминалов>> грамматики."),
-                                fieldWithPath("rules")
-                                        .description("Список <<rules,правил>> грамматики"),
-                                fieldWithPath("rules[].left")
-                                        .description("Нетерминал левой части правила грамматики"),
-                                fieldWithPath("rules[].right")
-                                        .description("Символы правой части правила грамматики"),
-                                fieldWithPath("startSymbol")
-                                        .description("<<startSymbol,Аксиома>> грамматики (нетерминал)")),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.ACCEPT).description("Всегда `%s`".formatted(MediaType.APPLICATION_JSON_VALUE))
+                        ),
+                        requestFields(GRAMMAR_DTO),
+                        responseHeaders(
+                                headerWithName(HttpHeaders.CONTENT_TYPE).description("Всегда %s".formatted(MediaType.APPLICATION_JSON))
+                        ),
                         responseFields(
                                 fieldWithPath("automaton").description("Построенный <<automaton,LR(0)-автомат>>"),
                                 fieldWithPath("automaton.states").description("<<automatonStates,Состояния>> автомата"),

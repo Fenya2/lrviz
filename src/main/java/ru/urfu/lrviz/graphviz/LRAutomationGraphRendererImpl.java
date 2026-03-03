@@ -62,7 +62,7 @@ public class LRAutomationGraphRendererImpl implements LRAutomationGraphRenderer 
             String stateName = entry.getKey();
             Node node = node(stateName).with(Shape.M_RECORD)
                     .with(Label.html(lrStateToHtml(stateName, entry.getValue())))
-                    .link(addTransitions(stateName, automaton.transitionMap()));
+                    .link(addTransitions(stateName, automaton.transitions()));
             nodes.add(node);
         }
         return nodes;

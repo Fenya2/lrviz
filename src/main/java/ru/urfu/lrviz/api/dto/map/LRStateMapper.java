@@ -1,7 +1,7 @@
-package ru.urfu.lrviz.api.dto.convert;
+package ru.urfu.lrviz.api.dto.map;
 
 import org.springframework.core.convert.ConversionService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.api.dto.LRItemDto;
 import ru.urfu.lrviz.api.dto.LRStateDto;
 import ru.urfu.lrviz.core.lr.LRItem;
@@ -15,7 +15,7 @@ import java.util.Set;
  * @author fenya
  * @since 03.02.2026
  */
-@Component
+@Service
 public class LRStateMapper {
 
     private final ConversionService conversionService;

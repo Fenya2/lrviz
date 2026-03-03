@@ -1,4 +1,4 @@
-package ru.urfu.lrviz.api.dto.convert;
+package ru.urfu.lrviz.api.dto.map;
 
 import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.api.dto.TransitionDto;
