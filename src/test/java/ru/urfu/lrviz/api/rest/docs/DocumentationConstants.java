@@ -89,7 +89,6 @@ public class DocumentationConstants {
             fieldWithPath("automaton.transitions[].to").description("Целевое состояние"),
             fieldWithPath("automaton.transitions[].through").description("Символ перехода"));
 
-
     private DocumentationConstants() {
     }
 }
