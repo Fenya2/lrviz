@@ -2,13 +2,12 @@ package ru.urfu.lrviz.api.rest.docs;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 
 import java.util.stream.Stream;
 
 import static org.springframework.http.HttpHeaders.ACCEPT;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -17,9 +16,8 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
-import static ru.urfu.lrviz.api.rest.docs.DocumentationConstants.*;
-import static ru.urfu.lrviz.core.GrammarExamples.G_5;
-import static ru.urfu.lrviz.core.GrammarExamples.getJsonDto;
+import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
+import static ru.urfu.lrviz.core.GrammarExamples.*;
 
 /**
  * @author fenya
@@ -49,10 +47,10 @@ class BuildLR0DocsTest extends AbstractMethodDocsTest {
     }
 
     @Test
-    void document() throws Exception {
+    void buildLr0() throws Exception {
         this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
                         .header(ACCEPT, APPLICATION_JSON_VALUE)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(getJsonDto(G_5)))
                 .andExpect(status().isOk())
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),

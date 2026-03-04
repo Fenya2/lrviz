@@ -60,7 +60,7 @@ public class AutomatonBuildController {
     }
 
     @PostMapping(value = "/lr0", version = FROM_V1, produces = IMAGE_PNG_VALUE)
-    public ResponseEntity<StreamingResponseBody> renderLR0InPng(
+    public ResponseEntity<StreamingResponseBody> renderLR0(
             @RequestParam(defaultValue = DEFAULT_IMAGE_SIZE) int size,
             @RequestBody GrammarDto grammar) {
         Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);

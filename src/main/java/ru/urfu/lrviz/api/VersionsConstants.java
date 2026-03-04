@@ -11,6 +11,5 @@ public final class VersionsConstants {
     public static final String LAST_VERSION = V1;
 
     private VersionsConstants() {
-
     }
 }
