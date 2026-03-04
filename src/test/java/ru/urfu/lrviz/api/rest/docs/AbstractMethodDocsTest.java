@@ -15,7 +15,6 @@ import java.io.File;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
-
 /**
  * @author fenya
  * @since 04.02.2026
