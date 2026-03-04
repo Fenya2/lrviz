@@ -113,6 +113,9 @@
                             </attributes>
                             <sourceDirectory>src/main/resources/api/docs</sourceDirectory>
                             <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
+                            <attributes>
+                                <images>/api/docs/images</images>
+                            </attributes>
                         </configuration>
                     </execution>
                 </executions>
@@ -128,7 +131,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-resources</id>
+                        <id>copy-guide</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -141,6 +144,25 @@
                                 <resource>
                                     <directory>
                                         ${project.build.directory}/generated-docs
+                                    </directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-images</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.outputDirectory}/static/api/docs/images
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${snippetsDirectory}/images
                                     </directory>
                                 </resource>
                             </resources>
