@@ -13,13 +13,13 @@ import ru.urfu.lrviz.api.dto.LrBuildResultDto;
 import ru.urfu.lrviz.api.dto.map.LrBuildResultMapper;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.*;
-import ru.urfu.lrviz.graphviz.LRAutomationGraphRenderer;
-import ru.urfu.lrviz.graphviz.RenderParameters;
+import ru.urfu.lrviz.render.LRAutomationGraphRenderer;
+import ru.urfu.lrviz.render.RenderParameters;
 
 import static org.springframework.http.MediaType.*;
 import static ru.urfu.lrviz.api.VersionsConstants.FROM_V1;
 import static ru.urfu.lrviz.api.openapi.OpenApiConfig.DETAILED_API_DOCS_PATH;
-import static ru.urfu.lrviz.graphviz.RenderFormat.PNG;
+import static ru.urfu.lrviz.render.RenderFormat.PNG;
 
 /**
  * @author fenya

@@ -1,4 +1,4 @@
-package ru.urfu.lrviz.graphviz;
+package ru.urfu.lrviz.render;
 
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 
