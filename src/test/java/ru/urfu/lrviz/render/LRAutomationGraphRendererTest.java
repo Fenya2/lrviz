@@ -1,4 +1,4 @@
-package ru.urfu.lrviz.graphviz;
+package ru.urfu.lrviz.render;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

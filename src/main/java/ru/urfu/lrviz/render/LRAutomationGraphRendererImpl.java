@@ -1,4 +1,4 @@
-package ru.urfu.lrviz.graphviz;
+package ru.urfu.lrviz.render;
 
 import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
