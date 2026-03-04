@@ -1,13 +1,14 @@
-package ru.urfu.lrviz.api.rest.docs;
+package ru.urfu.lrviz.api.rest.docs.snippets;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 /**
@@ -16,8 +17,10 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
  */
 public class DocumentationConstants {
 
-    public static final HeaderDescriptor ACCEPT_JSON_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.ACCEPT).description("Всегда `%s`".formatted(MediaType.APPLICATION_JSON_VALUE));
-    public static final HeaderDescriptor CONTENT_TYPE_JSON_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.CONTENT_TYPE).description("Всегда %s".formatted(MediaType.APPLICATION_JSON));
+    public static final HeaderDescriptor ACCEPT_JSON_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.ACCEPT).description("Всегда `%s`".formatted(APPLICATION_JSON_VALUE));
+    public static final HeaderDescriptor ACCEPT_PNG_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.ACCEPT).description("Всегда `%s`".formatted(IMAGE_PNG_VALUE));
+    public static final HeaderDescriptor CONTENT_TYPE_JSON_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.CONTENT_TYPE).description("Всегда %s".formatted(APPLICATION_JSON_VALUE));
+    public static final HeaderDescriptor CONTENT_TYPE_PNG_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.CONTENT_TYPE).description("Всегда %s".formatted(IMAGE_PNG_VALUE));
 
     public static final List<FieldDescriptor> GRAMMAR_DTO = List.of(
             fieldWithPath("terminals").description("Список <<terminals,терминалов>> грамматики."),
