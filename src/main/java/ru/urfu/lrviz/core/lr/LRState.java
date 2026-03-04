@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Состояние {@link LRAutomaton lr-автомата}. Состоит из LR-пунктов
+ * Состояние {@link LRAutomaton lr-автомата}
  *
  * @author fenya
  * @since 01.02.2026

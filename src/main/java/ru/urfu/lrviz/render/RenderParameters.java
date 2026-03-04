@@ -1,4 +1,4 @@
-package ru.urfu.lrviz.graphviz;
+package ru.urfu.lrviz.render;
 
 /**
  * @author fenya
