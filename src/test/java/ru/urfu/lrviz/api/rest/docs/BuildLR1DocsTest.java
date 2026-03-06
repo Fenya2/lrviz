@@ -5,16 +5,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 
-import java.util.stream.Stream;
-
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
@@ -59,8 +55,8 @@ class BuildLR1DocsTest extends AbstractMethodDocsTest {
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestHeaders(ACCEPT_JSON_HEADER),
                         pathParameters(VERSION_PARAMETER),
-                        requestFields(GRAMMAR_DTO),
+                        GRAMMAR_DTO_REQUEST,
                         responseHeaders(CONTENT_TYPE_JSON_HEADER),
-                        responseFields(Stream.concat(LR1_AUTOMATON_DTO.stream(), BUILD_LR1_LOG_DTO.stream()).toList())));
+                        BUILD_LR1_AUTOMATON_RESPONSE));
     }
 }
