@@ -11,9 +11,10 @@ import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
@@ -57,8 +58,10 @@ class RenderLR1DocsTest extends AbstractMethodDocsTest {
                 .andExpect(status().isOk())
                 .andDo(MvcResult::getAsyncResult)
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(),
-                        preprocessRequest(),
+                        preprocessRequest(prettyPrint()),
                         preprocessResponse(),
+                        pathParameters(VERSION_PARAMETER),
+                        queryParameters(SIZE_PARAMETER),
                         requestHeaders(CONTENT_TYPE_PNG_HEADER),
                         requestFields(GRAMMAR_DTO),
                         responseHeaders(CONTENT_TYPE_JSON_HEADER),
