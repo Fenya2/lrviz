@@ -15,10 +15,12 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
-import static ru.urfu.lrviz.core.GrammarExamples.*;
+import static ru.urfu.lrviz.core.GrammarExamples.G_7;
+import static ru.urfu.lrviz.core.GrammarExamples.getJsonDto;
 
 /**
  * @author fenya
@@ -56,6 +58,7 @@ class BuildLR1DocsTest extends AbstractMethodDocsTest {
                 .andExpect(status().isOk())
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestHeaders(ACCEPT_JSON_HEADER),
+                        pathParameters(VERSION_PARAMETER),
                         requestFields(GRAMMAR_DTO),
                         responseHeaders(CONTENT_TYPE_JSON_HEADER),
                         responseFields(Stream.concat(LR1_AUTOMATON_DTO.stream(), BUILD_LR1_LOG_DTO.stream()).toList())));

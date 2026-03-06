@@ -4,18 +4,26 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
+import org.springframework.restdocs.request.ParameterDescriptor;
+import org.springframework.restdocs.request.RequestDocumentation;
 
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.snippet.Attributes.key;
+import static ru.urfu.lrviz.api.AutomatonBuildController.DEFAULT_IMAGE_SIZE;
 
 /**
  * @author fenya
  * @since 04.03.2026
  */
 public class DocumentationConstants {
+    public static final String DEFAULT_VALUE_ATTRIBUTE = "defaultValue";
+
+    public static final ParameterDescriptor VERSION_PARAMETER = RequestDocumentation.parameterWithName("version").description("версия API");
+    public static final ParameterDescriptor SIZE_PARAMETER = RequestDocumentation.parameterWithName("size").optional().description("*Необязательный*. Размер изображения").attributes(key(DEFAULT_VALUE_ATTRIBUTE).value(DEFAULT_IMAGE_SIZE));
 
     public static final HeaderDescriptor ACCEPT_JSON_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.ACCEPT).description("Всегда `%s`".formatted(APPLICATION_JSON_VALUE));
     public static final HeaderDescriptor ACCEPT_PNG_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.ACCEPT).description("Всегда `%s`".formatted(IMAGE_PNG_VALUE));
