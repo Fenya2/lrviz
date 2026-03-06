@@ -72,7 +72,7 @@ public class DocumentationConstants {
 
     public static final ResponseFieldsSnippet BUILD_LR1_AUTOMATON_RESPONSE = BUILD_LR0_AUTOMATON_RESPONSE.and(
             fieldWithPath("automaton.states[].items[].lookAheadSymbol").description("Терминальный символ (или символ завершения строки `⊣`)").attributes(IS_REQUIRED),
-            fieldWithPath("buildLog.o   perations[].item.lookAheadSymbol").optional().description("Терминальный символ (или символ завершения строки `⊣`)").attributes(IS_OPTIONAL));
+            fieldWithPath("buildLog.operations[].item.lookAheadSymbol").optional().description("Терминальный символ (или символ завершения строки `⊣`)").attributes(IS_OPTIONAL));
 
     private DocumentationConstants() {
     }

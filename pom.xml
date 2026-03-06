@@ -21,12 +21,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
     <properties>
         <java.version>25</java.version>
         <jackson-core.version>2.21.0</jackson-core.version>
