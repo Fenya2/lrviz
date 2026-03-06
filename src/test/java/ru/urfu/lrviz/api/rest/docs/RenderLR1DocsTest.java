@@ -12,7 +12,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -63,7 +62,7 @@ class RenderLR1DocsTest extends AbstractMethodDocsTest {
                         pathParameters(VERSION_PARAMETER),
                         queryParameters(SIZE_PARAMETER),
                         requestHeaders(CONTENT_TYPE_PNG_HEADER),
-                        requestFields(GRAMMAR_DTO),
+                        GRAMMAR_DTO_REQUEST,
                         responseHeaders(CONTENT_TYPE_JSON_HEADER),
                         responseImagePng("renderLr1")));
     }
