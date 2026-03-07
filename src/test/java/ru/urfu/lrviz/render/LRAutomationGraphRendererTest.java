@@ -6,6 +6,7 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.urfu.lrviz.core.lr.BuildOptions;
 import ru.urfu.lrviz.core.GrammarExamples;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.BuildContextCreator;
@@ -55,7 +56,7 @@ class LRAutomationGraphRendererTest {
         LRAutomaton automaton = builders.build(
                 GrammarExamples.get(G_2),
                 LR_0,
-                contextCreator.createLR0Context());
+                contextCreator.createLR0Context(BuildOptions.createEmpty()));
         Path renderPath = tempDir.resolve("renderLR0.png");
         render(renderPath, automaton);
     }
@@ -66,7 +67,7 @@ class LRAutomationGraphRendererTest {
         LRAutomaton automaton = builders.build(
                 grammar,
                 LR_1,
-                contextCreator.createLR1Context(grammar));
+                contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
         Path renderPath = tempDir.resolve("renderLR1.png");
         render(renderPath, automaton);
     }

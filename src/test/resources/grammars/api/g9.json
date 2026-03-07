@@ -1,35 +1,35 @@
 {
   "grammar": {
     "terminals": [
-      "a",
-      "b",
-      "c",
-      "d"
+      "x",
+      "*",
+      "="
     ],
     "nonTerminals": [
       "S",
-      "A"
+      "L",
+      "R"
     ],
     "rules": [
       {
         "left": "S",
-        "right": "Aa"
+        "right": "L=R"
       },
       {
         "left": "S",
-        "right": "bAc"
+        "right": "R"
       },
       {
-        "left": "S",
-        "right": "bc"
+        "left": "L",
+        "right": "*R"
       },
       {
-        "left": "S",
-        "right": "bda"
+        "left": "L",
+        "right": "x"
       },
       {
-        "left": "A",
-        "right": "d"
+        "left": "R",
+        "right": "L"
       }
     ],
     "startSymbol": "S"
