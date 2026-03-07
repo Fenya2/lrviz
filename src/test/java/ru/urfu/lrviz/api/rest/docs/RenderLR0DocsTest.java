@@ -19,7 +19,7 @@ import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
 import static ru.urfu.lrviz.api.rest.docs.snippets.ImageSnippet.responseImagePng;
 import static ru.urfu.lrviz.core.GrammarExamples.G_6;
-import static ru.urfu.lrviz.core.GrammarExamples.getJsonDto;
+import static ru.urfu.lrviz.core.GrammarExamples.getAsJson;
 
 /**
  * @author fenya
@@ -49,11 +49,11 @@ class RenderLR0DocsTest extends AbstractMethodDocsTest {
     }
 
     @Test
-    void renderLr0() throws Exception {
+    void document() throws Exception {
         this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
                         .header(ACCEPT, IMAGE_PNG_VALUE)
                         .contentType(APPLICATION_JSON)
-                        .content(getJsonDto(G_6)))
+                        .content(getAsJson(G_6)))
                 .andExpect(status().isOk())
                 .andDo(MvcResult::getAsyncResult)
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(),
@@ -62,7 +62,7 @@ class RenderLR0DocsTest extends AbstractMethodDocsTest {
                         pathParameters(VERSION_PARAMETER),
                         queryParameters(SIZE_PARAMETER),
                         requestHeaders(ACCEPT_PNG_HEADER),
-                        GRAMMAR_DTO_REQUEST,
+                        BUILD_LR_AUTOMATON_REQUEST,
                         responseHeaders(CONTENT_TYPE_PNG_HEADER),
                         responseImagePng("renderLr0")));
     }

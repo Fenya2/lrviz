@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
 import static ru.urfu.lrviz.core.GrammarExamples.G_5;
-import static ru.urfu.lrviz.core.GrammarExamples.getJsonDto;
+import static ru.urfu.lrviz.core.GrammarExamples.getAsJson;
 
 /**
  * @author fenya
@@ -46,16 +46,16 @@ class BuildLR0DocsTest extends AbstractMethodDocsTest {
     }
 
     @Test
-    void buildLr0() throws Exception {
+    void document() throws Exception {
         this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
                         .header(ACCEPT, APPLICATION_JSON_VALUE)
                         .contentType(APPLICATION_JSON)
-                        .content(getJsonDto(G_5)))
+                        .content(getAsJson(G_5)))
                 .andExpect(status().isOk())
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestHeaders(ACCEPT_JSON_HEADER),
                         pathParameters(VERSION_PARAMETER),
-                        GRAMMAR_DTO_REQUEST,
+                        BUILD_LR_AUTOMATON_REQUEST,
                         responseHeaders(CONTENT_TYPE_JSON_HEADER),
                         BUILD_LR0_AUTOMATON_RESPONSE));
     }

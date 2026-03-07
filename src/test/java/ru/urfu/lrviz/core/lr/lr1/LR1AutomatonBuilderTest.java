@@ -3,6 +3,7 @@ package ru.urfu.lrviz.core.lr.lr1;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.urfu.lrviz.core.lr.BuildOptions;
 import ru.urfu.lrviz.core.GrammarExamples;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.grammar.NonTerminal;
@@ -36,7 +37,7 @@ class LR1AutomatonBuilderTest {
     @Test
     void build1() {
         Grammar grammar = GrammarExamples.get(G_1);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar));
+        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
 
         Terminal INT = new Terminal("i");
         Terminal REAL = new Terminal("r");
@@ -131,7 +132,7 @@ class LR1AutomatonBuilderTest {
     @Test
     void build2() {
         Grammar grammar = GrammarExamples.get(G_2);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar));
+        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
 
         Terminal a = new Terminal("a");
         Terminal b = new Terminal("b");
@@ -234,7 +235,7 @@ class LR1AutomatonBuilderTest {
     @Test
     void build3() {
         Grammar grammar = GrammarExamples.get(G_3);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar));
+        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
 
         Terminal LPAREN = new Terminal("(");
         Terminal RPAREN = new Terminal(")");
@@ -351,7 +352,7 @@ class LR1AutomatonBuilderTest {
     @Test
     void build4() {
         Grammar grammar = GrammarExamples.get(G_4);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar));
+        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
 
         Terminal u = new Terminal("u");
         Terminal v = new Terminal("v");
@@ -484,7 +485,7 @@ class LR1AutomatonBuilderTest {
     @Test
     void build5() {
         Grammar grammar = GrammarExamples.get(G_5);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar));
+        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
 
         Terminal LPAREN = new Terminal("(");
         Terminal RPAREN = new Terminal(")");
@@ -559,7 +560,7 @@ class LR1AutomatonBuilderTest {
     @Test
     void build6() {
         Grammar grammar = GrammarExamples.get(G_6);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar));
+        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
 
         Terminal a = new Terminal("a");
         Terminal b = new Terminal("b");
@@ -657,7 +658,7 @@ class LR1AutomatonBuilderTest {
     @Test
     void build7() {
         Grammar grammar = GrammarExamples.get(G_7);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar));
+        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
 
         Terminal a = new Terminal("a");
         Terminal b = new Terminal("b");
@@ -781,7 +782,7 @@ class LR1AutomatonBuilderTest {
     @Test
     void build8() {
         Grammar grammar = GrammarExamples.get(G_8);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar));
+        LRAutomaton actual = builder.build(grammar, contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
 
         Terminal i = new Terminal("i");
         Terminal plus = new Terminal("+");
