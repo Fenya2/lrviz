@@ -9,7 +9,7 @@ import ru.urfu.lrviz.core.lr.LRState;
  * @author fenya
  * @since 22.02.2026
  */
-public class EndToEndStateNameGenerator implements StateNameGenerator {
+public class EndToEndNumerationStateNameGenerator implements StateNameGenerator {
     private int counter = 1;
 
     @Override

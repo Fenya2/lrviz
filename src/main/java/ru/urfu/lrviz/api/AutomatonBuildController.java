@@ -3,12 +3,13 @@ package ru.urfu.lrviz.api;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Nullable;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import ru.urfu.lrviz.api.dto.GrammarDto;
+import ru.urfu.lrviz.api.dto.LRBuildRequestDto;
 import ru.urfu.lrviz.api.dto.LrBuildResultDto;
 import ru.urfu.lrviz.api.dto.map.LrBuildResultMapper;
 import ru.urfu.lrviz.core.grammar.Grammar;
@@ -16,9 +17,12 @@ import ru.urfu.lrviz.core.lr.*;
 import ru.urfu.lrviz.render.LRAutomationGraphRenderer;
 import ru.urfu.lrviz.render.RenderParameters;
 
+import java.util.Objects;
+
 import static org.springframework.http.MediaType.*;
 import static ru.urfu.lrviz.api.VersionsConstants.FROM_V1;
 import static ru.urfu.lrviz.api.openapi.OpenApiConfig.DETAILED_API_DOCS_PATH;
+import static ru.urfu.lrviz.core.lr.AutomatonType.LR_0;
 import static ru.urfu.lrviz.render.RenderFormat.PNG;
 
 /**
@@ -52,30 +56,38 @@ public class AutomatonBuildController {
     @PostMapping(value = "/lr0", version = FROM_V1, produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Строит LR(0)-автомат", externalDocs = @ExternalDocumentation(description = "Подробнее",
             url = DETAILED_API_DOCS_PATH + "#lr0"))
-    public LrBuildResultDto buildLR0(@RequestBody GrammarDto grammar) {
-        Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
-        BuildContext context = contextCreator.createLR0Context();
-        LRAutomaton automaton = builders.build(targetGrammar, AutomatonType.LR_0, context);
+    public LrBuildResultDto buildLR0(@RequestBody LRBuildRequestDto buildRequest) {
+        Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
+        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildContext context = prepareLr0BuildContext(buildOptions);
+        LRAutomaton automaton = builders.build(targetGrammar, LR_0, context);
         return buildResultMapper.map(automaton, context);
     }
 
     @PostMapping(value = "/lr0", version = FROM_V1, produces = IMAGE_PNG_VALUE)
     public ResponseEntity<StreamingResponseBody> renderLR0(
             @RequestParam(defaultValue = DEFAULT_IMAGE_SIZE) int size,
-            @RequestBody GrammarDto grammar) {
-        Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
-        BuildContext context = contextCreator.createLR0Context();
-        LRAutomaton automaton = builders.build(targetGrammar, AutomatonType.LR_0, context);
+            @RequestBody LRBuildRequestDto buildRequest) {
+        Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
+        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildContext context = prepareLr0BuildContext(buildOptions);
+        LRAutomaton automaton = builders.build(targetGrammar, LR_0, context);
         StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG));
         return ResponseEntity.ok().contentType(IMAGE_PNG).body(stream);
+    }
+
+    private BuildContext prepareLr0BuildContext(@Nullable BuildOptions buildOptions) {
+        BuildOptions rawContext = Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty());
+        return contextCreator.createLR0Context(rawContext);
     }
 
     @PostMapping(value = "/lr1", version = FROM_V1, produces = APPLICATION_JSON_VALUE)
     @Operation(summary = "Строит LR(1)-автомат", externalDocs = @ExternalDocumentation(
             description = "Подробнее", url = DETAILED_API_DOCS_PATH + "#lr1"))
-    public LrBuildResultDto buildLR1(@RequestBody GrammarDto grammar) {
-        Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
-        BuildContext context = contextCreator.createLR1Context(targetGrammar);
+    public LrBuildResultDto buildLR1(@RequestBody LRBuildRequestDto buildRequest) {
+        Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
+        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildContext context = prepareLr1BuildContext(targetGrammar, buildOptions);
         LRAutomaton automaton = builders.build(targetGrammar, AutomatonType.LR_1, context);
         return buildResultMapper.map(automaton, context);
     }
@@ -83,11 +95,17 @@ public class AutomatonBuildController {
     @PostMapping(value = "/lr1", version = FROM_V1, produces = IMAGE_PNG_VALUE)
     public ResponseEntity<StreamingResponseBody> renderLR1(
             @RequestParam(defaultValue = DEFAULT_IMAGE_SIZE) int size,
-            @RequestBody GrammarDto grammar) {
-        Grammar targetGrammar = conversionService.convert(grammar, Grammar.class);
-        BuildContext context = contextCreator.createLR1Context(targetGrammar);
+            @RequestBody LRBuildRequestDto buildRequest) {
+        Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
+        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildContext context = prepareLr1BuildContext(targetGrammar, buildOptions);
         LRAutomaton automaton = builders.build(targetGrammar, AutomatonType.LR_1, context);
         StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(stream);
+    }
+
+    private BuildContext prepareLr1BuildContext(Grammar grammar, BuildOptions buildContext) {
+        BuildOptions rawContext = Objects.requireNonNullElse(buildContext, BuildOptions.createEmpty());
+        return contextCreator.createLR1Context(grammar, rawContext);
     }
 }
