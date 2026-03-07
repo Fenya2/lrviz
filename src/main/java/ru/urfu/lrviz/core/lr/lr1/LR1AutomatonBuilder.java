@@ -1,12 +1,8 @@
 package ru.urfu.lrviz.core.lr.lr1;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.core.grammar.*;
-import ru.urfu.lrviz.core.lr.AutomatonType;
-import ru.urfu.lrviz.core.lr.BuildContext;
-import ru.urfu.lrviz.core.lr.LRItem;
-import ru.urfu.lrviz.core.lr.TransitionSymbol;
-import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
+import ru.urfu.lrviz.core.lr.*;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -17,8 +13,8 @@ import java.util.stream.Stream;
  * @author fenya
  * @since 14.02.2026
  */
-@Service
-public class LR1AutomatonBuilder extends LR0AutomatonBuilder {
+@Component
+public class LR1AutomatonBuilder extends AbstractLRAutomatonBuilder {
     public LR1AutomatonBuilder(GrammarService grammarService) {
         super(grammarService);
     }
@@ -30,7 +26,7 @@ public class LR1AutomatonBuilder extends LR0AutomatonBuilder {
 
     @Override
     protected LRItem getInitialItem(Rule startRule) {
-        return new LR1Item(startRule, 0, EndOfChainSymbol.getInstance());
+        return LR1Item.ofInitial(startRule, EndOfChainSymbol.getInstance());
     }
 
     @Override
