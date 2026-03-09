@@ -7,7 +7,7 @@ import java.util.*;
 @Service
 public class GrammarServiceImpl implements GrammarService {
     @Override
-    public void extendGrammar(Grammar grammar) {
+    public void expandGrammar(Grammar grammar) {
         NonTerminal oldStartSymbol = grammar.getStartSymbol();
         NonTerminal newStartSymbol = prepareNewStartSymbol(grammar);
         grammar.addNonTerminal(newStartSymbol);

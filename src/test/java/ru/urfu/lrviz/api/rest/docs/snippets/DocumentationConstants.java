@@ -16,6 +16,8 @@ import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static ru.urfu.lrviz.api.AutomatonBuildController.DEFAULT_IMAGE_SIZE;
+import static ru.urfu.lrviz.api.rest.docs.snippets.Anchors.*;
+import static ru.urfu.lrviz.core.lr.lr1.EndOfChainSymbol.END_OF_CHAIN_SYMBOL;
 
 /**
  * @author fenya
@@ -38,33 +40,33 @@ public class DocumentationConstants {
 
     public static final RequestFieldsSnippet BUILD_LR_AUTOMATON_REQUEST = requestFields()
             .andWithPrefix("grammar",
-                    fieldWithPath("").description("Грамматика, по которой требуется построить LR-автомат"),
-                    fieldWithPath(".terminals").description("Список <<terminals,терминалов>> грамматики."),
-                    fieldWithPath(".nonTerminals").description("Список <<nonTerminals,нетерминалов>> грамматики."),
-                    fieldWithPath(".rules").description("Список <<rules,правил>> грамматики"),
-                    fieldWithPath(".rules[].left").description("Нетерминал левой части правила грамматики"),
-                    fieldWithPath(".rules[].right").description("Символы правой части правила грамматики"),
-                    fieldWithPath(".startSymbol").description("<<startSymbol,Аксиома>> грамматики (нетерминал)"))
+                    fieldWithPath("").description("Грамматика, по которой требуется построить LR-автомат").attributes(IS_REQUIRED),
+                    fieldWithPath(".terminals").description("Список %s грамматики.".formatted(createHyperLink(TERMINALS, "терминалов"))).attributes(IS_REQUIRED),
+                    fieldWithPath(".nonTerminals").description("Список %s грамматики".formatted(createHyperLink(NONTERMINALS, "нетерминалов"))).attributes(IS_REQUIRED),
+                    fieldWithPath(".rules").description("Список %s грамматики".formatted(createHyperLink(RULES, "правил"))).attributes(IS_REQUIRED),
+                    fieldWithPath(".rules[].left").description("Нетерминал левой части правила грамматики").attributes(IS_REQUIRED),
+                    fieldWithPath(".rules[].right").description("Символы правой части правила грамматики").attributes(IS_REQUIRED),
+                    fieldWithPath(".startSymbol").description("%s грамматики (нетерминал)".formatted(createHyperLink(START_SYMBOL, "Аксиома"))).attributes(IS_REQUIRED))
             .andWithPrefix("buildOptions",
-                    fieldWithPath("").description("Параметры построения LR-автомата").type(OBJECT).optional(),
-                    fieldWithPath(".namesGenerationStrategy").type(STRING).description("Стратегия генерации имен состояний при построении автомата"));
+                    fieldWithPath("").optional().description("%s построения LR-автомата".formatted(createHyperLink(BUILD_OPTIONS, "Параметры"))).type(OBJECT).attributes(IS_OPTIONAL),
+                    fieldWithPath(".namesGenerationStrategy").type(STRING).description("Стратегия генерации имен состояний при построении автомата").attributes(IS_REQUIRED));
 
     public static final ResponseFieldsSnippet BUILD_LR0_AUTOMATON_RESPONSE = responseFields()
             .andWithPrefix("automaton",
-                    fieldWithPath("").description("Построенный <<automaton,LR(0)-автомат>>").attributes(IS_REQUIRED),
-                    fieldWithPath(".states").description("<<automatonStates,Состояния>> автомата").attributes(IS_REQUIRED),
+                    fieldWithPath("").description("Построенный %s".formatted(createHyperLink(AUTOMATON, "LR(0)-автомат"))).attributes(IS_REQUIRED),
+                    fieldWithPath(".states").description("%s автомата".formatted(createHyperLink(AUTOMATON_STATES, "Состояния"))).attributes(IS_REQUIRED),
                     fieldWithPath(".states[].name").description("Имя состояния").attributes(IS_REQUIRED),
-                    fieldWithPath(".states[].items").description("<<lrItems,LR(0)-пункты>> в состоянии").attributes(IS_REQUIRED),
+                    fieldWithPath(".states[].items").description("%s в состоянии".formatted(createHyperLink(LR_ITEMS, "LR(0)-пункты"))).attributes(IS_REQUIRED),
                     fieldWithPath(".states[].items[].rule").description("Правило грамматики пункта").attributes(IS_REQUIRED),
                     fieldWithPath(".states[].items[].rule.left").description("Левая часть правила").attributes(IS_REQUIRED),
                     fieldWithPath(".states[].items[].rule.right").description("Правая часть правила").attributes(IS_REQUIRED),
                     fieldWithPath(".states[].items[].dotIndex").description("Позиция точки в правой части правила").attributes(IS_REQUIRED),
-                    fieldWithPath(".transitions").description("<<automatonTransitions,Переходы>> между состояниями автомата").attributes(IS_REQUIRED),
+                    fieldWithPath(".transitions").description("%s между состояниями автомата".formatted(createHyperLink(AUTOMATON_TRANSITIONS, "Переходы"))).attributes(IS_REQUIRED),
                     fieldWithPath(".transitions[].from").description("Исходное состояние").attributes(IS_REQUIRED),
                     fieldWithPath(".transitions[].to").description("Целевое состояние").attributes(IS_REQUIRED),
                     fieldWithPath(".transitions[].through").description("Символ перехода").attributes(IS_REQUIRED))
             .andWithPrefix("buildLog",
-                    fieldWithPath("").description("<<buildLog,Лог построения автомата>>").attributes(IS_REQUIRED),
+                    fieldWithPath("").description(createHyperLink(BUILD_LOG, "Лог построения автомата")).attributes(IS_REQUIRED),
                     fieldWithPath(".operations").description("Последовательность операций построения").attributes(IS_REQUIRED),
                     fieldWithPath(".operations[].message").description("Человекочитаемое описание операции").attributes(IS_REQUIRED),
                     fieldWithPath(".operations[].level").description("Тип операции").attributes(IS_REQUIRED),
@@ -80,7 +82,7 @@ public class DocumentationConstants {
                     fieldWithPath(".operations[].through").optional().description("Символ перехода").attributes(IS_OPTIONAL));
 
     public static final ResponseFieldsSnippet BUILD_LR1_AUTOMATON_RESPONSE = BUILD_LR0_AUTOMATON_RESPONSE.and(
-            fieldWithPath("automaton.states[].items[].lookAheadSymbol").description("Терминальный символ (или символ завершения строки `⊣`)").attributes(IS_REQUIRED),
+            fieldWithPath("automaton.states[].items[].lookAheadSymbol").description("Терминальный символ (или символ завершения строки `%s`)".formatted(END_OF_CHAIN_SYMBOL)).attributes(IS_REQUIRED),
             fieldWithPath("buildLog.operations[].item.lookAheadSymbol").optional().description("Терминальный символ (или символ завершения строки `⊣`)").attributes(IS_OPTIONAL));
 
     private DocumentationConstants() {
