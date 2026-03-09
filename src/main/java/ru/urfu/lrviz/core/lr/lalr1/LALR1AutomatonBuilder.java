@@ -17,8 +17,14 @@ public class LALR1AutomatonBuilder extends LR0AutomatonBuilder {
         super(grammarService);
     }
 
+    /**
+     * Распространение и спонтанная генерация символов предпросмотра
+     *
+     * @return
+     */
     @Override
     public AutomatonType getBuildType() {
         return LALR;
     }
+
 }

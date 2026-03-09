@@ -22,7 +22,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
 
     public LRAutomaton build(Grammar grammar, BuildContext context) {
         Grammar extendedGrammar = new Grammar(grammar);
-        grammarService.extendGrammar(extendedGrammar);
+        grammarService.expandGrammar(extendedGrammar);
         context.getBuildLog().append(new ExtendGrammarOperation());
         String startStateName = initStartState(extendedGrammar, context);
         Queue<String> processingStates = new ArrayDeque<>(Collections.singleton(startStateName));
