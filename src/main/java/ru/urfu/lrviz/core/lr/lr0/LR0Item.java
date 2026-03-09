@@ -10,14 +10,6 @@ public final class LR0Item extends LRItem {
         super(rule, dotIndex);
     }
 
-    public static LR0Item ofInitial(Rule rule) {
-        return new LR0Item(rule, 0);
-    }
-
-    public static LR0Item ofFinal(Rule rule) {
-        return new LR0Item(rule, rule.right().size());
-    }
-
     public LR0Item shift() {
         return new LR0Item(getRule(), getDotIndex() + 1);
     }
@@ -39,5 +31,13 @@ public final class LR0Item extends LRItem {
     @Override
     public String asString() {
         return "[" + ruleToString() + "]";
+    }
+
+    public static LR0Item ofInitial(Rule rule) {
+        return new LR0Item(rule, 0);
+    }
+
+    public static LR0Item ofFinal(Rule rule) {
+        return new LR0Item(rule, rule.right().size());
     }
 }
