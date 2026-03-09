@@ -994,7 +994,7 @@ p a>code:hover {
 
 	#toc.toc2 {
 		position: fixed;
-		width: 20em;
+		width: 25em;
 		left: 0;
 		top: 0;
 		border-right: 1px solid #dddddd;
@@ -1069,7 +1069,7 @@ p a>code:hover {
 }
 
 #footer {
-	max-width: 100%;
+	max-width: 80%;
 	background-color: black;
 	padding: 1.25em;
 }
