@@ -10,6 +10,9 @@ import ru.urfu.lrviz.core.lr.state.name.generation.EndToEndNumerationStateNameGe
 import ru.urfu.lrviz.core.lr.state.name.generation.StateNameGenerator;
 
 import java.util.HashMap;
+import java.util.Objects;
+
+import static ru.urfu.lrviz.core.lr.lalr1.LALR1BuildAlgorithm.CLASSIC;
 
 /**
  * Билдер контекста для построения LR-автоматов
@@ -25,10 +28,24 @@ public class BuildContextCreator {
         this.grammarService = grammarService;
     }
 
+    public BuildContext createContext(AutomatonType automatonType, Grammar grammar, BuildOptions options) {
+        return switch (automatonType) {
+            case LR_0 -> createLR0Context(options);
+            case LR_1 -> createLR1Context(grammar, options);
+            case LALR -> createLALR1Context(grammar, options);
+        };
+    }
+
+    private BuildContext createLALR1Context(Grammar grammar, BuildOptions options) {
+        BuildContext buildContext = createLR1Context(grammar, options);
+        buildContext.setLalr1BuildAlgorithm(Objects.requireNonNullElse(options.lalr1BuildAlgorithm(), CLASSIC));
+        return buildContext;
+    }
+
     /**
      * @return контекст для построения LR(1)-автомата
      */
-    public BuildContext createLR1Context(Grammar grammar, BuildOptions rawContext) {
+    private BuildContext createLR1Context(Grammar grammar, BuildOptions rawContext) {
         BuildContext context = createLR0Context(rawContext);
         context.setFirstCalculator(new FirstCalculator(grammarService.getFirst(grammar)));
         return context;
@@ -37,7 +54,7 @@ public class BuildContextCreator {
     /**
      * @return контекст для построения LR(0)-автомата
      */
-    public BuildContext createLR0Context(BuildOptions buildOptions) {
+    private BuildContext createLR0Context(BuildOptions buildOptions) {
         BuildContext buildContext = new BuildContext();
         buildContext.setBuildLog(new BuildLog());
         buildContext.setStateNamesGenerator(getNameGenerator(buildOptions.namesGenerationStrategy()));
