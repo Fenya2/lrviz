@@ -63,7 +63,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
      * @return имена новых добавленных в автомат состояний при обработке состояния с именем {@code stateName}
      */
     private Set<String> processState(String stateName, Grammar grammar, BuildContext context) {
-        HashSet<String> newStates = new HashSet<>();
+        HashSet<String> newStates = new LinkedHashSet<>();
         LRState state = context.getNamedStates().get(stateName);
         Set<LRItem> stateItems = state.items();
         Map<GrammarSymbol, Set<LRItem>> groupedByDotSymbol = groupItemsByDotSymbol(stateItems);
@@ -106,7 +106,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
             }
             Rule rule = item.getRule();
             GrammarSymbol dotSymbol = rule.right().get(item.getDotIndex());
-            grouped.computeIfAbsent(dotSymbol, _ -> new HashSet<>()).add(item);
+            grouped.computeIfAbsent(dotSymbol, _ -> new LinkedHashSet<>()).add(item);
         }
         return grouped;
     }
@@ -120,8 +120,8 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
     }
 
     private LRState closureState(LRState state, Grammar grammar, BuildContext context) {
-        HashSet<LRItem> processedItems = new HashSet<>();
-        Set<LRItem> newStateItems = new HashSet<>(state.items());
+        HashSet<LRItem> processedItems = new LinkedHashSet<>();
+        Set<LRItem> newStateItems = new LinkedHashSet<>(state.items());
         Queue<LRItem> processingItems = new ArrayDeque<>(state.items());
         while (!processingItems.isEmpty()) {
             LRItem item = processingItems.poll();

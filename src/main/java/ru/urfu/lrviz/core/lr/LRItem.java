@@ -57,7 +57,7 @@ public abstract class LRItem {
         return asString();
     }
 
-    protected String ruleToString() {
+    protected final String ruleToString() {
         return rule.left() + "→"
                 + String.join("", rule.right().subList(0, dotIndex).stream().map(grammarSymbol -> grammarSymbol.lexicalValue).toList())
                 + "•"
