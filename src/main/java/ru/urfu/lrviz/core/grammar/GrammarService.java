@@ -8,7 +8,7 @@ public interface GrammarService {
     /**
      * Расширяет грамматику {@code grammar}
      */
-    void extendGrammar(Grammar grammar);
+    void expandGrammar(Grammar grammar);
 
     /**
      * Проверяет, что грамматика {@code grammar} является расширенной

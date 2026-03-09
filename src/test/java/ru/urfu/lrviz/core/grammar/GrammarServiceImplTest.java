@@ -23,7 +23,7 @@ class GrammarServiceImplTest {
     private GrammarServiceImpl grammarService;
 
     @Test
-    void extendGrammarExpectNewStartSymbolAndRule() {
+    void expandGrammarExpectNewStartSymbolAndRule() {
         Terminal singleTerminal = new Terminal("a");
         NonTerminal startSymbol = new NonTerminal("S");
         Set<Terminal> terminals = Collections.singleton(singleTerminal);
@@ -31,7 +31,7 @@ class GrammarServiceImplTest {
         Set<Rule> rules = Collections.singleton(new Rule(startSymbol, singleTerminal));
         Grammar grammar = new Grammar(terminals, nonTerminals, rules, startSymbol);
 
-        grammarService.extendGrammar(grammar);
+        grammarService.expandGrammar(grammar);
 
         NonTerminal newStartSymbol = new NonTerminal("S'");
         assertEquals(newStartSymbol, grammar.getStartSymbol());
@@ -39,7 +39,7 @@ class GrammarServiceImplTest {
     }
 
     @Test
-    void extendGrammarWhenStartSymbolAlreadyHasApostropheExpectMultipleApostrophes() {
+    void expandGrammarWhenStartSymbolAlreadyHasApostropheExpectMultipleApostrophes() {
         Terminal singleTerminal = new Terminal("a");
         NonTerminal originalStartSymbol = new NonTerminal("S");
         NonTerminal startSymbol = new NonTerminal("S'");
@@ -50,7 +50,7 @@ class GrammarServiceImplTest {
                 new Rule(originalStartSymbol, singleTerminal));
         Grammar grammar = new Grammar(terminals, nonTerminals, rules, originalStartSymbol);
 
-        grammarService.extendGrammar(grammar);
+        grammarService.expandGrammar(grammar);
 
         NonTerminal newStartSymbol = new NonTerminal("S''");
         assertEquals(newStartSymbol, grammar.getStartSymbol());
