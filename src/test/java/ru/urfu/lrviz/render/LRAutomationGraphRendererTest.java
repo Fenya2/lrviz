@@ -6,10 +6,10 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.urfu.lrviz.core.lr.BuildOptions;
 import ru.urfu.lrviz.core.GrammarExamples;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.BuildContextCreator;
+import ru.urfu.lrviz.core.lr.BuildOptions;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LRAutomatonBuilders;
 
@@ -53,10 +53,11 @@ class LRAutomationGraphRendererTest {
 
     @Test
     void renderLR0() throws IOException {
+        Grammar grammar = GrammarExamples.get(G_2);
         LRAutomaton automaton = builders.build(
-                GrammarExamples.get(G_2),
+                grammar,
                 LR_0,
-                contextCreator.createLR0Context(BuildOptions.createEmpty()));
+                contextCreator.createContext(LR_0, grammar, BuildOptions.createEmpty()));
         Path renderPath = tempDir.resolve("renderLR0.png");
         render(renderPath, automaton);
     }
@@ -67,7 +68,7 @@ class LRAutomationGraphRendererTest {
         LRAutomaton automaton = builders.build(
                 grammar,
                 LR_1,
-                contextCreator.createLR1Context(grammar, BuildOptions.createEmpty()));
+                contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
         Path renderPath = tempDir.resolve("renderLR1.png");
         render(renderPath, automaton);
     }

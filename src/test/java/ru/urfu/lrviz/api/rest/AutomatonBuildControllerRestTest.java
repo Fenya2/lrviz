@@ -70,7 +70,7 @@ class AutomatonBuildControllerRestTest {
                 .apiVersion(V1)
                 .accept(APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new LRBuildRequestDto(getAsDto(G_1), new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE)))
+                .body(new LRBuildRequestDto(getAsDto(G_1), new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE, null)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(APPLICATION_JSON);

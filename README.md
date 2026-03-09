@@ -42,3 +42,5 @@ http://localhost:8080/api/docs/guide.html
 - https://sourceforge.net/projects/jsmachines/
 - https://www.cs.cornell.edu/courses/cs4120/2022sp/notes.html?id=lr
 - https://www.dickgrune.com/Books/PTAPG_1st_Edition/BookBody.pdf
+- https://dpvipracollege.ac.in/wp-content/uploads/2023/01/Alfred-V.-Aho-Monica-S.-Lam-Ravi-Sethi-Jeffrey-D.-Ullman-Compilers-Principles-Techniques-and-Tools-Pearson_Addison-Wesley-2007.pdf
+- https://simondlevy.academic.wlu.edu/files/courses/cs332w2004/lectures/23_FEB_2004.pdf

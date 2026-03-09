@@ -10,7 +10,6 @@ import ru.urfu.lrviz.core.lr.lr0.LR0Item;
 import ru.urfu.lrviz.core.lr.lr1.LR1Item;
 
 /**
- *
  * @author fenya
  * @since 03.02.2026
  */
@@ -32,6 +31,6 @@ public class LRItemConverter implements Converter<LRItem, LRItemDto> {
         if (item instanceof LR1Item lr1Item) {
             return new LRItemDto(convertedRule, item.getDotIndex(), lr1Item.getLookAheadSymbol().asString());
         }
-        throw new UnsupportedOperationException();
+        throw new IllegalArgumentException("Unable convert LR-item " + item.asString());
     }
 }
