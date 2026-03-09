@@ -17,7 +17,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static ru.urfu.lrviz.api.AutomatonBuildController.DEFAULT_IMAGE_SIZE;
 import static ru.urfu.lrviz.api.rest.docs.snippets.Anchors.*;
-import static ru.urfu.lrviz.core.lr.lr1.EndOfChainSymbol.END_OF_CHAIN_SYMBOL;
 
 /**
  * @author fenya
@@ -49,11 +48,12 @@ public class DocumentationConstants {
                     fieldWithPath(".startSymbol").description("%s грамматики (нетерминал)".formatted(createHyperLink(START_SYMBOL, "Аксиома"))).attributes(IS_REQUIRED))
             .andWithPrefix("buildOptions",
                     fieldWithPath("").optional().description("%s построения LR-автомата".formatted(createHyperLink(BUILD_OPTIONS, "Параметры"))).type(OBJECT).attributes(IS_OPTIONAL),
-                    fieldWithPath(".namesGenerationStrategy").type(STRING).description("Стратегия генерации имен состояний при построении автомата").attributes(IS_REQUIRED));
+                    fieldWithPath(".namesGenerationStrategy").optional().type(STRING).description("Стратегия генерации имен состояний при построении автомата").attributes(IS_OPTIONAL),
+                    fieldWithPath(".lalr1BuildAlgorithm").optional().type(STRING).description("Алгоритм построения LALR(1)-автомата").attributes(IS_OPTIONAL));
 
     public static final ResponseFieldsSnippet BUILD_LR0_AUTOMATON_RESPONSE = responseFields()
             .andWithPrefix("automaton",
-                    fieldWithPath("").description("Построенный %s".formatted(createHyperLink(AUTOMATON, "LR(0)-автомат"))).attributes(IS_REQUIRED),
+                    fieldWithPath("").description("Построенный %s".formatted(createHyperLink(AUTOMATON, "LR-автомат"))).attributes(IS_REQUIRED),
                     fieldWithPath(".states").description("%s автомата".formatted(createHyperLink(AUTOMATON_STATES, "Состояния"))).attributes(IS_REQUIRED),
                     fieldWithPath(".states[].name").description("Имя состояния").attributes(IS_REQUIRED),
                     fieldWithPath(".states[].items").description("%s в состоянии".formatted(createHyperLink(LR_ITEMS, "LR(0)-пункты"))).attributes(IS_REQUIRED),
@@ -82,8 +82,8 @@ public class DocumentationConstants {
                     fieldWithPath(".operations[].through").optional().description("Символ перехода").attributes(IS_OPTIONAL));
 
     public static final ResponseFieldsSnippet BUILD_LR1_AUTOMATON_RESPONSE = BUILD_LR0_AUTOMATON_RESPONSE.and(
-            fieldWithPath("automaton.states[].items[].lookAheadSymbol").description("Терминальный символ (или символ завершения строки `%s`)".formatted(END_OF_CHAIN_SYMBOL)).attributes(IS_REQUIRED),
-            fieldWithPath("buildLog.operations[].item.lookAheadSymbol").optional().description("Терминальный символ (или символ завершения строки `⊣`)").attributes(IS_OPTIONAL));
+            fieldWithPath("automaton.states[].items[].lookAheadSymbol").description("Символ предпросмотра").attributes(IS_REQUIRED),
+            fieldWithPath("buildLog.operations[].item.lookAheadSymbol").optional().description("Символ предпросмотра").attributes(IS_OPTIONAL));
 
     private DocumentationConstants() {
     }

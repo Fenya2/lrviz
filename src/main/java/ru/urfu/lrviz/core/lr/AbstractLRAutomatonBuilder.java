@@ -31,7 +31,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
             context.getBuildLog().append(new StartAddNewTransitionsOperation(stateName));
             processingStates.addAll(processState(stateName, extendedGrammar, context));
         }
-        return new LRAutomaton(Map.copyOf(context.getNamedStates()), Map.copyOf(context.definedTransitions()));
+        return new LRAutomaton(Map.copyOf(context.getNamedStates()), Map.copyOf(context.getDefinedTransitions()));
     }
 
     private String initStartState(Grammar grammar, BuildContext context) {
@@ -72,7 +72,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
             LRState toState = buildTargetState(grammar, entry.getValue(), context);
             if (context.getNamedStates().containsValue(toState)) {
                 String toStateName = getToStateName(toState, context.getNamedStates());
-                context.definedTransitions().put(new LRAutomaton.TransitionKey(stateName, transitionSymbol), toStateName);
+                context.getDefinedTransitions().put(new LRAutomaton.TransitionKey(stateName, transitionSymbol), toStateName);
                 context.getBuildLog().append(new AddTransitionOperation(stateName, toStateName, transitionSymbol));
                 continue;
             }
@@ -80,7 +80,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
             context.getNamedStates().put(newStateName, toState);
             context.getBuildLog().append(new AddStateOperation(newStateName));
             logNewItemsAddition(newStateName, toState.items(), context.getBuildLog());
-            context.definedTransitions().put(new LRAutomaton.TransitionKey(stateName, transitionSymbol), newStateName);
+            context.getDefinedTransitions().put(new LRAutomaton.TransitionKey(stateName, transitionSymbol), newStateName);
             context.getBuildLog().append(new AddTransitionOperation(stateName, newStateName, transitionSymbol));
             newStates.add(newStateName);
         }

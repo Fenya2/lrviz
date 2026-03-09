@@ -21,6 +21,8 @@
 :examples: Примеры
 :fromV1: v1+
 
+:endOfChainSymbol: ⊣
+
 :terminals: terminals
 :nonTerminals: nonTerminals
 :rules: rules
@@ -249,8 +251,8 @@ LR-пункт состоит из:
 * для <<lr0,LR(0)>> и <<lalr1,LALR(1)>> используются link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(0)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(0)-пункт]
 * для <<lr1,LR(1)>> используются link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(1)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(1)-пункты]
 
-В случае использования LR(1)-пунктов, добавляется поле _{item_lookAheadSymbol}_.
-Значением поля является символ из списка рассматриваемых <<terminals,терминалов>> или же символ завершения строки `⊣`.
+В случае использования LR(1)-пунктов, добавляется поле _{item_lookAheadSymbol}_ - символ предпросмотра.
+Значением поля является символ из списка рассматриваемых <<terminals,терминалов>> или же символ завершения строки `{endOfChainSymbol}`.
 
 [#automatonTransitions]
 === Переходы
