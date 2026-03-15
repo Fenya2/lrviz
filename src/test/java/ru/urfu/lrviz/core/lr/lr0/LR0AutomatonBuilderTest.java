@@ -19,12 +19,11 @@ import java.util.Map;
 
 import static ru.urfu.lrviz.core.GrammarExamples.*;
 import static ru.urfu.lrviz.core.lr.AutomatonType.LR_0;
+import static ru.urfu.lrviz.core.lr.state.name.generation.ByTransitionSymbolStateNameGenerator.INIT_AUTOMATON_STATE_NAME;
 
 @SuppressWarnings("java:S117") // имена переменных здесь оправданы
 @SpringBootTest
 class LR0AutomatonBuilderTest {
-
-    private static final String INIT_AUTOMATON_STATE_NAME = "∇";
 
     private final LR0AutomatonBuilder builder;
     private final BuildContextCreator contextCreator;

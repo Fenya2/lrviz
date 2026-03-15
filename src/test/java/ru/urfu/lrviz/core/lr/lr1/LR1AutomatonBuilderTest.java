@@ -19,13 +19,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.urfu.lrviz.core.GrammarExamples.*;
 import static ru.urfu.lrviz.core.lr.AutomatonType.LR_1;
+import static ru.urfu.lrviz.core.lr.state.name.generation.ByTransitionSymbolStateNameGenerator.INIT_AUTOMATON_STATE_NAME;
 
 @SuppressWarnings("java:S117") // Имена переменных здесь оправданы
 @SpringBootTest
 class LR1AutomatonBuilderTest {
-
-    private static final String INIT_AUTOMATON_STATE_NAME = "∇";
-
     private final LR1AutomatonBuilder builder;
     private final BuildContextCreator contextCreator;
 

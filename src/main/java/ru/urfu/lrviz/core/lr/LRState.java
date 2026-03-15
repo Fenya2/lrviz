@@ -22,6 +22,12 @@ public record LRState(Set<LRItem> items) {
         return diff;
     }
 
+    public static LRState merge(LRState state1, LRState state2) {
+        HashSet<LRItem> newItems = new HashSet<>(state1.items);
+        newItems.addAll(state2.items);
+        return new LRState(newItems);
+    }
+
     @Override
     public String toString() {
         return items.toString();
