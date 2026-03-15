@@ -12,7 +12,7 @@ import java.util.Map;
  * начинаяется с 1, увеличивается с шагом 1
  */
 public class ByTransitionSymbolStateNameGenerator implements StateNameGenerator {
-    private static final String INIT_AUTOMATON_STATE_NAME = "∇";
+    public static final String INIT_AUTOMATON_STATE_NAME = "∇";
 
     private final Map<GrammarSymbol, Integer> counters;
 

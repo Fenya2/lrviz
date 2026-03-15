@@ -6,9 +6,7 @@ import ru.urfu.lrviz.core.lr.AutomatonType;
 import ru.urfu.lrviz.core.lr.BuildContext;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LrAutomatonBuilder;
-import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
 import ru.urfu.lrviz.core.lr.lr1.LR1AutomatonBuilder;
-import ru.urfu.lrviz.core.lr.operations.StartBuildLR1Operation;
 
 import static ru.urfu.lrviz.core.lr.AutomatonType.LALR;
 
@@ -18,13 +16,12 @@ import static ru.urfu.lrviz.core.lr.AutomatonType.LALR;
  */
 @Component
 public class LALR1AutomatonBuilder implements LrAutomatonBuilder {
-
     private final LR1AutomatonBuilder lr1AutomatonBuilder;
-    private final LR0AutomatonBuilder lr0AutomatonBuilder;
+    private final ClassicLALR1AutomatonBuilder classicLALR1AutomatonBuilder;
 
-    public LALR1AutomatonBuilder(LR1AutomatonBuilder lr1AutomatonBuilder, LR0AutomatonBuilder lr0AutomatonBuilder) {
+    public LALR1AutomatonBuilder(LR1AutomatonBuilder lr1AutomatonBuilder, ClassicLALR1AutomatonBuilder classicLALR1AutomatonBuilder) {
         this.lr1AutomatonBuilder = lr1AutomatonBuilder;
-        this.lr0AutomatonBuilder = lr0AutomatonBuilder;
+        this.classicLALR1AutomatonBuilder = classicLALR1AutomatonBuilder;
     }
 
     @Override
@@ -37,13 +34,12 @@ public class LALR1AutomatonBuilder implements LrAutomatonBuilder {
         return switch (context.getLalr1BuildAlgorithm()) {
             case CLASSIC -> buildWithClassicAlgorithm(grammar, context);
             case CHANNEL -> buildWithChannelAlgorithm(grammar, context);
+            case null -> throw new IllegalArgumentException("LALR build algorithm is not specified.");
         };
     }
 
     private LRAutomaton buildWithClassicAlgorithm(Grammar grammar, BuildContext context) {
-        context.getBuildLog().append(new StartBuildLR1Operation());
-        LRAutomaton lr1Automaton = lr1AutomatonBuilder.build(grammar, context);
-        throw new UnsupportedOperationException();
+        return classicLALR1AutomatonBuilder.build(lr1AutomatonBuilder.build(grammar, context), context);
     }
 
     private LRAutomaton buildWithChannelAlgorithm(Grammar grammar, BuildContext context) {
