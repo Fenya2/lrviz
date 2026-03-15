@@ -32,6 +32,7 @@
         <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
         <graphviz-java.version>0.18.1</graphviz-java.version>
         <j2html.version>1.6.0</j2html.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <pathOfRenderedDocs>${project.build.directory}/generated-docs</pathOfRenderedDocs>
         <pathOfDocsImages>api/docs/images</pathOfDocsImages>
     </properties>
@@ -80,6 +81,33 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>
