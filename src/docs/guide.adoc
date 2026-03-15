@@ -71,6 +71,9 @@
 :optionNamesGenerationStrategy: namesGenerationStrategy
 :optionNamesGenerationStrategyByTransition: byTransitionSymbol
 :optionNamesGenerationStrategyEndToEndNumeric: endToEndNumeric
+:optionLalr1BuildAlgorithm: lalr1BuildAlgorithm
+:optionLalr1BuildAlgorithmClassic: classic
+:optionLalr1BuildAlgorithmChannel: channel
 
 == Введение
 
@@ -104,22 +107,33 @@ operation::POST/v1/image/png/api/{version}/build/lr0[snippets='request-headers,p
 
 === {pngExample}
 
-image::{images}/renderLr0.png[Пример построения lr0,50%]
+image::{images}/renderLr0.png[Пример построения lr(0),50%]
 
 [#lalr1]
 == POST api/{{fromV1}}/build/lalr1 (json)
 
-IMPORTANT: не реализовано
+Строит link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LALR-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82[LALR(1)-автомат].
+Результат возвращает в формате json.
 
-Строит link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LALR-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82[LALR(1)-автомат]
+operation::POST/v1/application/json/api/{version}/build/lalr1[snippets='request-headers,path-parameters,request-fields,response-headers,response-fields,curl-request']
+
+.{examples}
+[%collapsible]
+====
+operation::POST/v1/application/json/api/{version}/build/lalr1[snippets='http-request,http-response']
+====
 
 [#renderLalr1]
 == POST api/{{fromV1}}/build/lalr1 (png)
 
-IMPORTANT: не реализовано
-
 Строит link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LALR-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82[LALR(1)-автомат].
 Результат возвращает в формате png.
+
+operation::POST/v1/image/png/api/{version}/build/lalr1[snippets='request-headers,path-parameters,query-parameters,request-fields,response-headers,curl-request,http-request']
+
+=== {pngExample}
+
+image::{images}/renderLalr1.png[Пример построения lalr(1),50%]
 
 [#lr1]
 == POST api/{{fromV1}}/build/lr1 (json)
@@ -127,12 +141,12 @@ IMPORTANT: не реализовано
 Строит link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(1)-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82[LR(1)-автомат].
 Результат возвращает в формате json.
 
-operation::POST/v1/application/json/api/{version}/build/lr1[snippets='request-headers,path-parameters,request-fields,response-headers,response-fields,curl-request']
+operation::POST/v1/application/json/api/{version}/build/lalr1[snippets='request-headers,path-parameters,request-fields,response-headers,response-fields,curl-request']
 
 .{examples}
 [%collapsible]
 ====
-operation::POST/v1/application/json/api/{version}/build/lr1[snippets='http-request,http-response']
+operation::POST/v1/application/json/api/{version}/build/lalr1[snippets='http-request,http-response']
 ====
 
 [#renderLr1]
@@ -145,7 +159,7 @@ operation::POST/v1/image/png/api/{version}/build/lr1[snippets='request-headers,p
 
 === {pngExample}
 
-image::{images}/renderLr1.png[Пример построения lr1,50%]
+image::{images}/renderLr1.png[Пример построения lr(1),50%]
 
 [#grammar]
 == Грамматика
@@ -341,14 +355,16 @@ IMPORTANT: LR-автомат полностью восстанавливаетс
 
 В запросах на построение LR-автоматов можно передать параметры, которые будут учитываться при построении
 
+[#buildOption1]
 === {optionNamesGenerationStrategy}
 
 Задает стратегию генерации имен состояния строящегося LR-автомата.
-Поддерживаются 2 стратегии. По умолчанию используется стратегия:
+Поддерживаются 2 стратегии:
 
 *{optionNamesGenerationStrategyByTransition}* - по символу перехода.
 
-Стартовому состоянию дается имя `∇`. Имя очередного состояния, добавляемого в процессе построения формируются в формате:
+Стартовому состоянию дается имя `∇`.
+Имя очередного состояния, добавляемого в процессе построения формируются в формате:
 
 [quote]
 TRANSITION_SYMBOL + NUMBER
@@ -356,10 +372,30 @@ TRANSITION_SYMBOL + NUMBER
 где:
 
 * _TRANSITION_SYMBOL_ - лексическое значение символа, по которому осуществляется переход в новое состояние
-* _NUMBER_ - порядковый номер состояния, присваиваемый автоматически при его добавлении в автомат. Нумерация начинается с 1 для первого добавленного состояния и увеличивается на 1 для каждого нового состояния.
+* _NUMBER_ - порядковый номер состояния, присваиваемый автоматически при его добавлении в автомат.
+Нумерация начинается с 1 для первого добавленного состояния и увеличивается на 1 для каждого нового состояния.
 
 IMPORTANT: используется по умолчанию
 
 *_endToEndNumeric_* - сквозная нумерация состояний.
 
-Стартовому состоянию дается имя `0`. Каждое последующее добавляемое в автомат состояние получает имя в виде следующего целого числа (1, 2, 3, ...).
+Стартовому состоянию дается имя `0`.
+Каждое последующее добавляемое в автомат состояние получает имя в виде следующего целого числа (1, 2, 3, ...).
+
+[#buildOption2]
+=== {optionLalr1BuildAlgorithm}
+
+Задает алгоритм, с применением которого будет строиться <<lalr1,LALR(1)-автомат>>.
+
+Поддерживается 2 алгоритма:
+
+*{optionLalr1BuildAlgorithmClassic}* - классический алгоритм построения LALR(1)-автомата.
+
+Сперва строится <<lr1,LR(1)-автомат>>.
+После чего состояния с одинаковыми множествами link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/%D0%AF%D0%B4%D1%80%D0%BE-LR(1)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82%D0%B0[ядер] объединяются.
+
+IMPORTANT: используется по умолчанию
+
+*{optionLalr1BuildAlgorithmChannel}* - канальный алгоритм.
+
+WARNING: Не поддерживается
