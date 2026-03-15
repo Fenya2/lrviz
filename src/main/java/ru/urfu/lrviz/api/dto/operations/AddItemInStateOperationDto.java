@@ -3,7 +3,6 @@ package ru.urfu.lrviz.api.dto.operations;
 import ru.urfu.lrviz.api.dto.LRItemDto;
 
 /**
- *
  * @author fenya
  * @since 03.02.2026
  */

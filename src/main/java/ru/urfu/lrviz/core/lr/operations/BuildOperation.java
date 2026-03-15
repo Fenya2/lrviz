@@ -5,7 +5,7 @@ public abstract class BuildOperation {
     public final OperationLevel level;
 
 
-    public BuildOperation(String message, OperationLevel level) {
+    BuildOperation(String message, OperationLevel level) {
         this.message = message;
         this.level = level;
     }

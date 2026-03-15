@@ -7,6 +7,7 @@ import ru.urfu.lrviz.core.lr.BuildContext;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LrAutomatonBuilder;
 import ru.urfu.lrviz.core.lr.lr1.LR1AutomatonBuilder;
+import ru.urfu.lrviz.core.lr.operations.BuildLRAutomatonOperation;
 
 import static ru.urfu.lrviz.core.lr.AutomatonType.LALR;
 
@@ -31,6 +32,7 @@ public class LALR1AutomatonBuilder implements LrAutomatonBuilder {
 
     @Override
     public LRAutomaton build(Grammar grammar, BuildContext context) {
+        context.getBuildLog().append(new BuildLRAutomatonOperation(getBuildType()));
         return switch (context.getLalr1BuildAlgorithm()) {
             case CLASSIC -> buildWithClassicAlgorithm(grammar, context);
             case CHANNEL -> buildWithChannelAlgorithm(grammar, context);

@@ -66,6 +66,8 @@
 
 :extendGrammarOperation: extendGrammar
 :startAddNewTransitionsOperation: startAddNewTransitions
+:buildLrAutomatonOperation: buildLrAutomaton
+:compactLRAutomatonOperation: compactLRAutomaton
 :pngExample: Пример ответа
 
 :optionNamesGenerationStrategy: namesGenerationStrategy
@@ -347,8 +349,10 @@ IMPORTANT: LR-автомат полностью восстанавливаетс
 
 === Поддерживемые _{commentLevelOperation}_ операции
 
+* _{buildLrAutomatonOperation}_ - начало построения LR-автомата.
 * _{extendGrammarOperation}_ - расширение исходной грамматики (добавление нового стартового правила).
 * _{startAddNewTransitionsOperation}_ - начало обработки очередного состояния автомата - просмотр LR-пунктов состояния и поиск возможных переходов
+* _{compactLRAutomatonOperation}_ - при построении <<lalr1,LALR(1)-автоматов>> <<buildOption2,классическим алгоритмом>>. Начало ужатия LR(1)-автомата до LALR(1) автомата путем объединения состояний с одинаковыми множествами ядер.
 
 [#buildOptions]
 == Параметры построения автомата
