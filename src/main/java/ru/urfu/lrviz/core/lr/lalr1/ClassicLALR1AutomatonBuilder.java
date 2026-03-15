@@ -5,6 +5,7 @@ import ru.urfu.lrviz.core.lr.BuildContext;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LRState;
 import ru.urfu.lrviz.core.lr.lr0.LR0Item;
+import ru.urfu.lrviz.core.lr.operations.CompactLRAutomatonOperation;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,10 +23,11 @@ import java.util.stream.Collectors;
 public class ClassicLALR1AutomatonBuilder {
     /**
      * @param lr1Automaton LR(1) автомат, который ужимается до LALR(1) автомата
-     * @param context      контекст построения
+     * @param context контекст построения
      * @return LALR(1) автомат
      */
     public LRAutomaton build(LRAutomaton lr1Automaton, BuildContext context) {
+        context.getBuildLog().append(new CompactLRAutomatonOperation());
         Map<String, LRState> lr1States = lr1Automaton.namedStates();
         Map<String, Set<LR0Item>> kernelSets = createKernelSets(lr1States);
         Map<LRAutomaton.TransitionKey, String> lr1Transitions = lr1Automaton.transitions();
