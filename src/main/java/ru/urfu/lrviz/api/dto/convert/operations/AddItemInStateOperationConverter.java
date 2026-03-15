@@ -2,7 +2,7 @@ package ru.urfu.lrviz.api.dto.convert.operations;
 
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.LRItemDto;
 import ru.urfu.lrviz.api.dto.operations.AddItemInStateOperationDto;
 import ru.urfu.lrviz.core.lr.operations.AddItemInStateOperation;
@@ -12,7 +12,7 @@ import ru.urfu.lrviz.core.lr.operations.AddItemInStateOperation;
  * @author fenya
  * @since 03.02.2026
  */
-@Service
+@Component
 public class AddItemInStateOperationConverter implements Converter<AddItemInStateOperation, AddItemInStateOperationDto> {
 
     private final ConversionService conversionService;

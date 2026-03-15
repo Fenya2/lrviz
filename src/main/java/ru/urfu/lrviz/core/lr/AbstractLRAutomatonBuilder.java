@@ -21,6 +21,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
     }
 
     public LRAutomaton build(Grammar grammar, BuildContext context) {
+        context.getBuildLog().append(new BuildLRAutomatonOperation(getBuildType()));
         Grammar extendedGrammar = new Grammar(grammar);
         grammarService.expandGrammar(extendedGrammar);
         context.getBuildLog().append(new ExtendGrammarOperation());
