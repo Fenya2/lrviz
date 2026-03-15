@@ -30,7 +30,6 @@ import static ru.urfu.lrviz.core.lr.state.name.generation.ByTransitionSymbolStat
 @SuppressWarnings("java:S117") // имена переменных здесь оправданы
 @SpringBootTest
 class ClassicLALRAutomatonBuilderTest {
-
     private final LR1AutomatonBuilder lr1AutomatonBuilder;
     private final BuildContextCreator contextCreator;
     private final ClassicLALR1AutomatonBuilder builder;

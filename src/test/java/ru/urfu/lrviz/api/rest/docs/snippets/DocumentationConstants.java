@@ -48,8 +48,11 @@ public class DocumentationConstants {
                     fieldWithPath(".startSymbol").description("%s грамматики (нетерминал)".formatted(createHyperLink(START_SYMBOL, "Аксиома"))).attributes(IS_REQUIRED))
             .andWithPrefix("buildOptions",
                     fieldWithPath("").optional().description("%s построения LR-автомата".formatted(createHyperLink(BUILD_OPTIONS, "Параметры"))).type(OBJECT).attributes(IS_OPTIONAL),
-                    fieldWithPath(".namesGenerationStrategy").optional().type(STRING).description("Стратегия генерации имен состояний при построении автомата").attributes(IS_OPTIONAL),
-                    fieldWithPath(".lalr1BuildAlgorithm").optional().type(STRING).description("Алгоритм построения LALR(1)-автомата").attributes(IS_OPTIONAL));
+                    fieldWithPath(".namesGenerationStrategy").optional().type(STRING).description("%s при построении автомата".formatted(createHyperLink(BUILD_OPTION_NAMES_GENERATION_STRATEGY, "Стратегия генерации имен состояний"))).attributes(IS_OPTIONAL));
+
+    public static final RequestFieldsSnippet BUILD_LALR_AUTOMATON_REQUEST = BUILD_LR_AUTOMATON_REQUEST
+            .andWithPrefix("buildOptions",
+                    fieldWithPath(".lalr1BuildAlgorithm").optional().type(STRING).description(createHyperLink(BUILD_OPTION_LALR1_BUILD_ALGORITHM, "Алгоритм построения LALR(1)-автомата")).attributes(IS_OPTIONAL));
 
     public static final ResponseFieldsSnippet BUILD_LR0_AUTOMATON_RESPONSE = responseFields()
             .andWithPrefix("automaton",
@@ -84,6 +87,8 @@ public class DocumentationConstants {
     public static final ResponseFieldsSnippet BUILD_LR1_AUTOMATON_RESPONSE = BUILD_LR0_AUTOMATON_RESPONSE.and(
             fieldWithPath("automaton.states[].items[].lookAheadSymbol").description("Символ предпросмотра").attributes(IS_REQUIRED),
             fieldWithPath("buildLog.operations[].item.lookAheadSymbol").optional().description("Символ предпросмотра").attributes(IS_OPTIONAL));
+
+    public static final ResponseFieldsSnippet BUILD_LALR1_AUTOMATON_RESPONSE = BUILD_LR1_AUTOMATON_RESPONSE;
 
     private DocumentationConstants() {
     }
