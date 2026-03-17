@@ -14,6 +14,6 @@ import ru.urfu.lrviz.core.lr.operations.AddTransitionOperation;
 public class AddTransitionOperationConverter implements Converter<AddTransitionOperation, AddTransitionOperationDto> {
     @Override
     public AddTransitionOperationDto convert(AddTransitionOperation source) {
-        return new AddTransitionOperationDto(source.message, source.from, source.to, source.through.lexicalValue);
+        return new AddTransitionOperationDto(source.message, source.from, source.to, source.through.asString());
     }
 }

@@ -23,12 +23,15 @@ public class BuildOperationConverter implements Converter<BuildOperation, BuildO
     @Override
     public BuildOperationDto convert(BuildOperation operation) {
         return switch (operation) {
-            case ExtendGrammarOperation _ -> conversionService.convert(operation, ExtendGrammarOperationDto.class);
             case AddStateOperation _ -> conversionService.convert(operation, AddStateOperationDto.class);
             case AddItemInStateOperation _ -> conversionService.convert(operation, AddItemInStateOperationDto.class);
+            case AddTransitionOperation _ -> conversionService.convert(operation, AddTransitionOperationDto.class);
+            case DeleteStateOperation _ -> conversionService.convert(operation, DeleteStateOperationDto.class);
+            case DeleteTransitionOperation _ ->
+                    conversionService.convert(operation, DeleteTransitionOperationDto.class);
+            case ExtendGrammarOperation _ -> conversionService.convert(operation, ExtendGrammarOperationDto.class);
             case StartAddNewTransitionsOperation _ ->
                     conversionService.convert(operation, StartAddNewTransitionsOperationDto.class);
-            case AddTransitionOperation _ -> conversionService.convert(operation, AddTransitionOperationDto.class);
             case BuildLRAutomatonOperation _ ->
                     conversionService.convert(operation, BuildLRAutomatonOperationDto.class);
             case CompactLRAutomatonOperation _ ->
