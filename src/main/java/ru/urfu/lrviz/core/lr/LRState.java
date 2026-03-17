@@ -11,9 +11,14 @@ import java.util.Set;
  * @since 01.02.2026
  */
 public record LRState(Set<LRItem> items) {
+    private static final LRState EMPTY_STATE = new LRState();
 
     public LRState(LRItem... items) {
         this(Set.copyOf(Arrays.asList(items)));
+    }
+
+    public static LRState createEmpty() {
+        return EMPTY_STATE;
     }
 
     public static Set<LRItem> diff(LRState before, LRState after) {

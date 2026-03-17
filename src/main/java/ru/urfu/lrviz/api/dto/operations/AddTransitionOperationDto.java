@@ -4,36 +4,8 @@ package ru.urfu.lrviz.api.dto.operations;
  * @author fenya
  * @since 03.02.2026
  */
-public final class AddTransitionOperationDto extends BuildOperationDto {
-    private final String from;
-    private final String to;
-    private final String through;
-
+public final class AddTransitionOperationDto extends TransitionModificationOperationDto {
     public AddTransitionOperationDto(String message, String from, String to, String through) {
-        super(BuildOperationDto.ACTION_LEVEL, message, "addTransition");
-        this.from = from;
-        this.to = to;
-        this.through = through;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public String getThrough() {
-        return through;
-    }
-
-    @Override
-    public String toString() {
-        return "AddTransitionOperationDto{" +
-                "from='" + from + '\'' +
-                ", to='" + to + '\'' +
-                ", through='" + through + '\'' +
-                '}';
+        super(message, "addTransition", from, to, through);
     }
 }
