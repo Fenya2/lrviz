@@ -13,7 +13,7 @@ public abstract class BuildOperationDto {
     private final String message;
     private final String name;
 
-    public BuildOperationDto(
+    protected BuildOperationDto(
             String level,
             String message, String name) {
         this.level = level;

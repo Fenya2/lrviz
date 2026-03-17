@@ -14,6 +14,6 @@ import ru.urfu.lrviz.core.lr.operations.AddStateOperation;
 public class AddStateOperationConverter implements Converter<AddStateOperation, AddStateOperationDto> {
     @Override
     public AddStateOperationDto convert(AddStateOperation operation) {
-        return new AddStateOperationDto(operation.message, operation.getStateName());
+        return new AddStateOperationDto(operation.message, operation.stateName);
     }
 }

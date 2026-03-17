@@ -8,6 +8,8 @@ import ru.urfu.lrviz.core.lr.operations.*;
 
 import java.util.*;
 
+import static ru.urfu.lrviz.core.lr.BuildLogUtils.logNewItemsAddition;
+
 /**
  * @author fenya
  * @since 07.03.2026
@@ -139,10 +141,4 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
     }
 
     protected abstract Set<LRItem> getNewItems(Grammar grammar, LRItem processingItem, BuildContext context);
-
-    private static void logNewItemsAddition(String stateName, Set<LRItem> newItems, BuildLog log) {
-        for (LRItem item : newItems) {
-            log.append(new AddItemInStateOperation(stateName, item));
-        }
-    }
 }
