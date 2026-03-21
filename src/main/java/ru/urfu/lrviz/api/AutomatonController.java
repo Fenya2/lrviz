@@ -31,7 +31,7 @@ import static ru.urfu.lrviz.render.RenderFormat.PNG;
 @RestController
 @Tag(name = "Построение LR-автоматов")
 @RequestMapping("/build")
-public class AutomatonBuildController {
+public class AutomatonController {
     public static final String DEFAULT_IMAGE_SIZE = "1024";
 
     private final ConversionService conversionService;
@@ -40,7 +40,7 @@ public class AutomatonBuildController {
     private final BuildContextCreator contextCreator;
     private final LRAutomationGraphRenderer renderer;
 
-    public AutomatonBuildController(
+    public AutomatonController(
             ConversionService conversionService,
             LRAutomatonBuilders builders,
             LrBuildResultMapper buildResultMapper,
@@ -73,7 +73,7 @@ public class AutomatonBuildController {
         BuildContext context = contextCreator.createContext(
                 LR_0, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty()));
         LRAutomaton automaton = builders.build(targetGrammar, LR_0, context);
-        StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG));
+        StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG, false));
         return ResponseEntity.ok().contentType(IMAGE_PNG).body(stream);
     }
 
@@ -98,7 +98,7 @@ public class AutomatonBuildController {
         BuildContext context = contextCreator.createContext(
                 LR_1, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty()));
         LRAutomaton automaton = builders.build(targetGrammar, LR_1, context);
-        StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG));
+        StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG, false));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(stream);
     }
 
@@ -123,7 +123,7 @@ public class AutomatonBuildController {
         BuildContext context = contextCreator.createContext(
                 LALR, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty()));
         LRAutomaton automaton = builders.build(targetGrammar, LALR, context);
-        StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG));
+        StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG, true));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(stream);
     }
 }

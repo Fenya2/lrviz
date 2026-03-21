@@ -44,6 +44,10 @@ public abstract class LRItem {
         return dotIndex;
     }
 
+    public boolean isDotSymbolAtTheBeginning() {
+        return dotIndex == 0;
+    }
+
     public boolean isFinal() {
         return dotIndex == rule.right().size();
     }

@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
 import static ru.urfu.lrviz.api.rest.docs.snippets.ImageSnippet.responseImagePng;
+import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.core.GrammarExamples.G_6;
-import static ru.urfu.lrviz.core.GrammarExamples.getAsJson;
 
 /**
  * @author fenya
@@ -53,7 +53,7 @@ class RenderLR0DocsTest extends AbstractMethodDocsTest {
         this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
                         .header(ACCEPT, IMAGE_PNG_VALUE)
                         .contentType(APPLICATION_JSON)
-                        .content(getAsJson(G_6)))
+                        .content(getAsBuildRequestBodyFor(G_6)))
                 .andExpect(status().isOk())
                 .andDo(MvcResult::getAsyncResult)
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(),

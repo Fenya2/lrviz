@@ -15,8 +15,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
+import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.core.GrammarExamples.G_7;
-import static ru.urfu.lrviz.core.GrammarExamples.getAsJson;
 
 /**
  * @author fenya
@@ -50,7 +50,7 @@ class BuildLR1DocsTest extends AbstractMethodDocsTest {
         this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
                         .header(ACCEPT, APPLICATION_JSON_VALUE)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(getAsJson(G_7)))
+                        .content(getAsBuildRequestBodyFor(G_7)))
                 .andExpect(status().isOk())
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestHeaders(ACCEPT_JSON_HEADER),
