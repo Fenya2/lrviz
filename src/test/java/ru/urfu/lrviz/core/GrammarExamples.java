@@ -1,19 +1,11 @@
 package ru.urfu.lrviz.core;
 
-import ru.urfu.lrviz.api.dto.GrammarDto;
-import ru.urfu.lrviz.api.dto.RuleDto;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.grammar.NonTerminal;
 import ru.urfu.lrviz.core.grammar.Rule;
 import ru.urfu.lrviz.core.grammar.Terminal;
 
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -22,9 +14,6 @@ import java.util.Set;
  */
 @SuppressWarnings("java:S117") // имена переменных здесь оправданы
 public class GrammarExamples {
-
-    public static final String JSON_RESOURCES_PATH = "/grammars/api";
-
     /**
      * <pre>
      * D => T L
@@ -117,30 +106,8 @@ public class GrammarExamples {
             G_8, createG8(),
             G_9, createG9());
 
-    public static final Map<String, GrammarDto> DTO_EXAMPLES = Map.of(
-            G_1, createG1Dto()
-    );
-
     public static Grammar get(String name) {
         return EXAMPLES.get(name);
-    }
-
-    public static GrammarDto getAsDto(String name) {
-        return DTO_EXAMPLES.get(name);
-    }
-
-    public static String getAsJson(String grammarName) {
-        try {
-            URL resource = Objects.requireNonNull(GrammarExamples.class.getResource(getResourcePath(grammarName)));
-            Path path = Paths.get(resource.toURI());
-            return Files.readString(path);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static String getResourcePath(String grammarName) {
-        return JSON_RESOURCES_PATH + "/" + grammarName + ".json";
     }
 
     private static Grammar createG1() {
@@ -165,25 +132,6 @@ public class GrammarExamples {
         return new Grammar(terminals, nonTerminals, rules, D);
     }
 
-    /**
-     * <pre>
-     * D => T L
-     * T => i | r
-     * L => L ; a | a
-     * </pre>
-     */
-    private static GrammarDto createG1Dto() {
-        return new GrammarDto(
-                List.of("i", "r", ";", "a"),
-                List.of("D", "T", "L"),
-                List.of(new RuleDto("D", "TL"),
-                        new RuleDto("T", "i"),
-                        new RuleDto("T", "i"),
-                        new RuleDto("L", "L;a"),
-                        new RuleDto("L", "a")),
-                "D"
-        );
-    }
 
     private static Grammar createG2() {
         Terminal a = new Terminal("a");

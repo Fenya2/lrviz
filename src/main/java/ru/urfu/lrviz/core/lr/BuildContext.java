@@ -9,7 +9,7 @@ import java.util.Map;
 
 public final class BuildContext {
     /**
-     * Лош построения автомата
+     * Лог построения автомата
      */
     private BuildLog buildLog;
     /**

@@ -15,7 +15,7 @@ import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
-import static ru.urfu.lrviz.api.AutomatonBuildController.DEFAULT_IMAGE_SIZE;
+import static ru.urfu.lrviz.api.AutomatonController.DEFAULT_IMAGE_SIZE;
 import static ru.urfu.lrviz.api.rest.docs.snippets.Anchors.*;
 
 /**

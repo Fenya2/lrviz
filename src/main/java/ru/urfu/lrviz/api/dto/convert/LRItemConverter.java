@@ -5,9 +5,14 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.LRItemDto;
 import ru.urfu.lrviz.api.dto.RuleDto;
+import ru.urfu.lrviz.core.grammar.Terminal;
 import ru.urfu.lrviz.core.lr.LRItem;
 import ru.urfu.lrviz.core.lr.lr0.LR0Item;
+import ru.urfu.lrviz.core.lr.lr1.EndOfChainSymbol;
 import ru.urfu.lrviz.core.lr.lr1.LR1Item;
+import ru.urfu.lrviz.core.lr.lr1.LookAheadSymbol;
+
+import static ru.urfu.lrviz.api.DomainConstants.END_OF_CHAIN_STRING_REPRESENTATION;
 
 /**
  * @author fenya
@@ -29,8 +34,17 @@ public class LRItemConverter implements Converter<LRItem, LRItemDto> {
             return new LRItemDto(convertedRule, item.getDotIndex(), null);
         }
         if (item instanceof LR1Item lr1Item) {
-            return new LRItemDto(convertedRule, item.getDotIndex(), lr1Item.getLookAheadSymbol().asString());
+            return new LRItemDto(convertedRule, item.getDotIndex(), getLookAhead(lr1Item));
         }
         throw new IllegalArgumentException("Unable convert LR-item " + item.asString());
+    }
+
+    private static String getLookAhead(LR1Item lr1Item) {
+        LookAheadSymbol lookAheadSymbol = lr1Item.getLookAheadSymbol();
+        return switch (lookAheadSymbol) {
+            case EndOfChainSymbol _ -> END_OF_CHAIN_STRING_REPRESENTATION;
+            case Terminal terminal -> terminal.lexicalValue;
+            default -> throw new IllegalArgumentException("Can't convert lookahead " + lookAheadSymbol.asString());
+        };
     }
 }
