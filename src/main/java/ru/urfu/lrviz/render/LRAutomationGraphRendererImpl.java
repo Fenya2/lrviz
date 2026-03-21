@@ -10,7 +10,9 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.LinkSource;
 import guru.nidi.graphviz.model.LinkTarget;
 import guru.nidi.graphviz.model.Node;
+import j2html.tags.ContainerTag;
 import j2html.tags.DomContent;
+import j2html.tags.Tag;
 import j2html.tags.specialized.TableTag;
 import org.springframework.stereotype.Service;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
@@ -41,6 +43,7 @@ public class LRAutomationGraphRendererImpl implements LRAutomationGraphRenderer 
     public static final int TRANSITION_ARROW_WIDTH = 2;
     public static final String LR_STATE_TITLE_BACKGROUND_COLOR = "black";
     public static final String LR_STATE_BACKGROUND_COLOR = "white";
+    public static final String KERNEL_ITEM_COLOR = "red";
 
     @Override
     public void render(LRAutomaton automaton, OutputStream outputStream, RenderParameters parameters) throws IOException {
@@ -48,7 +51,7 @@ public class LRAutomationGraphRendererImpl implements LRAutomationGraphRenderer 
                 .directed()
                 .graphAttr()
                 .with(Rank.dir(LEFT_TO_RIGHT))
-                .with(createNodes(automaton));
+                .with(createNodes(automaton, parameters.highLightBaseItems()));
         Graphviz
                 .fromGraph(graph)
                 .height(parameters.size())
@@ -56,43 +59,44 @@ public class LRAutomationGraphRendererImpl implements LRAutomationGraphRenderer 
                 .toOutputStream(outputStream);
     }
 
-    private List<? extends LinkSource> createNodes(LRAutomaton automaton) {
+    private List<? extends LinkSource> createNodes(LRAutomaton automaton, boolean highlightBaseItems) {
         List<LinkSource> nodes = new ArrayList<>(automaton.namedStates().size());
         for (Map.Entry<String, LRState> entry : automaton.namedStates().entrySet()) {
             String stateName = entry.getKey();
             Node node = node(stateName).with(Shape.M_RECORD)
-                    .with(Label.html(lrStateToHtml(stateName, entry.getValue())))
+                    .with(Label.html(lrStateToHtml(stateName, entry.getValue(), highlightBaseItems)))
                     .link(addTransitions(stateName, automaton.transitions()));
             nodes.add(node);
         }
         return nodes;
     }
 
-    private static String lrStateToHtml(String stateName, LRState state) {
+    private static String lrStateToHtml(String stateName, LRState state, boolean highlightBaseItems) {
         TableTag node = table()
                 .attr("border", "0")
                 .attr("bgcolor", LR_STATE_BACKGROUND_COLOR).with(
                         Stream.concat(
                                 createTitleTag(stateName),
-                                createItemTags(state)));
+                                createItemTags(state, highlightBaseItems)));
         return node.render();
     }
 
     private static Stream<? extends DomContent> createTitleTag(String stateName) {
-        return Stream.of(tr().with(
-                td()
-                        .attr("bgcolor", LR_STATE_TITLE_BACKGROUND_COLOR)
-                        .attr("align", "center")
-                        .with(tag("font").withText(stateName).attr("color", LR_STATE_BACKGROUND_COLOR))));
+        return Stream.of(tr().with(td()
+                .attr("bgcolor", LR_STATE_TITLE_BACKGROUND_COLOR)
+                .attr("align", "center")
+                .with(tag("font").withText(stateName).attr("color", LR_STATE_BACKGROUND_COLOR))));
     }
 
-    private static Stream<? extends DomContent> createItemTags(LRState state) {
+    private static Stream<? extends DomContent> createItemTags(LRState state, boolean highlightBaseItems) {
         return state.items().stream()
-                .map(item ->
-                        tr().with(
-                                td()
-                                        .attr("align", "left")
-                                        .with(tag("font").withText(item.asString()).attr("face", "bold"))));
+                .map(item -> {
+                    ContainerTag<? extends Tag<?>> itemTag = tag("font").withText(item.asString()).attr("face", "bold");
+                    if (highlightBaseItems && !item.isDotSymbolAtTheBeginning()) {
+                        itemTag.attr("color", KERNEL_ITEM_COLOR);
+                    }
+                    return tr().with(td().attr("align", "left").with(itemTag));
+                });
     }
 
     private List<? extends LinkTarget> addTransitions(String stateName, Map<LRAutomaton.TransitionKey, String> transitions) {
