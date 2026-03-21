@@ -19,8 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static ru.urfu.lrviz.core.GrammarExamples.G_2;
-import static ru.urfu.lrviz.core.lr.AutomatonType.LR_0;
-import static ru.urfu.lrviz.core.lr.AutomatonType.LR_1;
+import static ru.urfu.lrviz.core.lr.AutomatonType.*;
 
 /**
  * Тестирование рендера LR-автоматов. Так как библиотека graphviz не гарантирует детерминируемость рендеров от запуска
@@ -33,7 +32,7 @@ import static ru.urfu.lrviz.core.lr.AutomatonType.LR_1;
  */
 @SpringBootTest
 class LRAutomationGraphRendererTest {
-    private static final RenderParameters RENDER_PNG = new RenderParameters(1000, RenderFormat.PNG);
+    private static final RenderParameters RENDER_PNG = new RenderParameters(1000, RenderFormat.PNG, false);
 
     @TempDir(cleanup = CleanupMode.DEFAULT)
     Path tempDir;
@@ -70,6 +69,17 @@ class LRAutomationGraphRendererTest {
                 LR_1,
                 contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
         Path renderPath = tempDir.resolve("renderLR1.png");
+        render(renderPath, automaton);
+    }
+
+    @Test
+    void renderLALR1() throws IOException {
+        Grammar grammar = GrammarExamples.get(G_2);
+        LRAutomaton automaton = builders.build(
+                grammar,
+                LALR,
+                contextCreator.createContext(LALR, grammar, BuildOptions.createEmpty()));
+        Path renderPath = tempDir.resolve("renderLALR1.png");
         render(renderPath, automaton);
     }
 
