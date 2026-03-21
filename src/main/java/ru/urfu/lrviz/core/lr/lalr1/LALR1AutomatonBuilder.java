@@ -6,6 +6,7 @@ import ru.urfu.lrviz.core.lr.AutomatonType;
 import ru.urfu.lrviz.core.lr.BuildContext;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LrAutomatonBuilder;
+import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
 import ru.urfu.lrviz.core.lr.lr1.LR1AutomatonBuilder;
 import ru.urfu.lrviz.core.lr.operations.BuildLRAutomatonOperation;
 
@@ -17,11 +18,15 @@ import static ru.urfu.lrviz.core.lr.AutomatonType.LALR;
  */
 @Component
 public class LALR1AutomatonBuilder implements LrAutomatonBuilder {
+    private final LR0AutomatonBuilder lr0AutomatonBuilder;
     private final LR1AutomatonBuilder lr1AutomatonBuilder;
+    private final ChannelLALR1AutomatonBuilder channelLALR1AutomatonBuilder;
     private final ClassicLALR1AutomatonBuilder classicLALR1AutomatonBuilder;
 
-    public LALR1AutomatonBuilder(LR1AutomatonBuilder lr1AutomatonBuilder, ClassicLALR1AutomatonBuilder classicLALR1AutomatonBuilder) {
+    public LALR1AutomatonBuilder(LR0AutomatonBuilder lr0AutomatonBuilder, LR1AutomatonBuilder lr1AutomatonBuilder, ChannelLALR1AutomatonBuilder channelLALR1AutomatonBuilder, ClassicLALR1AutomatonBuilder classicLALR1AutomatonBuilder) {
+        this.lr0AutomatonBuilder = lr0AutomatonBuilder;
         this.lr1AutomatonBuilder = lr1AutomatonBuilder;
+        this.channelLALR1AutomatonBuilder = channelLALR1AutomatonBuilder;
         this.classicLALR1AutomatonBuilder = classicLALR1AutomatonBuilder;
     }
 
@@ -45,6 +50,6 @@ public class LALR1AutomatonBuilder implements LrAutomatonBuilder {
     }
 
     private LRAutomaton buildWithChannelAlgorithm(Grammar grammar, BuildContext context) {
-        throw new UnsupportedOperationException();
+        return channelLALR1AutomatonBuilder.build(lr0AutomatonBuilder.build(grammar, context), grammar, context);
     }
 }
