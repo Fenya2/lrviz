@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.urfu.lrviz.core.GrammarExamples;
 import ru.urfu.lrviz.core.grammar.Grammar;
-import ru.urfu.lrviz.core.lr.BuildContext;
-import ru.urfu.lrviz.core.lr.BuildContextCreator;
-import ru.urfu.lrviz.core.lr.BuildOptions;
-import ru.urfu.lrviz.core.lr.LRAutomaton;
+import ru.urfu.lrviz.core.lr.*;
 import ru.urfu.lrviz.core.lr.lr0.LR0AutomatonBuilder;
 
 import static ru.urfu.lrviz.core.GrammarExamples.G_9;

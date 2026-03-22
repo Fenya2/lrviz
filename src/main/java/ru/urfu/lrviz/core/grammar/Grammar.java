@@ -1,9 +1,6 @@
 package ru.urfu.lrviz.core.grammar;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,7 +22,7 @@ public class Grammar {
     public Grammar(Grammar grammar) {
         this.terminals = new HashSet<>(grammar.terminals);
         this.nonTerminals = new HashSet<>(grammar.nonTerminals);
-        this.rules = new HashSet<>(grammar.rules);
+        this.rules = new LinkedHashSet<>(grammar.rules);
         this.startSymbol = grammar.startSymbol;
     }
 
@@ -89,6 +86,9 @@ public class Grammar {
         return Collections.unmodifiableSet(nonTerminals);
     }
 
+    /**
+     * @return объединение множеста нетерминалов и терминалов грамматики
+     */
     public Set<GrammarSymbol> getGrammarSymbols() {
         return Stream.concat(terminals.stream(), nonTerminals.stream()).collect(Collectors.toSet());
     }
