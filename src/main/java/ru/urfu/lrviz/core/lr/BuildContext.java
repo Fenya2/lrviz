@@ -24,6 +24,10 @@ public final class BuildContext {
      * Переходы между состояниями автомата, которые будут заполняться в процессе построения
      */
     private Map<LRAutomaton.TransitionKey, String> definedTransitions;
+    /**
+     * Начальный пункт
+     */
+    private LRItem startItem;
     @Nullable
     private FirstCalculator firstCalculator;
     @Nullable
@@ -77,5 +81,13 @@ public final class BuildContext {
 
     public void setLalr1BuildAlgorithm(@Nullable LALR1BuildAlgorithm lalr1BuildAlgorithm) {
         this.lalr1BuildAlgorithm = lalr1BuildAlgorithm;
+    }
+
+    public LRItem getStartItem() {
+        return startItem;
+    }
+
+    public void setStartItem(LRItem startItem) {
+        this.startItem = startItem;
     }
 }

@@ -73,18 +73,19 @@ public class GrammarServiceImpl implements GrammarService {
     public static void calculateForChain(Set<FirstSetMember> result,
                                          List<GrammarSymbol> chain,
                                          Map<GrammarSymbol, Set<FirstSetMember>> firstSetBase) {
+        Epsilon epsilon = Epsilon.getInstance();
         int i = 0;
         for (; i < chain.size(); i++) {
             Set<FirstSetMember> firstSetMembers = firstSetBase.get(chain.get(i));
             Set<FirstSetMember> newMembers = new HashSet<>(firstSetMembers);
-            newMembers.remove(Epsilon.getInstance());
+            newMembers.remove(epsilon);
             result.addAll(newMembers);
-            if (!firstSetMembers.contains(Epsilon.getInstance())) {
+            if (!firstSetMembers.contains(epsilon)) {
                 break;
             }
         }
         if (i == chain.size()) {
-            result.add(Epsilon.getInstance());
+            result.add(epsilon);
         }
     }
 }

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Grammar {
     private final Set<Terminal> terminals;
@@ -86,6 +87,10 @@ public class Grammar {
 
     public Set<NonTerminal> getNonTerminals() {
         return Collections.unmodifiableSet(nonTerminals);
+    }
+
+    public Set<GrammarSymbol> getGrammarSymbols() {
+        return Stream.concat(terminals.stream(), nonTerminals.stream()).collect(Collectors.toSet());
     }
 
     public Set<Rule> getRules() {
