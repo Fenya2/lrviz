@@ -30,6 +30,31 @@ public class ChannelLALR1AutomatonBuilder {
         Map<String, LRState> lalr1AutomatonNamedStates = initLalr1AutomatonStates(lr0Automaton);
         Map<String, Set<LRItem>> lalr1NamedKernels = initLalr1Kernels(lalr1AutomatonNamedStates, context.getStartItem());
 
+        for (GrammarSymbol symbol : grammar.getGrammarSymbols()) {
+            for (Map.Entry<String, Set<LRItem>> namedLalr1Kernel : lalr1NamedKernels.entrySet()) {
+                for (LRItem kernelItem : namedLalr1Kernel.getValue()) {
+                    Set<LR1Item> closedKernel = closureKernelItem(kernelItem, grammar, context);
+                    for (LR1Item item : closedKernel) {
+                        if (!symbol.equals(item.getDotSymbol())) {
+                            continue;
+                        }
+                        LookAheadSymbol lookAheadSymbol = item.getLookAheadSymbol();
+                        if (!(lookAheadSymbol instanceof FictiveGrammarTerminalSymbol)) {
+                            String stateName = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
+                            Set<LRItem> kernel = lalr1NamedKernels.get(stateName);
+                            LRItem forGenerationItem = item.shift();
+                            for (LRItem propagateCandidate : kernel) {
+                                if (equalsByBasePart(forGenerationItem, propagateCandidate)) {
+                                    ((LALR1Item) propagateCandidate).addLookAhead(lookAheadSymbol);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         boolean stabilized;
         do {
             stabilized = true;
@@ -44,30 +69,18 @@ public class ChannelLALR1AutomatonBuilder {
                             LookAheadSymbol lookAheadSymbol = item.getLookAheadSymbol();
                             if (lookAheadSymbol instanceof FictiveGrammarTerminalSymbol) {
                                 Set<LookAheadSymbol> propagateSymbols = ((LALR1Item) kernelItem).getLookAheadSymbols();
-                                String propagateStateName = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
-                                Set<LRItem> propagateKernel = lalr1NamedKernels.get(propagateStateName);
+                                String propagatedStateName = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
+                                Set<LRItem> propagatedKernel = lalr1NamedKernels.get(propagatedStateName);
 
                                 LRItem propagateItem = item.shift();
-                                for (LRItem propagateCandidate : propagateKernel) {
-                                    if (equalsByBasePart(propagateItem, kernelItem)) {
+                                for (LRItem propagateCandidate : propagatedKernel) {
+                                    if (equalsByBasePart(propagateCandidate, propagateItem)) {
                                         boolean isNewPropagation = ((LALR1Item) propagateCandidate).addLookAheads(propagateSymbols);
                                         if (isNewPropagation) {
                                             stabilized = false;
                                         }
                                         break;
                                     }
-                                }
-                            }
-                            String stateName = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
-                            Set<LRItem> kernel = lalr1NamedKernels.get(stateName);
-                            LRItem forGenerationItem = item.shift();
-                            for (LRItem propagateCandidate : kernel) {
-                                if (equalsByBasePart(forGenerationItem, propagateCandidate)) {
-                                    boolean isNewGeneration = ((LALR1Item) propagateCandidate).addLookAhead(lookAheadSymbol);
-                                    if (isNewGeneration) {
-                                        stabilized = false;
-                                    }
-                                    break;
                                 }
                             }
                         }
