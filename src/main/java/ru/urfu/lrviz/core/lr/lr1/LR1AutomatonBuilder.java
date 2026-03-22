@@ -50,7 +50,7 @@ public class LR1AutomatonBuilder extends AbstractLRAutomatonBuilder {
         return newItems;
     }
 
-    private static List<GrammarSymbol> buildChain(LRItem processingItem) {
+    public static List<GrammarSymbol> buildChain(LRItem processingItem) {
         Stream<GrammarSymbol> endOfChain = ((LR1Item) processingItem).getLookAheadSymbol() instanceof Terminal terminal
                 ? Stream.of(terminal)
                 : Stream.empty();
@@ -58,7 +58,7 @@ public class LR1AutomatonBuilder extends AbstractLRAutomatonBuilder {
                 processingItem.getRule().right().stream().skip(processingItem.getDotIndex() + 1L), endOfChain).toList();
     }
 
-    private static Set<FirstSetMember> getFirsSet(List<GrammarSymbol> chain, BuildContext context) {
+    public static Set<FirstSetMember> getFirsSet(List<GrammarSymbol> chain, BuildContext context) {
         return Objects.requireNonNull(context.getFirstCalculator()).calculateForChain(chain);
     }
 }

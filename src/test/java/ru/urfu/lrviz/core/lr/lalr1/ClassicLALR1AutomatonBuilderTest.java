@@ -29,13 +29,13 @@ import static ru.urfu.lrviz.core.lr.state.name.generation.ByTransitionSymbolStat
  */
 @SuppressWarnings("java:S117") // имена переменных здесь оправданы
 @SpringBootTest
-class ClassicLALRAutomatonBuilderTest {
+class ClassicLALR1AutomatonBuilderTest {
     private final LR1AutomatonBuilder lr1AutomatonBuilder;
     private final BuildContextCreator contextCreator;
     private final ClassicLALR1AutomatonBuilder builder;
 
     @Autowired
-    ClassicLALRAutomatonBuilderTest(LR1AutomatonBuilder lr1AutomatonBuilder, BuildContextCreator contextCreator, ClassicLALR1AutomatonBuilder builder) {
+    ClassicLALR1AutomatonBuilderTest(LR1AutomatonBuilder lr1AutomatonBuilder, BuildContextCreator contextCreator, ClassicLALR1AutomatonBuilder builder) {
         this.lr1AutomatonBuilder = lr1AutomatonBuilder;
         this.contextCreator = contextCreator;
         this.builder = builder;

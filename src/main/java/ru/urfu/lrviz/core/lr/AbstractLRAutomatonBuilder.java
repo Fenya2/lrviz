@@ -43,6 +43,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
         Set<Rule> initRules = grammar.getAlternativesFor(grammar.getStartSymbol());
         Rule startRule = initRules.iterator().next();
         LRItem initialItem = getInitialItem(startRule);
+        context.setStartItem(initialItem);
         LRState startState = new LRState(Collections.singleton(initialItem));
         String stateName = context.getStateNamesGenerator().getInitAutomatonStateName();
         context.getBuildLog().append(new AddStateOperation(stateName));
@@ -123,19 +124,17 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
     }
 
     private LRState closureState(LRState state, Grammar grammar, BuildContext context) {
-        HashSet<LRItem> processedItems = new LinkedHashSet<>();
-        Set<LRItem> newStateItems = new LinkedHashSet<>(state.items());
         Queue<LRItem> processingItems = new ArrayDeque<>(state.items());
+        Set<LRItem> newStateItems = new LinkedHashSet<>();
         while (!processingItems.isEmpty()) {
             LRItem item = processingItems.poll();
-            if (processedItems.contains(item) || item.isFinal()) {
+            if (item.isFinal() || newStateItems.contains(item)) {
+                newStateItems.add(item);
                 continue;
             }
             Set<LRItem> newItems = getNewItems(grammar, item, context);
-            newItems.removeAll(processedItems);
-            newStateItems.addAll(newItems);
             processingItems.addAll(newItems);
-            processedItems.add(item);
+            newStateItems.add(item);
         }
         return new LRState(newStateItems);
     }
