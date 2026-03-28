@@ -10,6 +10,9 @@ import java.util.Objects;
  * @since 14.02.2026
  */
 public class LR1Item extends LRItem {
+    /**
+     * Символ предпросмотра
+     */
     private final LookAheadSymbol lookAheadSymbol;
 
     public LR1Item(Rule rule, int dotIndex, LookAheadSymbol lookAheadSymbol) {

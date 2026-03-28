@@ -27,7 +27,7 @@ public class LALR1Item extends LRItem {
     }
 
     /**
-     * Создает пункт на основе базового LR(0)-пункта
+     * Создает пункт на основе LR(0)-пункта
      */
     public static LALR1Item fromLr0Item(LR0Item baseItem) {
         return new LALR1Item(baseItem.getRule(), baseItem.getDotIndex(), new LinkedHashSet<>());
@@ -57,22 +57,23 @@ public class LALR1Item extends LRItem {
         return "[" + ruleToString() + "; " + lookAheads + "]";
     }
 
+    /**
+     * @return символы предпросмотра
+     */
     public Set<LookAheadSymbol> getLookAheadSymbols() {
         return lookAheadSymbols;
     }
 
     /**
      * Добавляет символ предпросмотра
-     *
-     * @return {@code true}, если символа не было
      */
-    public boolean addLookAhead(LookAheadSymbol symbol) {
-        return lookAheadSymbols.add(symbol);
+    public void addLookAhead(LookAheadSymbol symbol) {
+        lookAheadSymbols.add(symbol);
     }
 
     /**
      * Добавляет символы предпросмотра
-     *
+     * @param symbols символы предпросмотра
      * @return {@code true}, если хотя бы одного символа не было
      */
     public boolean addLookAheads(Set<LookAheadSymbol> symbols) {

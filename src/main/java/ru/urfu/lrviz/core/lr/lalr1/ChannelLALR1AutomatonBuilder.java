@@ -23,7 +23,7 @@ import static ru.urfu.lrviz.core.lr.lr1.LR1AutomatonBuilder.getFirsSet;
 public class ChannelLALR1AutomatonBuilder {
     /**
      * @param lr0Automaton построенный lr(0)-автомат
-     * @param context      контекст построения
+     * @param context контекст построения
      * @return LALR(1)-автомат
      */
     public LRAutomaton build(LRAutomaton lr0Automaton, Grammar grammar, BuildContext context) {
@@ -145,7 +145,7 @@ public class ChannelLALR1AutomatonBuilder {
         Set<LR1Item> closedKernel = new LinkedHashSet<>();
         while (!processingItems.isEmpty()) {
             LR1Item item = processingItems.poll();
-            if (closedKernel.contains(item) || item.isFinal()) {
+            if (closedKernel.contains(item) || item.isDotSymbolAtTheEnd()) {
                 closedKernel.add(item);
                 continue;
             }

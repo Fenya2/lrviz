@@ -1,6 +1,8 @@
 package ru.urfu.lrviz.core.lr.lr1;
 
 /**
+ * Символ конца строки
+ *
  * @author fenya
  * @since 14.02.2026
  */
