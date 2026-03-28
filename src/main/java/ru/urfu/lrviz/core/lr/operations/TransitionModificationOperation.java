@@ -3,6 +3,7 @@ package ru.urfu.lrviz.core.lr.operations;
 import ru.urfu.lrviz.core.lr.TransitionSymbol;
 
 /**
+ * Операция манипуляции с переходами LR-автомата (добавление/удаление)
  *
  * @author fenya
  * @since 17.03.2026

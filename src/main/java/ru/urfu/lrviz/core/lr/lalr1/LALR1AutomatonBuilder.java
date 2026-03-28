@@ -13,6 +13,8 @@ import ru.urfu.lrviz.core.lr.operations.BuildLRAutomatonOperation;
 import static ru.urfu.lrviz.core.lr.AutomatonType.LALR;
 
 /**
+ * Строил LALR(1)-автомат
+ *
  * @author fenya
  * @since 07.03.2026
  */
@@ -45,10 +47,25 @@ public class LALR1AutomatonBuilder implements LrAutomatonBuilder {
         };
     }
 
+    /**
+     * Строит LALR(1)-автомат с применением классического алгоритма
+     *
+     * @param grammar грамматика
+     * @param context контекст построения
+     * @return LALR(1)-автомат
+     */
     private LRAutomaton buildWithClassicAlgorithm(Grammar grammar, BuildContext context) {
         return classicLALR1AutomatonBuilder.build(lr1AutomatonBuilder.build(grammar, context), context);
     }
 
+    /**
+     * Строит LALR(1)-автомат с применением эффективного алгоритма построения (через механизм спонтанной генерации и
+     * распространения символов предпросмотра)
+     *
+     * @param grammar грамматика
+     * @param context контекст построения
+     * @return LALR(1)-автомат
+     */
     private LRAutomaton buildWithChannelAlgorithm(Grammar grammar, BuildContext context) {
         return channelLALR1AutomatonBuilder.build(lr0AutomatonBuilder.build(grammar, context), grammar, context);
     }

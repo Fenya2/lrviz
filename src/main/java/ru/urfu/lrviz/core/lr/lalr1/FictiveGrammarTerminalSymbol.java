@@ -14,6 +14,9 @@ public class FictiveGrammarTerminalSymbol extends Terminal implements LookAheadS
     private static final String STRING_REPRESENTATION = "#";
     private static final FictiveGrammarTerminalSymbol instance = new FictiveGrammarTerminalSymbol();
 
+    /**
+     * Экзепляр символа, которого нет в грамматике
+     */
     public static FictiveGrammarTerminalSymbol getInstance() {
         return instance;
     }

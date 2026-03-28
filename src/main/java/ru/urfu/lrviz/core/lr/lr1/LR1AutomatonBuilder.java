@@ -50,12 +50,16 @@ public class LR1AutomatonBuilder extends AbstractLRAutomatonBuilder {
         return newItems;
     }
 
-    public static List<GrammarSymbol> buildChain(LRItem processingItem) {
-        Stream<GrammarSymbol> endOfChain = ((LR1Item) processingItem).getLookAheadSymbol() instanceof Terminal terminal
+    /**
+     * Формирует последовательность символов от символа, который стоит после символа за точкой в {@code lr1Item} до
+     * конца + символ предпросмотра, если он является терминалом
+     */
+    public static List<GrammarSymbol> buildChain(LRItem lr1Item) {
+        Stream<GrammarSymbol> endOfChain = ((LR1Item) lr1Item).getLookAheadSymbol() instanceof Terminal terminal
                 ? Stream.of(terminal)
                 : Stream.empty();
         return Stream.concat(
-                processingItem.getRule().right().stream().skip(processingItem.getDotIndex() + 1L), endOfChain).toList();
+                lr1Item.getRule().right().stream().skip(lr1Item.getDotIndex() + 1L), endOfChain).toList();
     }
 
     public static Set<FirstSetMember> getFirsSet(List<GrammarSymbol> chain, BuildContext context) {

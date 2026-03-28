@@ -5,6 +5,8 @@ import ru.urfu.lrviz.core.lr.AutomatonType;
 import static ru.urfu.lrviz.core.lr.operations.OperationLevel.COMMENT;
 
 /**
+ * Операция начала построения LR-автомата
+ *
  * @author fenya
  * @since 15.03.2026
  */

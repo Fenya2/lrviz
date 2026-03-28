@@ -33,10 +33,17 @@ public final class LR0Item extends LRItem {
         return "[" + ruleToString() + "]";
     }
 
+    /**
+     * Создает LR(0)-пункт из правила {@code rule}. Символ точки помещается в начале правой части правила
+     */
     public static LR0Item ofInitial(Rule rule) {
         return new LR0Item(rule, 0);
     }
 
+    /**
+     *
+     * Создает LR(0)-пункт из правила {@code rule}. Символ точки помещается в конце правой части правила
+     */
     public static LR0Item ofFinal(Rule rule) {
         return new LR0Item(rule, rule.right().size());
     }
