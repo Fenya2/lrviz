@@ -29,7 +29,8 @@ class GrammarControllerRestTest extends AbstractRestTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(APPLICATION_JSON)
-                .expectBody(new ParameterizedTypeReference<Map<String, List<String>>>() {})
+                .expectBody(new ParameterizedTypeReference<Map<String, List<String>>>() {
+                })
                 .isEqualTo(Map.of(
                         "R", List.of("x", "*"),
                         "S", List.of("x", "*"),
