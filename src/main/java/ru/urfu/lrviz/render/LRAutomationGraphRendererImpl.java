@@ -91,7 +91,7 @@ public class LRAutomationGraphRendererImpl implements LRAutomationGraphRenderer 
     private static Stream<? extends DomContent> createItemTags(LRState state, boolean highlightBaseItems) {
         return state.items().stream()
                 .map(item -> {
-                    ContainerTag<? extends Tag<?>> itemTag = tag("font").withText(item.asString()).attr("face", "bold");
+                    ContainerTag<? extends Tag<?>> itemTag = tag("font").withText(item.asString());
                     if (highlightBaseItems && !item.isDotSymbolAtTheBeginning()) {
                         itemTag.attr("color", KERNEL_ITEM_COLOR);
                     }

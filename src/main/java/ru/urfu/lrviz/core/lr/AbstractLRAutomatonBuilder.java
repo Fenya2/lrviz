@@ -11,6 +11,8 @@ import java.util.*;
 import static ru.urfu.lrviz.core.lr.BuildLogUtils.logNewItemsAddition;
 
 /**
+ * Абстрактный билдер LR-автомата
+ *
  * @author fenya
  * @since 07.03.2026
  */
@@ -37,6 +39,13 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
         return new LRAutomaton(Map.copyOf(context.getNamedStates()), Map.copyOf(context.getDefinedTransitions()));
     }
 
+    /**
+     * Добавляет начальноео состояние с начальным пунктом
+     *
+     * @param grammar грамматика (расширенная)
+     * @param context контекст построения
+     * @return имя добавленного состояния
+     */
     private String initStartState(Grammar grammar, BuildContext context) {
         checkGrammarIsExtended(grammar);
 
@@ -54,6 +63,9 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
         return stateName;
     }
 
+    /**
+     * @return начальный LR-пункт из правила
+     */
     protected abstract LRItem getInitialItem(Rule startRule);
 
     private void checkGrammarIsExtended(Grammar grammar) {
@@ -105,7 +117,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
     private static Map<GrammarSymbol, Set<LRItem>> groupItemsByDotSymbol(Set<LRItem> stateItems) {
         Map<GrammarSymbol, Set<LRItem>> grouped = new LinkedHashMap<>();
         for (LRItem item : stateItems) {
-            if (item.isFinal()) {
+            if (item.isDotSymbolAtTheEnd()) {
                 continue;
             }
             Rule rule = item.getRule();
@@ -128,7 +140,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
         Set<LRItem> newStateItems = new LinkedHashSet<>();
         while (!processingItems.isEmpty()) {
             LRItem item = processingItems.poll();
-            if (item.isFinal() || newStateItems.contains(item)) {
+            if (item.isDotSymbolAtTheEnd() || newStateItems.contains(item)) {
                 newStateItems.add(item);
                 continue;
             }

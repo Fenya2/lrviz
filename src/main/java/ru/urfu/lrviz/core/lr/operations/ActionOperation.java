@@ -1,7 +1,7 @@
 package ru.urfu.lrviz.core.lr.operations;
 
 /**
- *
+ * Операция, выполнение которой важно для построения LR-автомата
  * @author fenya
  * @since 17.03.2026
  */

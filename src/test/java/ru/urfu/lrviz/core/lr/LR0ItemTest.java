@@ -21,7 +21,7 @@ class LR0ItemTest {
         LR0Item item = new LR0Item(rule, dotIndex);
         assertEquals(rule, item.getRule());
         assertEquals(dotIndex, item.getDotIndex());
-        assertFalse(item.isFinal());
+        assertFalse(item.isDotSymbolAtTheEnd());
     }
 
     @Test
@@ -43,7 +43,7 @@ class LR0ItemTest {
                 new NonTerminal("S"),
                 List.of(new Terminal("a"), new NonTerminal("B")));
         LR0Item finalItem = new LR0Item(rule, 2);
-        assertTrue(finalItem.isFinal());
+        assertTrue(finalItem.isDotSymbolAtTheEnd());
     }
 
     @Test
@@ -52,7 +52,7 @@ class LR0ItemTest {
                 new NonTerminal("A"),
                 List.of(new Terminal("x"), new Terminal("y"), new Terminal("z")));
         LR0Item item = new LR0Item(rule, 1);
-        assertFalse(item.isFinal());
+        assertFalse(item.isDotSymbolAtTheEnd());
     }
 
     @Test
@@ -63,6 +63,6 @@ class LR0ItemTest {
 
         assertNotNull(item);
         assertEquals(0, item.getDotIndex());
-        assertTrue(item.isFinal());
+        assertTrue(item.isDotSymbolAtTheEnd());
     }
 }

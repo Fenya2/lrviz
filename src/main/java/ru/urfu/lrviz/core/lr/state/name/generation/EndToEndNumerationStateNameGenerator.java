@@ -4,7 +4,7 @@ import ru.urfu.lrviz.core.grammar.GrammarSymbol;
 import ru.urfu.lrviz.core.lr.LRState;
 
 /**
- * Дает каждому новому состоянию новый номер. Нумерация начинается с 0
+ * Дает каждому новому состоянию новый номер. Нумерация начинается с 0, каждый раз увеличивается на 1
  *
  * @author fenya
  * @since 22.02.2026
