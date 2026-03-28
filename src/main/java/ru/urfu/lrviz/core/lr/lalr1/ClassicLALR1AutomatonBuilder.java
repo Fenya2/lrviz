@@ -45,7 +45,7 @@ public class ClassicLALR1AutomatonBuilder {
      * @param namedStates именованные состояние lr(1)-автомата
      * @return ядра для каждого состояния lr(1)-автомата
      * @implNote ядром состояния lr(1)-автомата здесь называется множество lr(0)-пунктов, полученное отбрасыванием
-     * символов предпросмотра у lr(1)-пунктово соответствующего состояния
+     * символов предпросмотра у lr(1)-пунктов у соответствующего состояния
      */
     private Map<String, Set<LR0Item>> createKernelSets(Map<String, LRState> namedStates) {
         return namedStates.entrySet().stream().collect(Collectors.toMap(
@@ -88,7 +88,7 @@ public class ClassicLALR1AutomatonBuilder {
         Map<String, String> newStateNames = HashMap.newHashMap(lr1States.size());
         for (String oldStateName : lr1States.keySet()) {
             for (Set<String> groupedByKernelStateNames : groupedByKernel.values()) {
-                if (groupedByKernelStateNames.contains(oldStateName)) {
+                if (groupedByKernelStateNames.size() > 1 && groupedByKernelStateNames.contains(oldStateName)) {
                     newStateNames.put(oldStateName, context.getStateNamesGenerator().generateForMergingStates(groupedByKernelStateNames));
                     break;
                 }

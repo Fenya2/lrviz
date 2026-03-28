@@ -163,6 +163,20 @@ operation::POST/v1/image/png/api/{version}/build/lr1[snippets='request-headers,p
 
 image::{images}/renderLr1.png[Пример построения lr(1),50%]
 
+[#first]
+== POST api/{{fromV1}}/grammar/first
+
+Строит множества link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/%D0%9C%D0%BD%D0%BE%D0%B6%D0%B5%D1%81%D1%82%D0%B2%D0%BE-FIRST-%D0%BE%D1%82-%D1%86%D0%B5%D0%BF%D0%BE%D1%87%D0%BA%D0%B8[FIRST] для каждого символа грамматики.
+
+operation::POST/v1/application/json/api/{version}/grammar/first[snippets='request-headers,path-parameters,request-fields,response-headers,response-fields,curl-request']
+
+.{examples}
+[%collapsible]
+====
+operation::POST/v1/application/json/api/{version}/grammar/first[snippets='http-request,http-response']
+====
+
+
 [#grammar]
 == Грамматика
 

@@ -11,20 +11,21 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
-import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsBuildRequestBodyFor;
-import static ru.urfu.lrviz.core.GrammarExamples.G_9;
+import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsDto;
+import static ru.urfu.lrviz.core.GrammarExamples.G_2;
 
 /**
  *
  * @author fenya
- * @since 15.03.2026
+ * @since 28.03.2026
  */
-class BuildLALR1DocsTest extends AbstractMethodDocsTest {
-    private static final String DOCUMENTED_PATH = "/api/{version}/build/lalr1";
+class BuildFirstDocsTest extends AbstractMethodDocsTest {
+    private static final String DOCUMENTED_PATH = "/api/{version}/grammar/first";
 
     @Override
     protected HttpMethod getDocumentedMethod() {
@@ -51,13 +52,15 @@ class BuildLALR1DocsTest extends AbstractMethodDocsTest {
         this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
                         .header(ACCEPT, APPLICATION_JSON_VALUE)
                         .contentType(APPLICATION_JSON)
-                        .content(getAsBuildRequestBodyFor(G_9)))
+                        .content(objectMapper.writeValueAsString(getAsDto(G_2))))
                 .andExpect(status().isOk())
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestHeaders(ACCEPT_JSON_HEADER),
                         pathParameters(VERSION_PARAMETER),
-                        BUILD_LALR_AUTOMATON_REQUEST,
+                        requestFields(GRAMMAR_DTO),
                         responseHeaders(CONTENT_TYPE_JSON_HEADER),
-                        BUILD_LALR1_AUTOMATON_RESPONSE));
+                        responseFields(
+                                fieldWithPath("*").description("Символы грамматики").attributes(IS_REQUIRED),
+                                fieldWithPath("*.[]").description("Множество FIRST для соответствующего символа грамматики").attributes(IS_REQUIRED))));
     }
 }

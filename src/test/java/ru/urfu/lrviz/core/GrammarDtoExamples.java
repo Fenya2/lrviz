@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static ru.urfu.lrviz.core.GrammarExamples.G_1;
-import static ru.urfu.lrviz.core.GrammarExamples.G_9;
+import static ru.urfu.lrviz.core.GrammarExamples.*;
 
 /**
  *
@@ -20,14 +19,12 @@ import static ru.urfu.lrviz.core.GrammarExamples.G_9;
  * @since 21.03.2026
  */
 public class GrammarDtoExamples {
-
     public static final String JSON_RESOURCES_PATH = "/grammars/api";
-
 
     public static final Map<String, GrammarDto> DTO_EXAMPLES = Map.of(
             G_1, createG1Dto(),
-            G_9, createG9Dto()
-    );
+            G_2, createG2Dto(),
+            G_9, createG9Dto());
 
     public static GrammarDto getAsDto(String name) {
         return DTO_EXAMPLES.get(name);
@@ -64,6 +61,18 @@ public class GrammarDtoExamples {
                         new RuleDto("L", "L;a"),
                         new RuleDto("L", "a")),
                 "D"
+        );
+    }
+
+    private static GrammarDto createG2Dto() {
+        return new GrammarDto(
+                List.of("a", "b"),
+                List.of("S", "A"),
+                List.of(
+                        new RuleDto("S", "AA"),
+                        new RuleDto("A", "aA"),
+                        new RuleDto("A", "b")),
+                "S"
         );
     }
 
