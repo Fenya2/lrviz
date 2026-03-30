@@ -1,10 +1,10 @@
 package ru.urfu.lrviz.api.openapi;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
-import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,8 +18,8 @@ public class OpenApiConfig {
     public static final String DETAILED_API_DOCS_PATH = "/api/docs/guide.html";
 
     @Bean
-    public OpenAPI openApi() {
-        return new OpenAPI()
+    public OpenApiCustomizer openApi() {
+        return openApi -> openApi
                 .info(new Info()
                         .title("LR Visualizer API")
                         .version("1.0")
