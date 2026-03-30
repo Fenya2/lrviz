@@ -42,7 +42,7 @@ class BuildLALR1DocsTest extends AbstractMethodDocsTest {
     }
 
     @Override
-    protected String getProduces() {
+    protected String getProduces()   {
         return APPLICATION_JSON_VALUE;
     }
 
