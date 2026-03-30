@@ -21,6 +21,7 @@ import static ru.urfu.lrviz.core.lr.AutomatonType.LR_1;
 
 @SpringBootTest
 class ChannelLALR1AutomatonBuilderTest {
+    public static final String CHECK_TRANSITIONS_COUNT_MESSAGE = "Количество переходов из ядра '%s' в автомате, построенном по классическому алгоритму, должно совпадать с количеством переходов из ядра '%s' в автомате, построенном канальным алгоритмом";
     private final LR0AutomatonBuilder lr0AutomatonBuilder;
     private final BuildContextCreator contextCreator;
     private final ChannelLALR1AutomatonBuilder channelLALR1AutomatonBuilder;
@@ -44,36 +45,82 @@ class ChannelLALR1AutomatonBuilderTest {
         BuildContext classicContext = contextCreator.createContext(LR_1, grammar, new BuildOptions(StateNamesGenerationStrategy.END_TO_END_NUMERIC, LALR1BuildAlgorithm.CLASSIC));
         LRAutomaton lr1Automaton = lr1AutomatonBuilder.build(grammar, classicContext);
         LRAutomaton classicLalr = classicLALR1AutomatonBuilder.build(lr1Automaton, classicContext);
-        Set<Set<LRItem>> expectedLalrKernels = getExpectedLalr1Kernels(classicLalr, classicContext);
+        Map<String, Set<LRItem>> expectedLalrKernels = getExpectedLalr1Kernels(classicLalr, classicContext);
 
         BuildContext channelContext = contextCreator.createContext(LALR, grammar, new BuildOptions(StateNamesGenerationStrategy.END_TO_END_NUMERIC, LALR1BuildAlgorithm.CHANNEL));
         LRAutomaton lr0Automaton = lr0AutomatonBuilder.build(grammar, channelContext);
         LRAutomaton channelLalr = channelLALR1AutomatonBuilder.build(lr0Automaton, grammar, channelContext);
-        Set<Set<LR1Item>> actualLalrKernels = getActualLalr1Kernels(channelLalr, channelContext);
-        Assertions.assertEquals(expectedLalrKernels, actualLalrKernels);
+        Map<String, Set<LRItem>> actualLalrKernels = getActualLalr1Kernels(channelLalr, channelContext);
+        Assertions.assertEquals(new HashSet<>(expectedLalrKernels.values()), new HashSet<>(actualLalrKernels.values()));
+        assertTransitionsEqual(classicLalr, classicContext, expectedLalrKernels, channelLalr, actualLalrKernels);
     }
 
-    private static Set<Set<LR1Item>> getActualLalr1Kernels(LRAutomaton channelLalr, BuildContext channelContext) {
+    private static void assertTransitionsEqual(LRAutomaton classicLalr, BuildContext classicContext, Map<String, Set<LRItem>> expectedLalrKernels, LRAutomaton channelLalr, Map<String, Set<LRItem>> actualLalrKernels) {
+        Queue<Set<LRItem>> processingKernels = new ArrayDeque<>(Collections.singleton(Collections.singleton(classicContext.getStartItem())));
+        Set<Set<LRItem>> processedKernels = new HashSet<>();
+        while (!processingKernels.isEmpty()) {
+            Set<LRItem> checkingKernel = processingKernels.poll();
+            if (processedKernels.contains(checkingKernel)) {
+                continue;
+            }
+            String kernelNameInExpected = findKernelName(expectedLalrKernels, checkingKernel);
+            String kernelNameInActual = findKernelName(actualLalrKernels, checkingKernel);
+
+            Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsFromExpectedKernel = getTransitionsFromKernel(classicLalr, kernelNameInExpected);
+            Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsFromActualKernel = getTransitionsFromKernel(channelLalr, kernelNameInActual);
+
+            Assertions.assertEquals(transitionsFromExpectedKernel.size(), transitionsFromActualKernel.size(), CHECK_TRANSITIONS_COUNT_MESSAGE.formatted(kernelNameInExpected, kernelNameInActual));
+
+            for (Map.Entry<LRAutomaton.TransitionKey, String> transitionInExpectedKernel : transitionsFromExpectedKernel) {
+                TransitionSymbol transitionSymbol = transitionInExpectedKernel.getKey().symbol();
+                Map.Entry<LRAutomaton.TransitionKey, String> transitionWithSameSymbolInActualKernel = transitionsFromActualKernel.stream()
+                        .filter(actualTransition -> transitionSymbol.equals(actualTransition.getKey().symbol()))
+                        .findFirst()
+                        .orElseThrow();
+                Set<LRItem> targetKernelInExpected = expectedLalrKernels.get(transitionInExpectedKernel.getValue());
+                Set<LRItem> targetKernelInActual = actualLalrKernels.get(transitionWithSameSymbolInActualKernel.getValue());
+
+                Assertions.assertEquals(targetKernelInExpected, targetKernelInActual);
+                processingKernels.add(targetKernelInExpected);
+                processingKernels.add(targetKernelInActual);
+            }
+            processedKernels.add(checkingKernel);
+        }
+    }
+
+    private static Set<Map.Entry<LRAutomaton.TransitionKey, String>> getTransitionsFromKernel(LRAutomaton classicLalr, String kernelName) {
+        return classicLalr.transitions().entrySet().stream()
+                .filter(transition -> kernelName.equals(transition.getKey().stateName()))
+                .collect(Collectors.toSet());
+    }
+
+    private static String findKernelName(Map<String, Set<LRItem>> expectedLalrKernels, Set<LRItem> checkingKernel) {
+        return expectedLalrKernels.entrySet().stream()
+                .filter(entry -> checkingKernel.equals(entry.getValue()))
+                .map(Map.Entry::getKey).findFirst().orElseThrow();
+    }
+
+    private static Map<String, Set<LRItem>> getActualLalr1Kernels(LRAutomaton channelLalr, BuildContext channelContext) {
         Map<String, LRState> channelLalrStates = channelLalr.namedStates();
-        Set<Set<LR1Item>> actualLalrKernels = HashSet.newHashSet(channelLalrStates.size());
+        Map<String, Set<LRItem>> actualLalrKernels = HashMap.newHashMap(channelLalrStates.size());
         for (Map.Entry<String, LRState> namedState : channelLalrStates.entrySet()) {
-            Set<LR1Item> unfoldedKernel = getLalr1Kernel(namedState.getValue(), channelContext.getStartItem()).stream()
+            Set<LRItem> unfoldedKernel = getLalr1Kernel(namedState.getValue(), channelContext.getStartItem()).stream()
                     .map(LALR1Item.class::cast)
                     .flatMap(
                             lalr1Item -> lalr1Item.getLookAheadSymbols().stream()
                                     .map(lookAheadSymbol -> new LR1Item(lalr1Item.getRule(), lalr1Item.getDotIndex(), lookAheadSymbol)))
                     .collect(Collectors.toSet());
-            actualLalrKernels.add(unfoldedKernel);
+            actualLalrKernels.put(namedState.getKey(), unfoldedKernel);
         }
         return actualLalrKernels;
     }
 
-    private Set<Set<LRItem>> getExpectedLalr1Kernels(LRAutomaton classicLalr, BuildContext classicContext) {
+    private Map<String, Set<LRItem>> getExpectedLalr1Kernels(LRAutomaton classicLalr, BuildContext classicContext) {
         Map<String, LRState> classicLalr1States = classicLalr.namedStates();
-        Set<Set<LRItem>> expectedLalr1Kernels = HashSet.newHashSet(classicLalr1States.size());
+        Map<String, Set<LRItem>> expectedLalr1Kernels = HashMap.newHashMap(classicLalr1States.size());
         for (Map.Entry<String, LRState> namedState : classicLalr1States.entrySet()) {
             Set<LRItem> kernel = getLalr1Kernel(namedState.getValue(), classicContext.getStartItem());
-            expectedLalr1Kernels.add(kernel);
+            expectedLalr1Kernels.put(namedState.getKey(), kernel);
         }
         return expectedLalr1Kernels;
     }
