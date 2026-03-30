@@ -28,6 +28,7 @@ public final class BuildContext {
      * Начальный пункт
      */
     private LRItem startItem;
+
     @Nullable
     private FirstCalculator firstCalculator;
     @Nullable

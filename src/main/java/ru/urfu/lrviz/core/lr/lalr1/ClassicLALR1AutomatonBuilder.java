@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ClassicLALR1AutomatonBuilder {
     /**
      * @param lr1Automaton LR(1) автомат, который ужимается до LALR(1) автомата
-     * @param context контекст построения
+     * @param context      контекст построения
      * @return LALR(1) автомат
      */
     public LRAutomaton build(LRAutomaton lr1Automaton, BuildContext context) {
