@@ -37,7 +37,7 @@ public class LR1AutomatonBuilder extends AbstractLRAutomatonBuilder {
         }
         List<GrammarSymbol> chain = buildChain(processingItem);
         Set<LRItem> newItems = new HashSet<>();
-        for (FirstSetMember member : getFirsSet(chain, context)) {
+        for (FirstSetMember member : getFirstSet(chain, context)) {
             LookAheadSymbol lookAheadSymbol = switch (member) {
                 case Terminal terminal -> terminal;
                 case Epsilon _ -> EndOfChainSymbol.getInstance();
@@ -62,7 +62,7 @@ public class LR1AutomatonBuilder extends AbstractLRAutomatonBuilder {
                 lr1Item.getRule().right().stream().skip(lr1Item.getDotIndex() + 1L), endOfChain).toList();
     }
 
-    public static Set<FirstSetMember> getFirsSet(List<GrammarSymbol> chain, BuildContext context) {
+    public static Set<FirstSetMember> getFirstSet(List<GrammarSymbol> chain, BuildContext context) {
         return Objects.requireNonNull(context.getFirstCalculator()).calculateForChain(chain);
     }
 }

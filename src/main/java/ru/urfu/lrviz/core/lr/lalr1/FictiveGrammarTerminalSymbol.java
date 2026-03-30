@@ -26,6 +26,16 @@ public class FictiveGrammarTerminalSymbol extends Terminal implements LookAheadS
     }
 
     @Override
+    public boolean equals(Object o) {
+        return this == o;
+    }
+
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+
+    @Override
     public String asString() {
         return STRING_REPRESENTATION;
     }

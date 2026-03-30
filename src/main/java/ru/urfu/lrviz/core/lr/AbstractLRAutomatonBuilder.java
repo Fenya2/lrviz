@@ -137,18 +137,18 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
 
     private LRState closureState(LRState state, Grammar grammar, BuildContext context) {
         Queue<LRItem> processingItems = new ArrayDeque<>(state.items());
-        Set<LRItem> newStateItems = new LinkedHashSet<>();
+        Set<LRItem> closedItems = new LinkedHashSet<>();
         while (!processingItems.isEmpty()) {
             LRItem item = processingItems.poll();
-            if (item.isDotSymbolAtTheEnd() || newStateItems.contains(item)) {
-                newStateItems.add(item);
+            if (item.isDotSymbolAtTheEnd() || closedItems.contains(item)) {
+                closedItems.add(item);
                 continue;
             }
             Set<LRItem> newItems = getNewItems(grammar, item, context);
             processingItems.addAll(newItems);
-            newStateItems.add(item);
+            closedItems.add(item);
         }
-        return new LRState(newStateItems);
+        return new LRState(closedItems);
     }
 
     protected abstract Set<LRItem> getNewItems(Grammar grammar, LRItem processingItem, BuildContext context);

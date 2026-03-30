@@ -12,43 +12,52 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.urfu.lrviz.core.lr.lr1.LR1AutomatonBuilder.buildChain;
-import static ru.urfu.lrviz.core.lr.lr1.LR1AutomatonBuilder.getFirsSet;
+import static ru.urfu.lrviz.core.lr.lr1.LR1AutomatonBuilder.getFirstSet;
 
 /**
- *
  * @author fenya
  * @since 21.03.2026
  */
 @Component
 public class ChannelLALR1AutomatonBuilder {
     /**
+     * Ключ к кэшу, хранящем замыкания пункта из LALR(1)-ядра
+     *
+     * @param kernelName имя ядра
+     * @param item       пункт ядра
+     * @author fenya
+     * @since 30.03.2026
+     */
+    public record ClosureCacheKey(String kernelName, LR1Item item) {
+    }
+
+    /**
      * @param lr0Automaton построенный lr(0)-автомат
-     * @param context контекст построения
+     * @param context      контекст построения
      * @return LALR(1)-автомат
      */
     public LRAutomaton build(LRAutomaton lr0Automaton, Grammar grammar, BuildContext context) {
         Map<String, LRState> lalr1AutomatonNamedStates = initLalr1AutomatonStates(lr0Automaton);
         Map<String, Set<LRItem>> lalr1NamedKernels = initLalr1Kernels(lalr1AutomatonNamedStates, context.getStartItem());
+        Map<ClosureCacheKey, Set<LR1Item>> kernelItemClosures = new HashMap<>();
 
         for (GrammarSymbol symbol : grammar.getGrammarSymbols()) {
             for (Map.Entry<String, Set<LRItem>> namedLalr1Kernel : lalr1NamedKernels.entrySet()) {
+                String kernelName = namedLalr1Kernel.getKey();
                 for (LRItem kernelItem : namedLalr1Kernel.getValue()) {
-                    Set<LR1Item> closedKernel = closureKernelItem(kernelItem, grammar, context);
-                    for (LR1Item item : closedKernel) {
+                    LR1Item closingItem = new LR1Item(kernelItem.getRule(), kernelItem.getDotIndex(), FictiveGrammarTerminalSymbol.getInstance());
+                    ClosureCacheKey cacheKey = new ClosureCacheKey(kernelName, closingItem);
+                    Set<LR1Item> closedItem = kernelItemClosures.computeIfAbsent(cacheKey, _ -> closureItem(closingItem, grammar, context));
+                    for (LR1Item item : closedItem) {
                         if (!symbol.equals(item.getDotSymbol())) {
                             continue;
                         }
                         LookAheadSymbol lookAheadSymbol = item.getLookAheadSymbol();
                         if (!(lookAheadSymbol instanceof FictiveGrammarTerminalSymbol)) {
-                            String stateName = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
-                            Set<LRItem> kernel = lalr1NamedKernels.get(stateName);
-                            LRItem forGenerationItem = item.shift();
-                            for (LRItem propagateCandidate : kernel) {
-                                if (equalsByBasePart(forGenerationItem, propagateCandidate)) {
-                                    ((LALR1Item) propagateCandidate).addLookAhead(lookAheadSymbol);
-                                    break;
-                                }
-                            }
+                            String stateForPropagation = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(kernelName, symbol));
+                            Set<LRItem> stateForGeneration = lalr1NamedKernels.get(stateForPropagation);
+                            LALR1Item candidateForGeneration = (LALR1Item) findCandidateForGeneration(item.shift(), stateForGeneration);
+                            candidateForGeneration.addLookAhead(lookAheadSymbol);
                         }
                     }
                 }
@@ -60,8 +69,11 @@ public class ChannelLALR1AutomatonBuilder {
             stabilized = true;
             for (GrammarSymbol symbol : grammar.getGrammarSymbols()) {
                 for (Map.Entry<String, Set<LRItem>> namedLalr1Kernel : lalr1NamedKernels.entrySet()) {
+                    String kernelName = namedLalr1Kernel.getKey();
                     for (LRItem kernelItem : namedLalr1Kernel.getValue()) {
-                        Set<LR1Item> closedKernel = closureKernelItem(kernelItem, grammar, context);
+                        LR1Item closingItem = new LR1Item(kernelItem.getRule(), kernelItem.getDotIndex(), FictiveGrammarTerminalSymbol.getInstance());
+                        ClosureCacheKey cacheKey = new ClosureCacheKey(kernelName, closingItem);
+                        Set<LR1Item> closedKernel = kernelItemClosures.computeIfAbsent(cacheKey, _ -> closureItem(closingItem, grammar, context));
                         for (LR1Item item : closedKernel) {
                             if (!symbol.equals(item.getDotSymbol())) {
                                 continue;
@@ -70,17 +82,10 @@ public class ChannelLALR1AutomatonBuilder {
                             if (lookAheadSymbol instanceof FictiveGrammarTerminalSymbol) {
                                 Set<LookAheadSymbol> propagateSymbols = ((LALR1Item) kernelItem).getLookAheadSymbols();
                                 String propagatedStateName = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
-                                Set<LRItem> propagatedKernel = lalr1NamedKernels.get(propagatedStateName);
-
-                                LRItem propagateItem = item.shift();
-                                for (LRItem propagateCandidate : propagatedKernel) {
-                                    if (equalsByBasePart(propagateCandidate, propagateItem)) {
-                                        boolean isNewPropagation = ((LALR1Item) propagateCandidate).addLookAheads(propagateSymbols);
-                                        if (isNewPropagation) {
-                                            stabilized = false;
-                                        }
-                                        break;
-                                    }
+                                Set<LRItem> stateForPropagation = lalr1NamedKernels.get(propagatedStateName);
+                                LALR1Item candidateForPropagation = (LALR1Item) findCandidateForGeneration(item.shift(), stateForPropagation);
+                                if (candidateForPropagation.addLookAheads(propagateSymbols)) {
+                                    stabilized = false;
                                 }
                             }
                         }
@@ -92,12 +97,21 @@ public class ChannelLALR1AutomatonBuilder {
         return new LRAutomaton(lalr1AutomatonNamedStates, lr0Automaton.transitions());
     }
 
+    private LRItem findCandidateForGeneration(LRItem itemToFind, Set<LRItem> kernelForPropagation) {
+        for (LRItem candidate : kernelForPropagation) {
+            if (equalsByBasePart(itemToFind, candidate)) {
+                return candidate;
+            }
+        }
+        throw new IllegalStateException("Can't find candidate item.");
+    }
+
     /**
      * Создает новый автомат с пустыми lalr(1)-пунктами на основе переданного lr(0)-автомата
      */
     private Map<String, LRState> initLalr1AutomatonStates(LRAutomaton lr0Automaton) {
         Map<String, LRState> namedStates = lr0Automaton.namedStates();
-        Map<String, LRState> lalr1NamedStates = HashMap.newHashMap(namedStates.size());
+        Map<String, LRState> lalr1NamedStates = LinkedHashMap.newLinkedHashMap(namedStates.size());
         for (Map.Entry<String, LRState> namedState : namedStates.entrySet()) {
             Set<LRItem> lalr1StateItems = mapLr0ItemsToEmptyLalr1Items(namedState.getValue().items());
             lalr1NamedStates.put(namedState.getKey(), new LRState(lalr1StateItems));
@@ -139,13 +153,13 @@ public class ChannelLALR1AutomatonBuilder {
     /**
      * Замыкает lr-пункт по символу {@link FictiveGrammarTerminalSymbol}
      */
-    private static Set<LR1Item> closureKernelItem(LRItem kernelItem, Grammar grammar, BuildContext context) {
+    private static Set<LR1Item> closureItem(LR1Item kernelItem, Grammar grammar, BuildContext context) {
         Queue<LR1Item> processingItems = new ArrayDeque<>();
-        processingItems.add(new LR1Item(kernelItem.getRule(), kernelItem.getDotIndex(), FictiveGrammarTerminalSymbol.getInstance()));
+        processingItems.add(kernelItem);
         Set<LR1Item> closedKernel = new LinkedHashSet<>();
         while (!processingItems.isEmpty()) {
             LR1Item item = processingItems.poll();
-            if (closedKernel.contains(item) || item.isDotSymbolAtTheEnd()) {
+            if (item.isDotSymbolAtTheEnd() || closedKernel.contains(item)) {
                 closedKernel.add(item);
                 continue;
             }
@@ -163,7 +177,7 @@ public class ChannelLALR1AutomatonBuilder {
         }
         List<GrammarSymbol> chain = buildChain(processingItem);
         Set<LR1Item> newItems = new HashSet<>();
-        for (FirstSetMember member : getFirsSet(chain, context)) {
+        for (FirstSetMember member : getFirstSet(chain, context)) {
             LookAheadSymbol lookAheadSymbol = switch (member) {
                 case Terminal terminal -> terminal;
                 case Epsilon _ -> EndOfChainSymbol.getInstance();
