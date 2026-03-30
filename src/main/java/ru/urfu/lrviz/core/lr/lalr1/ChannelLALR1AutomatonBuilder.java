@@ -56,7 +56,7 @@ public class ChannelLALR1AutomatonBuilder {
                         if (!(lookAheadSymbol instanceof FictiveGrammarTerminalSymbol)) {
                             String stateForPropagation = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(kernelName, symbol));
                             Set<LRItem> stateForGeneration = lalr1NamedKernels.get(stateForPropagation);
-                            LALR1Item candidateForGeneration = (LALR1Item) findCandidateForGeneration(item.shift(), stateForGeneration);
+                            LALR1Item candidateForGeneration = (LALR1Item) findCandidate(item.shift(), stateForGeneration);
                             candidateForGeneration.addLookAhead(lookAheadSymbol);
                         }
                     }
@@ -83,7 +83,7 @@ public class ChannelLALR1AutomatonBuilder {
                                 Set<LookAheadSymbol> propagateSymbols = ((LALR1Item) kernelItem).getLookAheadSymbols();
                                 String propagatedStateName = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
                                 Set<LRItem> stateForPropagation = lalr1NamedKernels.get(propagatedStateName);
-                                LALR1Item candidateForPropagation = (LALR1Item) findCandidateForGeneration(item.shift(), stateForPropagation);
+                                LALR1Item candidateForPropagation = (LALR1Item) findCandidate(item.shift(), stateForPropagation);
                                 if (candidateForPropagation.addLookAheads(propagateSymbols)) {
                                     stabilized = false;
                                 }
@@ -97,7 +97,7 @@ public class ChannelLALR1AutomatonBuilder {
         return new LRAutomaton(lalr1AutomatonNamedStates, lr0Automaton.transitions());
     }
 
-    private LRItem findCandidateForGeneration(LRItem itemToFind, Set<LRItem> kernelForPropagation) {
+    private LRItem findCandidate(LRItem itemToFind, Set<LRItem> kernelForPropagation) {
         for (LRItem candidate : kernelForPropagation) {
             if (equalsByBasePart(itemToFind, candidate)) {
                 return candidate;
