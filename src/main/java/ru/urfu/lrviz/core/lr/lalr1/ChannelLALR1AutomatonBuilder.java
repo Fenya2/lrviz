@@ -12,6 +12,7 @@ import ru.urfu.lrviz.core.lr.operations.AddLookAheadOperation;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.urfu.lrviz.core.lr.LRItem.equalsByBasePart;
 import static ru.urfu.lrviz.core.lr.lr1.LR1AutomatonBuilder.buildChain;
 import static ru.urfu.lrviz.core.lr.lr1.LR1AutomatonBuilder.getFirstSet;
 
@@ -39,7 +40,7 @@ public class ChannelLALR1AutomatonBuilder {
      */
     public LRAutomaton build(LRAutomaton lr0Automaton, Grammar grammar, BuildContext context) {
         Map<String, LRState> lalr1AutomatonNamedStates = initLalr1AutomatonStates(lr0Automaton);
-        Map<String, Set<LRItem>> lalr1NamedKernels = initLalr1Kernels(lalr1AutomatonNamedStates, context.getStartItem());
+        Map<String, Set<LRItem>> lalr1NamedKernels = initLalr1Kernels(lalr1AutomatonNamedStates, context.getStartItem(), context);
         Map<ClosureCacheKey, Set<LR1Item>> kernelItemClosures = new HashMap<>();
 
         for (GrammarSymbol symbol : grammar.getGrammarSymbols()) {
@@ -127,18 +128,20 @@ public class ChannelLALR1AutomatonBuilder {
      * @param lalr1AutomatonStates lalr(1)-автомат
      * @param startItem            начальный пункт
      */
-    private static Map<String, Set<LRItem>> initLalr1Kernels(Map<String, LRState> lalr1AutomatonStates, LRItem startItem) {
+    private static Map<String, Set<LRItem>> initLalr1Kernels(Map<String, LRState> lalr1AutomatonStates, LRItem startItem, BuildContext context) {
         Map<String, Set<LRItem>> lr0Kernels = HashMap.newHashMap(lalr1AutomatonStates.size());
         for (Map.Entry<String, LRState> namedState : lalr1AutomatonStates.entrySet()) {
             Set<LRItem> lalr1Kernel = getLalr1Kernel(namedState.getValue(), startItem);
+            String stateName = namedState.getKey();
             for (LRItem item : lalr1Kernel) {
                 LALR1Item lalr1Item = (LALR1Item) item;
                 if (equalsByBasePart(startItem, lalr1Item)) {
+                    context.getBuildLog().append(new AddLookAheadOperation(stateName, lalr1Item, EndOfChainSymbol.getInstance()));
                     lalr1Item.addLookAhead(EndOfChainSymbol.getInstance());
                     break;
                 }
             }
-            lr0Kernels.put(namedState.getKey(), lalr1Kernel);
+            lr0Kernels.put(stateName, lalr1Kernel);
         }
         return lr0Kernels;
     }
@@ -195,10 +198,6 @@ public class ChannelLALR1AutomatonBuilder {
         return state.items().stream()
                 .filter(item -> equalsByBasePart(startItem, item) || !item.isDotSymbolAtTheBeginning())
                 .collect(Collectors.toSet());
-    }
-
-    private static boolean equalsByBasePart(LRItem first, LRItem second) {
-        return first.getRule().equals(second.getRule()) && first.getDotIndex() == second.getDotIndex();
     }
 
     private static boolean propagateSymbols(Set<LookAheadSymbol> propagateSymbols, LALR1Item candidateForPropagation, String stateNameForPropagation, BuildContext context) {

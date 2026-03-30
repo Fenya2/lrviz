@@ -85,4 +85,8 @@ public abstract class LRItem {
                 + "•"
                 + String.join("", rule.right().subList(dotIndex, rule.right().size()).stream().map(grammarSymbol -> grammarSymbol.lexicalValue).toList());
     }
+
+    public static boolean equalsByBasePart(LRItem first, LRItem second) {
+        return first.getRule().equals(second.getRule()) && first.getDotIndex() == second.getDotIndex();
+    }
 }
