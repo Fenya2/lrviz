@@ -36,6 +36,7 @@ public class BuildOperationConverter implements Converter<BuildOperation, BuildO
                     conversionService.convert(operation, BuildLRAutomatonOperationDto.class);
             case CompactLRAutomatonOperation _ ->
                     conversionService.convert(operation, CompactLRAutomatonOperationDto.class);
+            case AddLookAheadOperation _ -> conversionService.convert(operation, AddLookAheadOperationDto.class);
             default -> throw new IllegalStateException("Unexpected value: " + operation);
         };
     }
