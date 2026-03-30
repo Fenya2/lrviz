@@ -11,7 +11,7 @@ public final class AddItemInStateOperationDto extends BuildOperationDto {
     private final LRItemDto item;
 
     public AddItemInStateOperationDto(String message, String state, LRItemDto item) {
-        super(BuildOperationDto.ACTION_LEVEL, message, "addItem");
+        super(ACTION_LEVEL, message, "addItem");
         this.item = item;
         this.state = state;
     }

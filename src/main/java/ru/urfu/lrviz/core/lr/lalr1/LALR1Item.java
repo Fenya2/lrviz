@@ -67,16 +67,7 @@ public class LALR1Item extends LRItem {
     /**
      * Добавляет символ предпросмотра
      */
-    public void addLookAhead(LookAheadSymbol symbol) {
-        lookAheadSymbols.add(symbol);
-    }
-
-    /**
-     * Добавляет символы предпросмотра
-     * @param symbols символы предпросмотра
-     * @return {@code true}, если хотя бы одного символа не было
-     */
-    public boolean addLookAheads(Set<LookAheadSymbol> symbols) {
-        return lookAheadSymbols.addAll(symbols);
+    public boolean addLookAhead(LookAheadSymbol symbol) {
+        return lookAheadSymbols.add(symbol);
     }
 }
