@@ -7,6 +7,7 @@ import ru.urfu.lrviz.core.lr.lr0.LR0Item;
 import ru.urfu.lrviz.core.lr.lr1.EndOfChainSymbol;
 import ru.urfu.lrviz.core.lr.lr1.LR1Item;
 import ru.urfu.lrviz.core.lr.lr1.LookAheadSymbol;
+import ru.urfu.lrviz.core.lr.operations.AddLookAheadOperation;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,9 +55,10 @@ public class ChannelLALR1AutomatonBuilder {
                         }
                         LookAheadSymbol lookAheadSymbol = item.getLookAheadSymbol();
                         if (!(lookAheadSymbol instanceof FictiveGrammarTerminalSymbol)) {
-                            String stateForPropagation = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(kernelName, symbol));
-                            Set<LRItem> stateForGeneration = lalr1NamedKernels.get(stateForPropagation);
+                            String stateNameForGeneration = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(kernelName, symbol));
+                            Set<LRItem> stateForGeneration = lalr1NamedKernels.get(stateNameForGeneration);
                             LALR1Item candidateForGeneration = (LALR1Item) findCandidate(item.shift(), stateForGeneration);
+                            context.getBuildLog().append(new AddLookAheadOperation(stateNameForGeneration, candidateForGeneration, lookAheadSymbol));
                             candidateForGeneration.addLookAhead(lookAheadSymbol);
                         }
                     }
@@ -78,13 +80,12 @@ public class ChannelLALR1AutomatonBuilder {
                             if (!symbol.equals(item.getDotSymbol())) {
                                 continue;
                             }
-                            LookAheadSymbol lookAheadSymbol = item.getLookAheadSymbol();
-                            if (lookAheadSymbol instanceof FictiveGrammarTerminalSymbol) {
+                            if (item.getLookAheadSymbol() instanceof FictiveGrammarTerminalSymbol) {
                                 Set<LookAheadSymbol> propagateSymbols = ((LALR1Item) kernelItem).getLookAheadSymbols();
-                                String propagatedStateName = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
-                                Set<LRItem> stateForPropagation = lalr1NamedKernels.get(propagatedStateName);
+                                String stateNameForPropagation = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
+                                Set<LRItem> stateForPropagation = lalr1NamedKernels.get(stateNameForPropagation);
                                 LALR1Item candidateForPropagation = (LALR1Item) findCandidate(item.shift(), stateForPropagation);
-                                if (candidateForPropagation.addLookAheads(propagateSymbols)) {
+                                if (propagateSymbols(propagateSymbols, candidateForPropagation, stateNameForPropagation, context)) {
                                     stabilized = false;
                                 }
                             }
@@ -198,5 +199,16 @@ public class ChannelLALR1AutomatonBuilder {
 
     private static boolean equalsByBasePart(LRItem first, LRItem second) {
         return first.getRule().equals(second.getRule()) && first.getDotIndex() == second.getDotIndex();
+    }
+
+    private static boolean propagateSymbols(Set<LookAheadSymbol> propagateSymbols, LALR1Item candidateForPropagation, String stateNameForPropagation, BuildContext context) {
+        boolean newPropagation = false;
+        for (LookAheadSymbol propagateSymbol : propagateSymbols) {
+            context.getBuildLog().append(new AddLookAheadOperation(stateNameForPropagation, candidateForPropagation, propagateSymbol));
+            if (candidateForPropagation.addLookAhead(propagateSymbol)) {
+                newPropagation = true;
+            }
+        }
+        return newPropagation;
     }
 }

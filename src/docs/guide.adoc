@@ -53,16 +53,21 @@
 :operationName: name
 
 :addStateOperation: addState
-:addStateOperation_stateName: stateName
+:deleteStateOperation: deleteState
+:ModifyStateOperation_stateName: stateName
 
 :addItemOperation: addItem
 :addItemOperation_state: state
 :addItemOperation_item: item
 
 :addTransitionOperation: addTransition
-:addTransitionOperation_from: from
-:addTransitionOperation_to: to
-:addTransitionOperation_through: through
+:deleteTransitionOperation: deleteTransition
+:ModifyTransitionOperation_from: from
+:ModifyTransitionOperation_to: to
+:ModifyTransitionOperation_through: through
+
+:addLookAheadOperation: addLookAheadSymbol
+:addLookAheadOperation_item: item
 
 :extendGrammarOperation: extendGrammar
 :startAddNewTransitionsOperation: startAddNewTransitions
@@ -176,7 +181,6 @@ operation::POST/v1/application/json/api/{version}/grammar/first[snippets='reques
 operation::POST/v1/application/json/api/{version}/grammar/first[snippets='http-request,http-response']
 ====
 
-
 [#grammar]
 == Грамматика
 
@@ -276,7 +280,7 @@ LR-пункт состоит из:
 
 Если правая часть правила пустая (ε-правило), допустимое значение {item_dotIndex} равно `0`.
 
-Состав LR-пунктов зависит от типа строиящегося автомата:
+Состав LR-пунктов зависит от типа строящегося автомата:
 
 * для <<lr0,LR(0)>> и <<lalr1,LALR(1)>> используются link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(0)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(0)-пункт]
 * для <<lr1,LR(1)>> используются link:https://fenya2.github.io/wiki/%D0%9B%D0%9E%D0%98/LR(1)-%D0%BF%D1%83%D0%BD%D0%BA%D1%82[LR(1)-пункты]
@@ -321,11 +325,14 @@ IMPORTANT: LR-автомат полностью восстанавливаетс
 Операция уровня _{actionLevelOperation}_ - ключевая операция, которую необходимо выполнить для построения автомата.
 Без её выполнения автомат будет построен некорректно или его дальнейшее построение окажется вовсе невозможным.
 
-Таких операций всего 3. Вот их имена:
+Таких операций всего 6. Вот их имена:
 
 * _{addStateOperation}_
+* _{deleteStateOperation}_
 * _{addItemOperation}_
 * _{addTransitionOperation}_
+* _{deleteTransitionOperation}_
+* _{addLookAheadOperation}_
 
 Операции уровня _{actionLevelOperation}_ также имеют дополнительные поля (помимо _{operationName}_, _{operationLevel}_, _{operationMessage}_), которые описаны <<actionLevelOperations,ниже>>.
 
@@ -341,7 +348,12 @@ IMPORTANT: LR-автомат полностью восстанавливаетс
 Каждое состояние в автомате имеет уникальное имя.
 
 Операция _{addStateOperation}_ добавляет новое состояние c указанным именем в строящийся LR-автомат.
-В поле _{addStateOperation_stateName}_ операциии _{addStateOperation}_ находится имя добавляемого состояния.
+В поле _{ModifyStateOperation_stateName}_ операциии _{addStateOperation}_ находится имя добавляемого состояния.
+
+==== {deleteStateOperation}
+
+Операция _{deleteStateOperation}_ удаляет состояние c указанным именем в строящемся LR-автомате.
+В поле _{ModifyStateOperation_stateName}_ операциии _{deleteStateOperation}_ находится имя удаляемого состояния.
 
 ==== {addItemOperation}
 
@@ -355,18 +367,31 @@ IMPORTANT: LR-автомат полностью восстанавливаетс
 
 Операция _{addTransitionOperation}_ добавляет переход из одного состояние строящегося LR-автомата в другое.
 
-В поле _{addTransitionOperation_from}_ находится имя состояния LR-автомата из которого осуществляется переход
+* В поле _{ModifyTransitionOperation_from}_ находится имя состояния LR-автомата из которого осуществляется переход
+* В поле _{ModifyTransitionOperation_to}_ находится имя состояния LR-автомата в которое осуществляется переход
+* В поле _{ModifyTransitionOperation_through}_ находится символ <<grammar, грамматики>> через который осуществляется переход
 
-В поле _{addTransitionOperation_to}_ находится имя состояния LR-автомата в которое осуществляется переход
+==== {deleteTransitionOperation}
 
-В поле _{addTransitionOperation_through}_ находится символ <<grammar, грамматики>> через который осуществляется переход
+Операция _{deleteTransitionOperation}_ удаляет переход из одного состояние строящегося LR-автомата в другое.
+
+* В поле _{ModifyTransitionOperation_from}_ находится имя состояния LR-автомата из которого осуществляется переход
+* В поле _{ModifyTransitionOperation_to}_ находится имя состояния LR-автомата в которое осуществляется переход
+* В поле _{ModifyTransitionOperation_through}_ находится символ <<grammar, грамматики>> через который осуществляется переход
+
+==== {addLookAheadOperation}
+
+Операция _{addLookAheadOperation}_ добавляет символ предпросмотра _{item_lookAheadSymbol}_ к LR-пункту _{addItemOperation_item}_ в состоянии с именем {modifystateoperation_statename}.
+
+Пункт _{addItemOperation_item}_, в который добавляется символ, описывается в <<lrItems,секции>>.
 
 === Поддерживемые _{commentLevelOperation}_ операции
 
 * _{buildLrAutomatonOperation}_ - начало построения LR-автомата.
 * _{extendGrammarOperation}_ - расширение исходной грамматики (добавление нового стартового правила).
 * _{startAddNewTransitionsOperation}_ - начало обработки очередного состояния автомата - просмотр LR-пунктов состояния и поиск возможных переходов
-* _{compactLRAutomatonOperation}_ - при построении <<lalr1,LALR(1)-автоматов>> <<buildOption2,классическим алгоритмом>>. Начало ужатия LR(1)-автомата до LALR(1) автомата путем объединения состояний с одинаковыми множествами ядер.
+* _{compactLRAutomatonOperation}_ - при построении <<lalr1,LALR(1)-автоматов>> <<buildOption2,классическим алгоритмом>>.
+Начало ужатия LR(1)-автомата до LALR(1) автомата путем объединения состояний с одинаковыми множествами ядер.
 
 [#buildOptions]
 == Параметры построения автомата

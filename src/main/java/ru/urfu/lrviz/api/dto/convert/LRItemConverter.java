@@ -7,6 +7,7 @@ import ru.urfu.lrviz.api.dto.LRItemDto;
 import ru.urfu.lrviz.api.dto.RuleDto;
 import ru.urfu.lrviz.core.grammar.Terminal;
 import ru.urfu.lrviz.core.lr.LRItem;
+import ru.urfu.lrviz.core.lr.lalr1.LALR1Item;
 import ru.urfu.lrviz.core.lr.lr0.LR0Item;
 import ru.urfu.lrviz.core.lr.lr1.EndOfChainSymbol;
 import ru.urfu.lrviz.core.lr.lr1.LR1Item;
@@ -15,6 +16,8 @@ import ru.urfu.lrviz.core.lr.lr1.LookAheadSymbol;
 import static ru.urfu.lrviz.api.DomainConstants.END_OF_CHAIN_STRING_REPRESENTATION;
 
 /**
+ * Конвертер LR-пунктов
+ *
  * @author fenya
  * @since 03.02.2026
  */
@@ -30,13 +33,11 @@ public class LRItemConverter implements Converter<LRItem, LRItemDto> {
     @Override
     public LRItemDto convert(LRItem item) {
         RuleDto convertedRule = conversionService.convert(item.getRule(), RuleDto.class);
-        if (item instanceof LR0Item) {
-            return new LRItemDto(convertedRule, item.getDotIndex(), null);
-        }
-        if (item instanceof LR1Item lr1Item) {
-            return new LRItemDto(convertedRule, item.getDotIndex(), getLookAhead(lr1Item));
-        }
-        throw new IllegalArgumentException("Unable convert LR-item " + item.asString());
+        return switch (item) {
+            case LR0Item _, LALR1Item _ -> new LRItemDto(convertedRule, item.getDotIndex(), null);
+            case LR1Item lr1Item -> new LRItemDto(convertedRule, item.getDotIndex(), getLookAhead(lr1Item));
+            default -> throw new IllegalArgumentException("Unable convert LR-item " + item.asString());
+        };
     }
 
     private static String getLookAhead(LR1Item lr1Item) {
