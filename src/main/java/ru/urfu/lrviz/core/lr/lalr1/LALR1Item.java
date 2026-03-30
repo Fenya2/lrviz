@@ -4,6 +4,7 @@ import ru.urfu.lrviz.core.grammar.Rule;
 import ru.urfu.lrviz.core.lr.LRItem;
 import ru.urfu.lrviz.core.lr.TransitionSymbol;
 import ru.urfu.lrviz.core.lr.lr0.LR0Item;
+import ru.urfu.lrviz.core.lr.lr1.LR1Item;
 import ru.urfu.lrviz.core.lr.lr1.LookAheadSymbol;
 
 import java.util.LinkedHashSet;
@@ -31,6 +32,16 @@ public class LALR1Item extends LRItem {
      */
     public static LALR1Item fromLr0Item(LR0Item baseItem) {
         return new LALR1Item(baseItem.getRule(), baseItem.getDotIndex(), new LinkedHashSet<>());
+    }
+
+    /**
+     * Создает пункт на основе LR(1)-пункта, добавляя в множество символов предпросмотра символ предпросмотра
+     * переданного пункта
+     */
+    public static LALR1Item fromLr1Item(LR1Item baseItem) {
+        LALR1Item lalr1Item = new LALR1Item(baseItem.getRule(), baseItem.getDotIndex(), new LinkedHashSet<>());
+        lalr1Item.addLookAhead(baseItem.getLookAheadSymbol());
+        return lalr1Item;
     }
 
     @Override

@@ -40,12 +40,6 @@ public class BuildLogUtils {
         }
     }
 
-    public static void logLRStatesAdditions(Set<String> stateNames, BuildLog log) {
-        for (String stateName : stateNames) {
-            log.append(new AddStateOperation(stateName));
-        }
-    }
-
     private BuildLogUtils() {
     }
 }
