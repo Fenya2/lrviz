@@ -35,6 +35,9 @@ class ClassicLALR1AutomatonBuilderTest {
     private final ClassicLALR1AutomatonBuilder builder;
 
     @Autowired
+    private LRAutomatonReconstructor reconstructor;
+
+    @Autowired
     ClassicLALR1AutomatonBuilderTest(LR1AutomatonBuilder lr1AutomatonBuilder, BuildContextCreator contextCreator, ClassicLALR1AutomatonBuilder builder) {
         this.lr1AutomatonBuilder = lr1AutomatonBuilder;
         this.contextCreator = contextCreator;
@@ -49,6 +52,7 @@ class ClassicLALR1AutomatonBuilderTest {
         LRAutomaton expected = lr1AutomatonBuilder.build(grammar, context);
         LRAutomaton actual = builder.build(expected, context);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
@@ -141,6 +145,7 @@ class ClassicLALR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
@@ -205,6 +210,7 @@ class ClassicLALR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
@@ -338,6 +344,7 @@ class ClassicLALR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
@@ -454,5 +461,6 @@ class ClassicLALR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 }

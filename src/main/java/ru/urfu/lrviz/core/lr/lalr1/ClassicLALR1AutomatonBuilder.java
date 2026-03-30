@@ -1,11 +1,10 @@
 package ru.urfu.lrviz.core.lr.lalr1;
 
 import org.springframework.stereotype.Component;
-import ru.urfu.lrviz.core.lr.BuildContext;
-import ru.urfu.lrviz.core.lr.BuildLogUtils;
-import ru.urfu.lrviz.core.lr.LRAutomaton;
-import ru.urfu.lrviz.core.lr.LRState;
+import ru.urfu.lrviz.core.lr.*;
 import ru.urfu.lrviz.core.lr.lr0.LR0Item;
+import ru.urfu.lrviz.core.lr.operations.AddItemInStateOperation;
+import ru.urfu.lrviz.core.lr.operations.AddStateOperation;
 import ru.urfu.lrviz.core.lr.operations.CompactLRAutomatonOperation;
 
 import java.util.HashMap;
@@ -37,7 +36,7 @@ public class ClassicLALR1AutomatonBuilder {
         Map<String, String> newStateNames = getRenamedStates(context, lr1States, groupedByKernel);
         Map<String, LRState> lalr1States = mergeStates(lr1States, newStateNames);
         Map<LRAutomaton.TransitionKey, String> lalr1Transitions = updateTransitions(lr1Transitions, newStateNames);
-        log(context, lr1Transitions, newStateNames, lalr1Transitions);
+        log(context, lr1Transitions, newStateNames, lalr1States, lalr1Transitions);
         return new LRAutomaton(lalr1States, lalr1Transitions);
     }
 
@@ -140,9 +139,9 @@ public class ClassicLALR1AutomatonBuilder {
     }
 
     /**
-     * Логирует операции, приводящие к построению lalr(1)-алгоритма
+     * Логирует операции, приводящие к построению lalr(1)-автомата
      */
-    private static void log(BuildContext context, Map<LRAutomaton.TransitionKey, String> lr1Transitions, Map<String, String> newStateNames, Map<LRAutomaton.TransitionKey, String> lalr1Transitions) {
+    private static void log(BuildContext context, Map<LRAutomaton.TransitionKey, String> lr1Transitions, Map<String, String> newStateNames, Map<String, LRState> lalr1States, Map<LRAutomaton.TransitionKey, String> lalr1Transitions) {
         Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsToRemove = lr1Transitions.entrySet().stream()
                 .filter(entry -> newStateNames.containsKey(entry.getKey().stateName()) || newStateNames.containsKey(entry.getValue()))
                 .collect(Collectors.toSet());
@@ -150,7 +149,13 @@ public class ClassicLALR1AutomatonBuilder {
         BuildLogUtils.logStatesDeletions(newStateNames.keySet(), context.getBuildLog());
 
         HashSet<String> mergedStateNames = new HashSet<>(newStateNames.values());
-        BuildLogUtils.logLRStatesAdditions(mergedStateNames, context.getBuildLog());
+        for (String mergedStateName : mergedStateNames) {
+            context.getBuildLog().append(new AddStateOperation(mergedStateName));
+            for (LRItem item : lalr1States.get(mergedStateName).items()) {
+                context.getBuildLog().append(new AddItemInStateOperation(mergedStateName, item));
+            }
+        }
+
         Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsToAdd = lalr1Transitions.entrySet().stream()
                 .filter(entry -> mergedStateNames.contains(entry.getKey().stateName()) || mergedStateNames.contains(entry.getValue()))
                 .collect(Collectors.toSet());

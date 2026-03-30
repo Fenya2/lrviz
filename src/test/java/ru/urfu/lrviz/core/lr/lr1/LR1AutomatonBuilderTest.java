@@ -8,10 +8,7 @@ import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.grammar.NonTerminal;
 import ru.urfu.lrviz.core.grammar.Rule;
 import ru.urfu.lrviz.core.grammar.Terminal;
-import ru.urfu.lrviz.core.lr.BuildContextCreator;
-import ru.urfu.lrviz.core.lr.BuildOptions;
-import ru.urfu.lrviz.core.lr.LRAutomaton;
-import ru.urfu.lrviz.core.lr.LRState;
+import ru.urfu.lrviz.core.lr.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,17 +23,20 @@ import static ru.urfu.lrviz.core.lr.state.name.generation.ByTransitionSymbolStat
 class LR1AutomatonBuilderTest {
     private final LR1AutomatonBuilder builder;
     private final BuildContextCreator contextCreator;
+    private final LRAutomatonReconstructor reconstructor;
 
     @Autowired
-    LR1AutomatonBuilderTest(LR1AutomatonBuilder builder, BuildContextCreator contextCreator) {
+    LR1AutomatonBuilderTest(LR1AutomatonBuilder builder, BuildContextCreator contextCreator, LRAutomatonReconstructor reconstructor) {
         this.builder = builder;
         this.contextCreator = contextCreator;
+        this.reconstructor = reconstructor;
     }
 
     @Test
     void build1() {
         Grammar grammar = GrammarExamples.get(G_1);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
+        LRAutomaton actual = builder.build(grammar, context);
 
         Terminal INT = new Terminal("i");
         Terminal REAL = new Terminal("r");
@@ -126,12 +126,14 @@ class LR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
     void build2() {
         Grammar grammar = GrammarExamples.get(G_2);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
+        LRAutomaton actual = builder.build(grammar, context);
 
         Terminal a = new Terminal("a");
         Terminal b = new Terminal("b");
@@ -229,12 +231,14 @@ class LR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
     void build3() {
         Grammar grammar = GrammarExamples.get(G_3);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
+        LRAutomaton actual = builder.build(grammar, context);
 
         Terminal LPAREN = new Terminal("(");
         Terminal RPAREN = new Terminal(")");
@@ -346,12 +350,14 @@ class LR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
     void build4() {
         Grammar grammar = GrammarExamples.get(G_4);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
+        LRAutomaton actual = builder.build(grammar, context);
 
         Terminal u = new Terminal("u");
         Terminal v = new Terminal("v");
@@ -479,12 +485,14 @@ class LR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
     void build5() {
         Grammar grammar = GrammarExamples.get(G_5);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
+        LRAutomaton actual = builder.build(grammar, context);
 
         Terminal LPAREN = new Terminal("(");
         Terminal RPAREN = new Terminal(")");
@@ -554,12 +562,14 @@ class LR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
     void build6() {
         Grammar grammar = GrammarExamples.get(G_6);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
+        LRAutomaton actual = builder.build(grammar, context);
 
         Terminal a = new Terminal("a");
         Terminal b = new Terminal("b");
@@ -652,12 +662,14 @@ class LR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
     void build7() {
         Grammar grammar = GrammarExamples.get(G_7);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
+        LRAutomaton actual = builder.build(grammar, context);
 
         Terminal a = new Terminal("a");
         Terminal b = new Terminal("b");
@@ -776,12 +788,14 @@ class LR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 
     @Test
     void build8() {
         Grammar grammar = GrammarExamples.get(G_8);
-        LRAutomaton actual = builder.build(grammar, contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
+        LRAutomaton actual = builder.build(grammar, context);
 
         Terminal i = new Terminal("i");
         Terminal plus = new Terminal("+");
@@ -962,5 +976,6 @@ class LR1AutomatonBuilderTest {
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
+        assertEquals(expected, reconstructor.reconstruct(context.getBuildLog()));
     }
 }

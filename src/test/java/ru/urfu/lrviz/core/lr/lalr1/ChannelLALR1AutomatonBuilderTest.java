@@ -1,6 +1,5 @@
 package ru.urfu.lrviz.core.lr.lalr1;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import ru.urfu.lrviz.core.lr.lr1.LR1Item;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.urfu.lrviz.core.GrammarExamples.*;
 import static ru.urfu.lrviz.core.lr.AutomatonType.LALR;
 import static ru.urfu.lrviz.core.lr.AutomatonType.LR_1;
@@ -30,7 +30,7 @@ class ChannelLALR1AutomatonBuilderTest {
     private final ClassicLALR1AutomatonBuilder classicLALR1AutomatonBuilder;
 
     @Autowired
-    ChannelLALR1AutomatonBuilderTest(LR0AutomatonBuilder lr1AutomatonBuilder, BuildContextCreator contextCreator, ChannelLALR1AutomatonBuilder channelLALR1AutomatonBuilder, LR1AutomatonBuilder lr1AutomatonBuilder1, ClassicLALR1AutomatonBuilder classicLALR1AutomatonBuilder) {
+    ChannelLALR1AutomatonBuilderTest(LR0AutomatonBuilder lr1AutomatonBuilder, BuildContextCreator contextCreator, ChannelLALR1AutomatonBuilder channelLALR1AutomatonBuilder, LR1AutomatonBuilder lr1AutomatonBuilder1, ClassicLALR1AutomatonBuilder classicLALR1AutomatonBuilder, LRAutomatonReconstructor reconstructor) {
         this.lr0AutomatonBuilder = lr1AutomatonBuilder;
         this.contextCreator = contextCreator;
         this.channelLALR1AutomatonBuilder = channelLALR1AutomatonBuilder;
@@ -51,7 +51,7 @@ class ChannelLALR1AutomatonBuilderTest {
         LRAutomaton lr0Automaton = lr0AutomatonBuilder.build(grammar, channelContext);
         LRAutomaton channelLalr = channelLALR1AutomatonBuilder.build(lr0Automaton, grammar, channelContext);
         Map<String, Set<LRItem>> actualLalrKernels = getActualLalr1Kernels(channelLalr, channelContext);
-        Assertions.assertEquals(new HashSet<>(expectedLalrKernels.values()), new HashSet<>(actualLalrKernels.values()));
+        assertEquals(new HashSet<>(expectedLalrKernels.values()), new HashSet<>(actualLalrKernels.values()));
         assertTransitionsEqual(classicLalr, classicContext, expectedLalrKernels, channelLalr, actualLalrKernels);
     }
 
@@ -68,8 +68,7 @@ class ChannelLALR1AutomatonBuilderTest {
 
             Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsFromExpectedKernel = getTransitionsFromKernel(classicLalr, kernelNameInExpected);
             Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsFromActualKernel = getTransitionsFromKernel(channelLalr, kernelNameInActual);
-
-            Assertions.assertEquals(transitionsFromExpectedKernel.size(), transitionsFromActualKernel.size(), CHECK_TRANSITIONS_COUNT_MESSAGE.formatted(kernelNameInExpected, kernelNameInActual));
+            assertEquals(transitionsFromExpectedKernel.size(), transitionsFromActualKernel.size(), CHECK_TRANSITIONS_COUNT_MESSAGE.formatted(kernelNameInExpected, kernelNameInActual));
 
             for (Map.Entry<LRAutomaton.TransitionKey, String> transitionInExpectedKernel : transitionsFromExpectedKernel) {
                 TransitionSymbol transitionSymbol = transitionInExpectedKernel.getKey().symbol();
@@ -80,7 +79,7 @@ class ChannelLALR1AutomatonBuilderTest {
                 Set<LRItem> targetKernelInExpected = expectedLalrKernels.get(transitionInExpectedKernel.getValue());
                 Set<LRItem> targetKernelInActual = actualLalrKernels.get(transitionWithSameSymbolInActualKernel.getValue());
 
-                Assertions.assertEquals(targetKernelInExpected, targetKernelInActual);
+                assertEquals(targetKernelInExpected, targetKernelInActual);
                 processingKernels.add(targetKernelInExpected);
                 processingKernels.add(targetKernelInActual);
             }
