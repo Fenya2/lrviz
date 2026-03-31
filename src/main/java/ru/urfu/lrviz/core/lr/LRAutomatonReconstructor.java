@@ -19,10 +19,17 @@ public class LRAutomatonReconstructor {
     private static final String UNEXPECTED_OPERATION_MESSAGE_PREFIX = "Unexpected operation[%d] (%s)";
 
     public LRAutomaton reconstruct(BuildLog buildLog) {
+        return reconstructUntil(buildLog, buildLog.getOperations().size());
+    }
+
+    public LRAutomaton reconstructUntil(BuildLog buildLog, int operationNumber) {
+        List<BuildOperation> operations = buildLog.getOperations();
+        if (operationNumber < 0 || operationNumber > operations.size()) {
+            throw new IllegalArgumentException("Illegal final operation number.");
+        }
         Map<String, LRState> namedStates = new LinkedHashMap<>();
         Map<LRAutomaton.TransitionKey, String> transitions = new LinkedHashMap<>();
-        List<BuildOperation> operations = buildLog.getOperations();
-        for (int i = 0; i < operations.size(); i++) {
+        for (int i = 0; i < operationNumber; i++) {
             BuildOperation buildOperation = operations.get(i);
             if (OperationLevel.COMMENT.equals(buildOperation.level)) {
                 continue;

@@ -20,6 +20,7 @@ import java.nio.file.Path;
 
 import static ru.urfu.lrviz.core.GrammarExamples.G_2;
 import static ru.urfu.lrviz.core.lr.AutomatonType.*;
+import static ru.urfu.lrviz.render.VisializeParametersConstants.RENDER_PNG;
 
 /**
  * Тестирование рендера LR-автоматов. Так как библиотека graphviz не гарантирует детерминируемость рендеров от запуска
@@ -31,20 +32,18 @@ import static ru.urfu.lrviz.core.lr.AutomatonType.*;
  * @since 28.02.2026
  */
 @SpringBootTest
-class LRAutomationGraphRendererTest {
-    private static final RenderParameters RENDER_PNG = new RenderParameters(1000, RenderFormat.PNG, false);
-
+class LRAutomationGraphRendererImplTest {
     @TempDir(cleanup = CleanupMode.DEFAULT)
-    Path tempDir;
+    private Path tempDir;
 
     private final LRAutomatonBuilders builders;
     private final BuildContextCreator contextCreator;
     private final LRAutomationGraphRendererImpl renderer;
 
     @Autowired
-    LRAutomationGraphRendererTest(LRAutomatonBuilders builders,
-                                  BuildContextCreator contextCreator,
-                                  LRAutomationGraphRendererImpl renderer) {
+    LRAutomationGraphRendererImplTest(LRAutomatonBuilders builders,
+                                      BuildContextCreator contextCreator,
+                                      LRAutomationGraphRendererImpl renderer) {
         this.builders = builders;
         this.contextCreator = contextCreator;
         this.renderer = renderer;

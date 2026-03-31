@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.RequestFieldsSnippet;
 import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 import org.springframework.restdocs.request.ParameterDescriptor;
@@ -92,10 +93,16 @@ public class DocumentationConstants {
                     fieldWithPath(".operations[].through").optional().description("Символ перехода").attributes(IS_OPTIONAL));
 
     public static final ResponseFieldsSnippet BUILD_LR1_AUTOMATON_RESPONSE = BUILD_LR0_AUTOMATON_RESPONSE.and(
-            fieldWithPath(".automaton.states[].items[].lookAheadSymbol").description("Символ предпросмотра").attributes(IS_REQUIRED),
+            fieldWithPath(".automaton.states[].items[].lookAheadSymbol").description("Символ предпросмотра").attributes(IS_OPTIONAL),
             fieldWithPath(".buildLog.operations[].item.lookAheadSymbol").optional().description("Символ предпросмотра").attributes(IS_OPTIONAL));
 
-    public static final ResponseFieldsSnippet BUILD_LALR1_AUTOMATON_RESPONSE = BUILD_LR1_AUTOMATON_RESPONSE;
+    public static final ResponseFieldsSnippet BUILD_LALR1_AUTOMATON_RESPONSE = BUILD_LR1_AUTOMATON_RESPONSE.and(
+            fieldWithPath(".automaton.states[].items[].lookAheadSymbols")
+                    .optional()
+                    .type(JsonFieldType.ARRAY)
+                    .description("Символы предпросмотра (при построении через %s)"
+                            .formatted(createHyperLink(BUILD_OPTION_LALR1_BUILD_ALGORITHM, "канальный алгоритм")))
+                    .attributes(IS_OPTIONAL));
 
     private DocumentationConstants() {
     }
