@@ -46,7 +46,7 @@ public class LRAutomationGraphRendererImpl implements LRAutomationGraphRenderer 
     public static final String KERNEL_ITEM_COLOR = "red";
 
     @Override
-    public void render(LRAutomaton automaton, OutputStream outputStream, RenderParameters parameters) throws IOException {
+    public void render(LRAutomaton automaton, OutputStream outputStream, VisualizeParameters parameters) throws IOException {
         Graph graph = graph()
                 .directed()
                 .graphAttr()
