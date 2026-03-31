@@ -59,8 +59,9 @@ public class ChannelLALR1AutomatonBuilder {
                             String stateNameForGeneration = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(kernelName, symbol));
                             Set<LRItem> stateForGeneration = lalr1NamedKernels.get(stateNameForGeneration);
                             LALR1Item candidateForGeneration = (LALR1Item) findCandidate(item.shift(), stateForGeneration);
-                            context.getBuildLog().append(new AddLookAheadOperation(stateNameForGeneration, candidateForGeneration, lookAheadSymbol));
-                            candidateForGeneration.addLookAhead(lookAheadSymbol);
+                            if (candidateForGeneration.addLookAhead(lookAheadSymbol)) {
+                                context.getBuildLog().append(new AddLookAheadOperation(stateNameForGeneration, candidateForGeneration, lookAheadSymbol));
+                            }
                         }
                     }
                 }
@@ -203,8 +204,8 @@ public class ChannelLALR1AutomatonBuilder {
     private static boolean propagateSymbols(Set<LookAheadSymbol> propagateSymbols, LALR1Item candidateForPropagation, String stateNameForPropagation, BuildContext context) {
         boolean newPropagation = false;
         for (LookAheadSymbol propagateSymbol : propagateSymbols) {
-            context.getBuildLog().append(new AddLookAheadOperation(stateNameForPropagation, candidateForPropagation, propagateSymbol));
             if (candidateForPropagation.addLookAhead(propagateSymbol)) {
+                context.getBuildLog().append(new AddLookAheadOperation(stateNameForPropagation, candidateForPropagation, propagateSymbol));
                 newPropagation = true;
             }
         }

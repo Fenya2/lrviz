@@ -7,11 +7,11 @@ package ru.urfu.lrviz.render;
  * @author fenya
  * @since 28.02.2026
  */
-public record RenderParameters(int size, RenderFormat format, boolean highLightBaseItems) {
+public record VisualizeParameters(int size, RenderFormat format, boolean highLightBaseItems) {
 
     private static final int MAX_SIZE = 10000;
 
-    public RenderParameters {
+    public VisualizeParameters {
 
         if (size <= 0 || size > MAX_SIZE) {
             throw new IllegalArgumentException();

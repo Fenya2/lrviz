@@ -13,8 +13,8 @@ import ru.urfu.lrviz.api.dto.LrBuildResultDto;
 import ru.urfu.lrviz.api.dto.map.LrBuildResultMapper;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.*;
-import ru.urfu.lrviz.render.LRAutomationGraphRenderer;
-import ru.urfu.lrviz.render.RenderParameters;
+import ru.urfu.lrviz.render.LRAutomatonVisualizer;
+import ru.urfu.lrviz.render.VisualizeParameters;
 
 import java.util.Objects;
 
@@ -38,18 +38,18 @@ public class AutomatonController {
     private final LRAutomatonBuilders builders;
     private final LrBuildResultMapper buildResultMapper;
     private final BuildContextCreator contextCreator;
-    private final LRAutomationGraphRenderer renderer;
+    private final LRAutomatonVisualizer visualizer;
 
     public AutomatonController(
             ConversionService conversionService,
             LRAutomatonBuilders builders,
             LrBuildResultMapper buildResultMapper,
-            BuildContextCreator contextCreator, LRAutomationGraphRenderer renderer) {
+            BuildContextCreator contextCreator, LRAutomatonVisualizer visualizer) {
         this.conversionService = conversionService;
         this.builders = builders;
         this.buildResultMapper = buildResultMapper;
         this.contextCreator = contextCreator;
-        this.renderer = renderer;
+        this.visualizer = visualizer;
     }
 
     @PostMapping(value = "/lr0", version = FROM_V1, produces = APPLICATION_JSON_VALUE)
@@ -73,7 +73,7 @@ public class AutomatonController {
         BuildContext context = contextCreator.createContext(
                 LR_0, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty()));
         LRAutomaton automaton = builders.build(targetGrammar, LR_0, context);
-        StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG, false));
+        StreamingResponseBody stream = os -> visualizer.visualize(automaton, os, new VisualizeParameters(size, PNG, false));
         return ResponseEntity.ok().contentType(IMAGE_PNG).body(stream);
     }
 
@@ -98,7 +98,7 @@ public class AutomatonController {
         BuildContext context = contextCreator.createContext(
                 LR_1, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty()));
         LRAutomaton automaton = builders.build(targetGrammar, LR_1, context);
-        StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG, false));
+        StreamingResponseBody stream = os -> visualizer.visualize(automaton, os, new VisualizeParameters(size, PNG, false));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(stream);
     }
 
@@ -123,7 +123,7 @@ public class AutomatonController {
         BuildContext context = contextCreator.createContext(
                 LALR, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty()));
         LRAutomaton automaton = builders.build(targetGrammar, LALR, context);
-        StreamingResponseBody stream = os -> renderer.render(automaton, os, new RenderParameters(size, PNG, true));
+        StreamingResponseBody stream = os -> visualizer.visualize(automaton, os, new VisualizeParameters(size, PNG, true));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(stream);
     }
 }
