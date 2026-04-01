@@ -38,12 +38,12 @@ class LRAutomationGraphRendererImplTest {
 
     private final LRAutomatonBuilders builders;
     private final BuildContextCreator contextCreator;
-    private final LRAutomationGraphRendererImpl renderer;
+    private final LrAutomatonGraphRendererImpl renderer;
 
     @Autowired
     LRAutomationGraphRendererImplTest(LRAutomatonBuilders builders,
                                       BuildContextCreator contextCreator,
-                                      LRAutomationGraphRendererImpl renderer) {
+                                      LrAutomatonGraphRendererImpl renderer) {
         this.builders = builders;
         this.contextCreator = contextCreator;
         this.renderer = renderer;

@@ -19,7 +19,9 @@ import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LRState;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +40,7 @@ import static j2html.TagCreator.*;
  * @since 28.02.2026
  */
 @Service
-public class LRAutomationGraphRendererImpl implements LRAutomationGraphRenderer {
-    private static final Map<RenderFormat, Format> SUPPORTED_FORMATS = Map.of(RenderFormat.PNG, Format.PNG);
+public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
     public static final int TRANSITION_ARROW_WIDTH = 2;
     public static final String LR_STATE_TITLE_BACKGROUND_COLOR = "black";
     public static final String LR_STATE_BACKGROUND_COLOR = "white";
@@ -52,11 +53,12 @@ public class LRAutomationGraphRendererImpl implements LRAutomationGraphRenderer 
                 .graphAttr()
                 .with(Rank.dir(LEFT_TO_RIGHT))
                 .with(createNodes(automaton, parameters.highLightBaseItems()));
-        Graphviz
+        String dotView = Graphviz
                 .fromGraph(graph)
                 .height(parameters.size())
-                .render(SUPPORTED_FORMATS.get(parameters.format()))
-                .toOutputStream(outputStream);
+                .render(Format.DOT)
+                .toString();
+        render(dotView, outputStream);
     }
 
     private List<? extends LinkSource> createNodes(LRAutomaton automaton, boolean highlightBaseItems) {
@@ -99,12 +101,35 @@ public class LRAutomationGraphRendererImpl implements LRAutomationGraphRenderer 
                 });
     }
 
-    private List<? extends LinkTarget> addTransitions(String stateName, Map<LRAutomaton.TransitionKey, String> transitions) {
+    private List<? extends LinkTarget> addTransitions(String
+                                                              stateName, Map<LRAutomaton.TransitionKey, String> transitions) {
         return transitions.entrySet().stream()
                 .filter(transition -> transition.getKey().stateName().equals(stateName))
                 .map(transition -> to(node(transition.getValue()))
                         .with(Label.of(transition.getKey().symbol().asString()))
                         .with(Style.lineWidth(TRANSITION_ARROW_WIDTH)))
                 .toList();
+    }
+
+    private static void render(String dotView, OutputStream outputStream) throws IOException {
+        ProcessBuilder pb = new ProcessBuilder("dot", "-Tpng");
+        pb.redirectErrorStream(true);
+        Process process = pb.start();
+        try (OutputStream stdin = process.getOutputStream()) {
+            stdin.write(dotView.getBytes(StandardCharsets.UTF_8));
+        }
+        try (InputStream stdout = process.getInputStream()) {
+            stdout.transferTo(outputStream);
+        }
+        int exitCode;
+        try {
+            exitCode = process.waitFor();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Process was interrupted", e);
+        }
+        if (exitCode != 0) {
+            throw new IOException("dot process failed with exit code: " + exitCode);
+        }
     }
 }
