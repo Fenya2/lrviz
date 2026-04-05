@@ -9,7 +9,10 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import ru.urfu.lrviz.api.dto.LRBuildRequestDto;
 import ru.urfu.lrviz.api.dto.LrBuildResultDto;
@@ -17,7 +20,7 @@ import ru.urfu.lrviz.api.dto.map.LrBuildResultMapper;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.*;
 import ru.urfu.lrviz.render.LRAutomatonVisualizer;
-import ru.urfu.lrviz.render.VisualizeParameters;
+import ru.urfu.lrviz.render.VisualizeOptions;
 
 import java.util.Objects;
 
@@ -60,39 +63,37 @@ public class AutomatonBuildController {
             url = DETAILED_API_DOCS_PATH + "#lr0"))
     public LrBuildResultDto buildLR0(@RequestBody LRBuildRequestDto buildRequest) {
         Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
-        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLr0BuildContext(targetGrammar, buildOptions);
         LRAutomaton automaton = builders.build(targetGrammar, LR_0, context);
-        return buildResultMapper.map(automaton, context);
+        return buildResultMapper.map(automaton, context, buildOptions);
     }
 
     @PostMapping(value = "/lr0", version = FROM_V1, produces = IMAGE_PNG_VALUE)
-    public ResponseEntity<StreamingResponseBody> renderLR0(
-            @RequestParam(defaultValue = DEFAULT_IMAGE_SIZE) int size,
-            @RequestBody LRBuildRequestDto buildRequest) {
+    public ResponseEntity<StreamingResponseBody> renderLR0(@RequestBody LRBuildRequestDto buildRequest) {
         Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
-        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLr0BuildContext(targetGrammar, buildOptions);
         LRAutomaton automaton = builders.build(targetGrammar, LR_0, context);
-        StreamingResponseBody stream = os -> visualizer.visualize(automaton, os, VisualizeParameters.builder().size(size).build());
+        VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
+                conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
+        StreamingResponseBody stream = os -> visualizer.visualize(automaton, os, visualizeOptions);
         return ResponseEntity.ok().contentType(IMAGE_PNG).body(stream);
     }
 
     @PostMapping(value = "/lr0", version = FROM_V1, produces = APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<StreamingResponseBody> visualizeLr0Build(LRBuildRequestDto buildRequest) {
+    public ResponseEntity<StreamingResponseBody> visualizeLr0Build(@RequestBody LRBuildRequestDto buildRequest) {
         Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
-        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLr0BuildContext(targetGrammar, buildOptions);
-        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(context.getBuildLog(), os, VisualizeParameters.builder().build());
+        builders.build(targetGrammar, LR_0, context);
+        VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
+                conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
+        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(context.getBuildLog(), os, visualizeOptions);
         return ResponseEntity.ok()
                 .contentType(APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(BUILD_LOG_FILENAME).build().toString())
                 .body(stream);
-    }
-
-    private BuildContext createLr0BuildContext(Grammar targetGrammar, @Nullable BuildOptions buildOptions) {
-        return contextCreator.createContext(
-                LR_0, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty()));
     }
 
     @PostMapping(value = "/lr1", version = FROM_V1, produces = APPLICATION_JSON_VALUE)
@@ -100,41 +101,37 @@ public class AutomatonBuildController {
             description = "Подробнее", url = DETAILED_API_DOCS_PATH + "#lr1"))
     public LrBuildResultDto buildLR1(@RequestBody LRBuildRequestDto buildRequest) {
         Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
-        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLr1BuildContext(targetGrammar, buildOptions);
         LRAutomaton automaton = builders.build(targetGrammar, LR_1, context);
-        return buildResultMapper.map(automaton, context);
+        return buildResultMapper.map(automaton, context, buildOptions);
     }
 
     @PostMapping(value = "/lr1", version = FROM_V1, produces = IMAGE_PNG_VALUE)
-    public ResponseEntity<StreamingResponseBody> renderLR1(
-            @RequestParam(defaultValue = DEFAULT_IMAGE_SIZE) int size,
-            @RequestBody LRBuildRequestDto buildRequest) {
+    public ResponseEntity<StreamingResponseBody> renderLR1(@RequestBody LRBuildRequestDto buildRequest) {
         Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
-        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLr1BuildContext(targetGrammar, buildOptions);
         LRAutomaton automaton = builders.build(targetGrammar, LR_1, context);
-        StreamingResponseBody stream = os -> visualizer.visualize(
-                automaton, os, VisualizeParameters.builder().size(size).build());
+        VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
+                conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
+        StreamingResponseBody stream = os -> visualizer.visualize(automaton, os, visualizeOptions);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(stream);
     }
 
     @PostMapping(value = "/lr1", version = FROM_V1, produces = APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<StreamingResponseBody> visualizeLr1Build(@RequestBody LRBuildRequestDto buildRequest) {
         Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
-        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLr1BuildContext(targetGrammar, buildOptions);
         builders.build(targetGrammar, LR_1, context);
-        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(context.getBuildLog(), os, VisualizeParameters.builder().build());
+        VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
+                conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
+        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(context.getBuildLog(), os, visualizeOptions);
         return ResponseEntity.ok()
                 .contentType(APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(BUILD_LOG_FILENAME).build().toString())
                 .body(stream);
-    }
-
-    private BuildContext createLr1BuildContext(Grammar targetGrammar, @Nullable BuildOptions buildOptions) {
-        return contextCreator.createContext(
-                LR_1, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty()));
     }
 
     @PostMapping(value = "/lalr1", version = FROM_V1, produces = APPLICATION_JSON_VALUE)
@@ -142,39 +139,54 @@ public class AutomatonBuildController {
             description = "Подробнее", url = DETAILED_API_DOCS_PATH + "#lalr1"))
     public LrBuildResultDto buildLALR1(@RequestBody LRBuildRequestDto buildRequest) {
         Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
-        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLalr1BuildContext(targetGrammar, buildOptions);
         LRAutomaton automaton = builders.build(targetGrammar, LALR, context);
-        return buildResultMapper.map(automaton, context);
+        return buildResultMapper.map(automaton, context, buildOptions);
     }
 
     @PostMapping(value = "/lalr1", version = FROM_V1, produces = IMAGE_PNG_VALUE)
     public ResponseEntity<StreamingResponseBody> renderLALR1(
-            @RequestParam(defaultValue = DEFAULT_IMAGE_SIZE) int size,
             @RequestBody LRBuildRequestDto buildRequest) {
         Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
-        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLalr1BuildContext(targetGrammar, buildOptions);
         LRAutomaton automaton = builders.build(targetGrammar, LALR, context);
         StreamingResponseBody stream = os -> visualizer.visualize(
-                automaton, os, VisualizeParameters.builder().size(size).build());
+                automaton, os, VisualizeOptions.builder().build());
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(stream);
     }
 
     @PostMapping(value = "/lalr1", version = FROM_V1, produces = APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<StreamingResponseBody> visualizeLalr1Build(LRBuildRequestDto buildRequest) {
+    public ResponseEntity<StreamingResponseBody> visualizeLalr1Build(@RequestBody LRBuildRequestDto buildRequest) {
         Grammar targetGrammar = conversionService.convert(buildRequest.grammar(), Grammar.class);
-        BuildOptions buildOptions = conversionService.convert(buildRequest.buildOptions(), BuildOptions.class);
+        BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLalr1BuildContext(targetGrammar, buildOptions);
-        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(context.getBuildLog(), os, VisualizeParameters.builder().build());
+        builders.build(targetGrammar, LALR, context);
+        VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
+                conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
+        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(context.getBuildLog(), os, visualizeOptions);
         return ResponseEntity.ok()
                 .contentType(APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(BUILD_LOG_FILENAME).build().toString())
                 .body(stream);
     }
 
+    private BuildContext createLr0BuildContext(Grammar targetGrammar, @Nullable BuildOptions buildOptions) {
+        return contextCreator.createContext(LR_0, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.builder().build()));
+    }
+
+    private BuildContext createLr1BuildContext(Grammar targetGrammar, @Nullable BuildOptions buildOptions) {
+        return contextCreator.createContext(
+                LR_1, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.builder().build()));
+    }
+
     private BuildContext createLalr1BuildContext(Grammar targetGrammar, @Nullable BuildOptions buildOptions) {
         return contextCreator.createContext(
-                LALR, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.createEmpty()));
+                LALR, targetGrammar, Objects.requireNonNullElse(buildOptions, BuildOptions.builder().build()));
+    }
+
+    private BuildOptions extractBuildOptions(LRBuildRequestDto buildRequest) {
+        return Objects.requireNonNullElse(conversionService.convert(buildRequest.buildOptions(), BuildOptions.class), BuildOptions.createEmpty());
     }
 }

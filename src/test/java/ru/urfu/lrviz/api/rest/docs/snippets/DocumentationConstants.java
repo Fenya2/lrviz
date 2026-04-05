@@ -14,13 +14,9 @@ import org.springframework.restdocs.snippet.Attributes;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
-import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
-import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.http.MediaType.*;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.snippet.Attributes.key;
-import static ru.urfu.lrviz.api.AutomatonBuildController.DEFAULT_IMAGE_SIZE;
 import static ru.urfu.lrviz.api.rest.docs.snippets.Anchors.*;
 
 /**
@@ -28,19 +24,19 @@ import static ru.urfu.lrviz.api.rest.docs.snippets.Anchors.*;
  * @since 04.03.2026
  */
 public class DocumentationConstants {
-    public static final String DEFAULT_VALUE_ATTRIBUTE_KEY = "defaultValue";
 
     public static final String IS_REQUIRED_ATTRIBUTE_KEY = "isRequired";
     public static final Attributes.Attribute IS_REQUIRED = Attributes.key(IS_REQUIRED_ATTRIBUTE_KEY).value("Да");
     public static final Attributes.Attribute IS_OPTIONAL = Attributes.key(IS_REQUIRED_ATTRIBUTE_KEY).value("Нет");
 
     public static final ParameterDescriptor VERSION_PARAMETER = RequestDocumentation.parameterWithName("version").description("версия API");
-    public static final ParameterDescriptor SIZE_PARAMETER = RequestDocumentation.parameterWithName("size").optional().description("Размер изображения").attributes(key(DEFAULT_VALUE_ATTRIBUTE_KEY).value(DEFAULT_IMAGE_SIZE));
 
     public static final HeaderDescriptor ACCEPT_JSON_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.ACCEPT).description(APPLICATION_JSON_VALUE);
     public static final HeaderDescriptor ACCEPT_PNG_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.ACCEPT).description(IMAGE_PNG_VALUE);
+    public static final HeaderDescriptor ACCEPT_ZIP_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.ACCEPT).description(APPLICATION_OCTET_STREAM_VALUE);
     public static final HeaderDescriptor CONTENT_TYPE_JSON_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_JSON_VALUE);
     public static final HeaderDescriptor CONTENT_TYPE_PNG_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.CONTENT_TYPE).description(IMAGE_PNG_VALUE);
+    public static final HeaderDescriptor CONTENT_TYPE_ZIP_HEADER = HeaderDocumentation.headerWithName(HttpHeaders.CONTENT_TYPE).description(APPLICATION_OCTET_STREAM_VALUE + " (zip)");
 
     public static final List<FieldDescriptor> GRAMMAR_DTO = List.of(fieldWithPath(".terminals").description("Список %s грамматики.".formatted(createHyperLink(TERMINALS, "терминалов"))).attributes(IS_REQUIRED),
             fieldWithPath(".nonTerminals").description("Список %s грамматики".formatted(createHyperLink(NONTERMINALS, "нетерминалов"))).attributes(IS_REQUIRED),
@@ -49,6 +45,12 @@ public class DocumentationConstants {
             fieldWithPath(".rules[].right").description("Символы правой части правила грамматики").attributes(IS_REQUIRED),
             fieldWithPath(".startSymbol").description("%s грамматики (нетерминал)".formatted(createHyperLink(START_SYMBOL, "Аксиома"))).attributes(IS_REQUIRED));
 
+    public static final FieldDescriptor OPTION_NAMES_GENERATION_STRATEGY = fieldWithPath(".namesGenerationStrategy").optional().type(STRING).description("%s при построении автомата".formatted(createHyperLink(BUILD_OPTION_NAMES_GENERATION_STRATEGY, "Стратегия генерации имен состояний"))).attributes(IS_OPTIONAL);
+    public static final FieldDescriptor OPTION_LALR1_BUILD_ALGORITHM = fieldWithPath(".lalr1BuildAlgorithm").optional().type(STRING).description(createHyperLink(BUILD_OPTION_LALR1_BUILD_ALGORITHM, "Алгоритм построения LALR(1)-автомата")).attributes(IS_OPTIONAL);
+    public static final FieldDescriptor OPTION_ENABLE_BUILD_LOG = fieldWithPath(".enableBuildLog").optional().type(BOOLEAN).description("Передавать ли в ответе %s".formatted(createHyperLink(BUILD_OPTION_ENABLE_BUILD_LOG, "лог построения"))).attributes(IS_OPTIONAL);
+
+    public static final FieldDescriptor VISUALIZE_OPTION_VISUALIZE_OPERATIONS = fieldWithPath(".visualizeOperations").optional().type(ARRAY).description("%s, которые нужно визуализировать. Если не указаны, то визуализируются все операции".formatted(createHyperLink(Anchors.VISUALIZE_OPTION_VISUALIZE_OPERATIONS, "Номера операций"))).attributes(IS_OPTIONAL);
+
     public static final RequestFieldsSnippet BUILD_LR_AUTOMATON_REQUEST = requestFields()
             .andWithPrefix(".grammar",
                     Stream.concat(
@@ -56,11 +58,10 @@ public class DocumentationConstants {
                             GRAMMAR_DTO.stream()).toList())
             .andWithPrefix(".buildOptions",
                     fieldWithPath("").optional().description("%s построения LR-автомата".formatted(createHyperLink(BUILD_OPTIONS, "Параметры"))).type(OBJECT).attributes(IS_OPTIONAL),
-                    fieldWithPath(".namesGenerationStrategy").optional().type(STRING).description("%s при построении автомата".formatted(createHyperLink(BUILD_OPTION_NAMES_GENERATION_STRATEGY, "Стратегия генерации имен состояний"))).attributes(IS_OPTIONAL));
+                    OPTION_NAMES_GENERATION_STRATEGY);
 
     public static final RequestFieldsSnippet BUILD_LALR_AUTOMATON_REQUEST = BUILD_LR_AUTOMATON_REQUEST
-            .andWithPrefix(".buildOptions",
-                    fieldWithPath(".lalr1BuildAlgorithm").optional().type(STRING).description(createHyperLink(BUILD_OPTION_LALR1_BUILD_ALGORITHM, "Алгоритм построения LALR(1)-автомата")).attributes(IS_OPTIONAL));
+            .andWithPrefix(".buildOptions", OPTION_LALR1_BUILD_ALGORITHM);
 
     public static final ResponseFieldsSnippet BUILD_LR0_AUTOMATON_RESPONSE = responseFields()
             .andWithPrefix(".automaton",
@@ -77,7 +78,7 @@ public class DocumentationConstants {
                     fieldWithPath(".transitions[].to").description("Целевое состояние").attributes(IS_REQUIRED),
                     fieldWithPath(".transitions[].through").description("Символ перехода").attributes(IS_REQUIRED))
             .andWithPrefix(".buildLog",
-                    fieldWithPath("").description(createHyperLink(BUILD_LOG, "Лог построения автомата")).attributes(IS_REQUIRED),
+                    fieldWithPath("").optional().type(OBJECT).description("%s (если указана %s)".formatted(createHyperLink(BUILD_LOG, "Лог построения LR-автомата"), createHyperLink(BUILD_OPTION_ENABLE_BUILD_LOG, "соответствующая опция"))).attributes(IS_OPTIONAL),
                     fieldWithPath(".operations").description("Последовательность операций построения").attributes(IS_REQUIRED),
                     fieldWithPath(".operations[].message").description("Человекочитаемое описание операции").attributes(IS_REQUIRED),
                     fieldWithPath(".operations[].level").description("Тип операции").attributes(IS_REQUIRED),
