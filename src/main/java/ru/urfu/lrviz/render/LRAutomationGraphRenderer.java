@@ -10,5 +10,5 @@ import java.io.OutputStream;
  * @since 28.02.2026
  */
 public interface LRAutomationGraphRenderer {
-    void render(LRAutomaton automaton, OutputStream outputStream, VisualizeParameters parameters) throws IOException;
+    void render(LRAutomaton automaton, OutputStream outputStream, VisualizeOptions parameters) throws IOException;
 }

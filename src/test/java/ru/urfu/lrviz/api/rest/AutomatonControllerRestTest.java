@@ -5,17 +5,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.client.EntityExchangeResult;
 import ru.urfu.lrviz.api.dto.BuildOptionsDto;
 import ru.urfu.lrviz.api.dto.LRBuildRequestDto;
+import ru.urfu.lrviz.api.dto.VisualizeOptionsDto;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.IMAGE_PNG;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.dto.convert.BuildOptionsDtoConverter.END_TO_END_NUMERIC_STRATEGY_CODE;
-import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsDto;
 import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsBuildRequestBodyFor;
+import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsDto;
 import static ru.urfu.lrviz.core.GrammarExamples.G_1;
 
 class AutomatonControllerRestTest extends AbstractRestTest {
-    private static final int IMAGE_SIZE = 250;
     private static final String BUILD_SEGMENT = "/build";
 
     @Test
@@ -34,11 +34,11 @@ class AutomatonControllerRestTest extends AbstractRestTest {
     @Test
     void renderLR0Png() {
         getRestClient().post()
-                .uri(BUILD_SEGMENT + "/lr0?size=" + IMAGE_SIZE)
+                .uri(BUILD_SEGMENT + "/lr0")
                 .apiVersion(V1)
                 .accept(IMAGE_PNG)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(getAsBuildRequestBodyFor(G_1))
+                .body(new LRBuildRequestDto(getAsDto(G_1), new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE, null, false), new VisualizeOptionsDto(null)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(IMAGE_PNG)
@@ -52,7 +52,7 @@ class AutomatonControllerRestTest extends AbstractRestTest {
                 .apiVersion(V1)
                 .accept(APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new LRBuildRequestDto(getAsDto(G_1), new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE, null)))
+                .body(new LRBuildRequestDto(getAsDto(G_1), new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE, null, false), null))
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(APPLICATION_JSON);
@@ -74,7 +74,7 @@ class AutomatonControllerRestTest extends AbstractRestTest {
     @Test
     void renderLR1Png() {
         getRestClient().post()
-                .uri(BUILD_SEGMENT + "/lr1?size=" + IMAGE_SIZE)
+                .uri(BUILD_SEGMENT + "/lr1")
                 .apiVersion(V1)
                 .accept(IMAGE_PNG)
                 .contentType(APPLICATION_JSON)

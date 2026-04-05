@@ -42,12 +42,20 @@ class ChannelLALR1AutomatonBuilderTest {
     @ValueSource(strings = {G_1, G_2, G_3, G_4, G_5, G_6, G_7, G_8, G_9})
     void isEqualToAutomatonBuildWithClassicAlgorithm(String grammarName) {
         Grammar grammar = GrammarExamples.get(grammarName);
-        BuildContext classicContext = contextCreator.createContext(LR_1, grammar, new BuildOptions(StateNamesGenerationStrategy.END_TO_END_NUMERIC, LALR1BuildAlgorithm.CLASSIC));
+        BuildOptions classicOptions = BuildOptions.builder()
+                .namesGenerationStrategy(StateNamesGenerationStrategy.END_TO_END_NUMERIC)
+                .lalr1BuildAlgorithm(LALR1BuildAlgorithm.CLASSIC)
+                .build();
+        BuildContext classicContext = contextCreator.createContext(LR_1, grammar, classicOptions);
         LRAutomaton lr1Automaton = lr1AutomatonBuilder.build(grammar, classicContext);
         LRAutomaton classicLalr = classicLALR1AutomatonBuilder.build(lr1Automaton, classicContext);
         Map<String, Set<LRItem>> expectedLalrKernels = getExpectedLalr1Kernels(classicLalr, classicContext);
 
-        BuildContext channelContext = contextCreator.createContext(LALR, grammar, new BuildOptions(StateNamesGenerationStrategy.END_TO_END_NUMERIC, LALR1BuildAlgorithm.CHANNEL));
+        BuildOptions channelOptions = BuildOptions.builder()
+                .namesGenerationStrategy(StateNamesGenerationStrategy.END_TO_END_NUMERIC)
+                .lalr1BuildAlgorithm(LALR1BuildAlgorithm.CHANNEL)
+                .build();
+        BuildContext channelContext = contextCreator.createContext(LALR, grammar, channelOptions);
         LRAutomaton lr0Automaton = lr0AutomatonBuilder.build(grammar, channelContext);
         LRAutomaton channelLalr = channelLALR1AutomatonBuilder.build(lr0Automaton, grammar, channelContext);
         Map<String, Set<LRItem>> actualLalrKernels = getActualLalr1Kernels(channelLalr, channelContext);

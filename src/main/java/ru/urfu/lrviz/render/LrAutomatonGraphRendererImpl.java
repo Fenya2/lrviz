@@ -47,7 +47,7 @@ public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
     public static final String KERNEL_ITEM_COLOR = "red";
 
     @Override
-    public void render(LRAutomaton automaton, OutputStream outputStream, VisualizeParameters parameters) throws IOException {
+    public void render(LRAutomaton automaton, OutputStream outputStream, VisualizeOptions parameters) throws IOException {
         Graph graph = graph()
                 .directed()
                 .graphAttr()
@@ -55,7 +55,6 @@ public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
                 .with(createNodes(automaton, parameters.highLightBaseItems()));
         String dotView = Graphviz
                 .fromGraph(graph)
-                .height(parameters.size())
                 .render(Format.DOT)
                 .toString();
         render(dotView, outputStream);
@@ -112,9 +111,9 @@ public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
     }
 
     private static void render(String dotView, OutputStream outputStream) throws IOException {
-        ProcessBuilder pb = new ProcessBuilder("dot", "-Tpng");
-        pb.redirectErrorStream(true);
-        Process process = pb.start();
+        ProcessBuilder processBuilder = new ProcessBuilder("dot", "-Tpng");
+        processBuilder.redirectErrorStream(true);
+        Process process = processBuilder.start();
         try (OutputStream stdin = process.getOutputStream()) {
             stdin.write(dotView.getBytes(StandardCharsets.UTF_8));
         }

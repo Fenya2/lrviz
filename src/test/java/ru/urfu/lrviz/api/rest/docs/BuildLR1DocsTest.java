@@ -55,7 +55,7 @@ class BuildLR1DocsTest extends AbstractMethodDocsTest {
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestHeaders(ACCEPT_JSON_HEADER),
                         pathParameters(VERSION_PARAMETER),
-                        BUILD_LR_AUTOMATON_REQUEST,
+                        BUILD_LR_AUTOMATON_REQUEST.andWithPrefix(".buildOptions", OPTION_ENABLE_BUILD_LOG),
                         responseHeaders(CONTENT_TYPE_JSON_HEADER),
                         BUILD_LR1_AUTOMATON_RESPONSE));
     }

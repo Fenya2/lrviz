@@ -33,9 +33,11 @@ public class BuildOptionsDtoConverter implements Converter<BuildOptionsDto, Buil
         if (options == null) {
             return null;
         }
-        StateNamesGenerationStrategy stateNamesGenerationStrategy = getStateNamesGenerationStrategy(options.namesGenerationStrategy());
-        LALR1BuildAlgorithm buildAlgorithm = getLalr1BuildAlgorithm(options.lalr1BuildAlgorithm());
-        return new BuildOptions(stateNamesGenerationStrategy, buildAlgorithm);
+        return BuildOptions.builder()
+                .namesGenerationStrategy(getStateNamesGenerationStrategy(options.namesGenerationStrategy()))
+                .lalr1BuildAlgorithm(getLalr1BuildAlgorithm(options.lalr1BuildAlgorithm()))
+                .enableBuildLog(Boolean.TRUE.equals(options.enableBuildLog()))
+                .build();
     }
 
     @Nullable
