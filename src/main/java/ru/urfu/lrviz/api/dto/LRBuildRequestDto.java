@@ -8,5 +8,5 @@ import jakarta.annotation.Nullable;
  * @author fenya
  * @since 07.03.2026
  */
-public record LRBuildRequestDto(GrammarDto grammar, @Nullable BuildOptionsDto buildOptions) {
+public record LRBuildRequestDto(GrammarDto grammar, @Nullable BuildOptionsDto buildOptions, @Nullable VisualizeOptionsDto visualizeOptions) {
 }

@@ -6,7 +6,7 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -16,14 +16,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
 import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsBuildRequestBodyFor;
-import static ru.urfu.lrviz.core.GrammarExamples.G_5;
+import static ru.urfu.lrviz.core.GrammarExamples.G_6;
 
 /**
+ *
  * @author fenya
- * @since 05.02.2026
+ * @since 05.04.2026
  */
-class BuildLR0DocsTest extends AbstractMethodDocsTest {
-    private static final String DOCUMENTED_PATH = "/api/{version}/build/lr0";
+class VisualizeLALR1BuildDocsTest extends AbstractMethodDocsTest {
+
+    private static final String DOCUMENTED_PATH = "/api/{version}/build/lalr1";
 
     @Override
     protected HttpMethod getDocumentedMethod() {
@@ -42,21 +44,21 @@ class BuildLR0DocsTest extends AbstractMethodDocsTest {
 
     @Override
     protected String getProduces() {
-        return APPLICATION_JSON_VALUE;
+        return APPLICATION_OCTET_STREAM_VALUE;
     }
 
     @Test
     void document() throws Exception {
         this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
-                        .header(ACCEPT, APPLICATION_JSON_VALUE)
+                        .header(ACCEPT, APPLICATION_OCTET_STREAM_VALUE)
                         .contentType(APPLICATION_JSON)
-                        .content(getAsBuildRequestBodyFor(G_5)))
+                        .content(getAsBuildRequestBodyFor(G_6)))
                 .andExpect(status().isOk())
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
-                        requestHeaders(ACCEPT_JSON_HEADER),
+                        requestHeaders(ACCEPT_ZIP_HEADER),
                         pathParameters(VERSION_PARAMETER),
-                        BUILD_LR_AUTOMATON_REQUEST.andWithPrefix(".buildOptions", OPTION_ENABLE_BUILD_LOG),
-                        responseHeaders(CONTENT_TYPE_JSON_HEADER),
-                        BUILD_LR0_AUTOMATON_RESPONSE));
+                        BUILD_LALR_AUTOMATON_REQUEST
+                                .andWithPrefix("visualizeOperations", VISUALIZE_OPTION_VISUALIZE_OPERATIONS),
+                        responseHeaders(CONTENT_TYPE_ZIP_HEADER)));
     }
 }

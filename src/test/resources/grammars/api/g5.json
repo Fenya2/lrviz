@@ -18,5 +18,8 @@
       }
     ],
     "startSymbol": "S"
+  },
+  "buildOptions": {
+    "enableBuildLog": true
   }
 }

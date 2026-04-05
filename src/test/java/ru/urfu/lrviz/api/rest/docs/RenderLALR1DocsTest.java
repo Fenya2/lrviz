@@ -13,7 +13,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.responseH
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
@@ -61,7 +60,6 @@ class RenderLALR1DocsTest extends AbstractMethodDocsTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(),
                         pathParameters(VERSION_PARAMETER),
-                        queryParameters(SIZE_PARAMETER),
                         requestHeaders(CONTENT_TYPE_PNG_HEADER),
                         BUILD_LALR_AUTOMATON_REQUEST,
                         responseHeaders(CONTENT_TYPE_JSON_HEADER),

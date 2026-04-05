@@ -10,6 +10,7 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -28,19 +29,27 @@ public class LRAutomatonVisualizer {
         this.reconstructor = reconstructor;
     }
 
-    public void visualize(LRAutomaton automaton, OutputStream outputStream, VisualizeParameters parameters) throws IOException {
+    public void visualize(LRAutomaton automaton, OutputStream outputStream, VisualizeOptions parameters) throws IOException {
         renderer.render(automaton, outputStream, parameters);
     }
 
-    public void visualizeBuildLog(BuildLog buildLog, OutputStream outputStream, VisualizeParameters parameters) throws IOException {
+    public void visualizeBuildLog(BuildLog buildLog, OutputStream outputStream, VisualizeOptions options) throws IOException {
         List<BuildOperation> operations = buildLog.getOperations();
+        Set<Integer> visualizeOperations = options.getVisualizeOperations();
         try (ZipOutputStream zip = new ZipOutputStream(outputStream)) {
             for (int i = 0; i < operations.size(); i++) {
+                if (visualizeOperations != null && !visualizeOperations.contains(i)) {
+                    continue;
+                }
                 LRAutomaton reconstructed = reconstructor.reconstructUntil(buildLog, i);
-                String entryName = String.format("%d.png", i);
-                ZipEntry entry = new ZipEntry(entryName);
+                ZipEntry entry = new ZipEntry(i + ".png");
                 zip.putNextEntry(entry);
-                renderer.render(reconstructed, wrapInNonClosingStream(zip), parameters);
+
+                renderer.render(
+                        reconstructed,
+                        wrapInNonClosingStream(zip),
+                        options
+                );
                 zip.closeEntry();
             }
         }
