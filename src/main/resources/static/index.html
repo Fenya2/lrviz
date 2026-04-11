@@ -1,9 +1,88 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined"/><script>window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$']],
-        displayMath: [['$$', '$$']]
-      },
-      svg: {
-        fontCache: 'global'
-      }
-    }</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script><title>Grammar Visualizer</title><script defer="defer" src="/js/chunk-vendors.2e8f5f48.js"></script><script defer="defer" src="/js/app.823644ce.js"></script><link href="/css/app.ba2ac8d0.css" rel="stylesheet"></head><body><noscript><strong>This app requires JavaScript to be enabled.</strong></noscript><div id="app"></div></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <title>Grammar Visualizer</title>
+</head>
+<body>
+<noscript><strong>This app requires JavaScript to be enabled.</strong></noscript>
+<div id="app">
+    <div class="grammarEditor">
+        <h1>Редактор грамматики</h1>
+        <div class="terminalsSection">
+            <h2>Терминалы</h2>
+            <input id="terminalInputField" type="text" maxlength="1">
+            <button id="addTerminalButton">+</button>
+            <div id="terminalsList"></div>
+        </div>
+        <div class="nonTerminalsSection">
+            <h2>Нетерминалы</h2>
+            <input id="nonTerminalInputField" type="text" maxlength="1">
+            <button id="addNonTerminalButton">+</button>
+            <div id="nonTerminalsList"></div>
+        </div>
+        <div class="rulesSection">
+            <h2>Правила</h2>
+            <select id="leftPartRuleSelector"></select>
+            <span id="leftPartRuleText"></span>
+            <input id="rightPartRuleInputField" type="text">
+            <button id="addRuleButton">+</button>
+            <div id="rulesList"></div>
+        </div>
+        <div class="startSymbolSection">
+            <h2>Аксиома</h2>
+            <select id="startSymbolSelector">
+            </select>
+        </div>
+    </div>
+    <div class="automatonSelectSection">
+        <h2>Автомат</h2>
+        <label for="automatonSelector">Тип</label><select id="automatonSelector">
+        <option value="lr0">LR(0)-автомат</option>
+        <option value="lalr1">LALR(1)-автомат</option>
+        <option value="lr1">LR(1)-автомат</option>
+    </select>
+    </div>
+    <div class="buildOptionsSection">
+        <h2>Параметры построения</h2>
+        <p>
+            <label for="namesGenerationStrategySelector">Стратегия генерации имен состояний</label>
+            <select id="namesGenerationStrategySelector">
+                <option value="byTransitionSymbol">По символу перехода</option>
+                <option value="endToEndNumeric">Cквозная нумерация состояний</option>
+            </select>
+        </p>
+        <p>
+            <label for="lalr1BuildAlgorithmSelector">Алгоритм построения LALR(1)-автомата</label>
+            <select id="lalr1BuildAlgorithmSelector" disabled>
+                <option value="classic">Классический алгоритм</option>
+                <option value="channel">Канальный алгоритм</option>
+            </select>
+        </p>
+    </div>
+    <div class="visualizeOptionsSection">
+        <h2>Параметры визуализации</h2>
+        <label for="presentationSelector">Представление</label>
+        <select id="presentationSelector">
+            <option value="application/json">Лог построения</option>
+            <option value="image/png">Картинка</option>
+        </select>
+    </div>
+    <div class="buildSection">
+        <button id="buildButton">Построить</button>
+        <div id="buildContainer"></div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.33.1/cytoscape.min.js" integrity="sha512-kHAY8XzRfLVMcLuowdk91552RD+Nb2/1uHamfHMdLejNqlZnbEJLl1wYnsNnqIFCEZ++WaOcOlfokC6p9JWrLw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-node-html-label@1.2.2/dist/cytoscape-node-html-label.min.js"></script>
+<script>
+    cytoscape.use(cytoscapeNodeHtmlLabel);
+</script>
+<script src="js/Models.js"></script>
+<script src="js/GrammarEditor.js"></script>
+<script src="js/AutomatonSelector.js"></script>
+<script src="js/BuildOptions.js"></script>
+<script src="js/VisualizeOptions.js"></script>
+<script src="js/BuildController.js"></script>
+</body>
+</html>
