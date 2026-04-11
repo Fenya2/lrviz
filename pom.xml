@@ -35,6 +35,7 @@
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <pathOfRenderedDocs>${project.build.directory}/generated-docs</pathOfRenderedDocs>
         <pathOfDocsImages>api/docs/images</pathOfDocsImages>
+        <skip.documentation.generation>true</skip.documentation.generation>
     </properties>
     <dependencies>
         <dependency>
@@ -107,6 +108,15 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>generate-documentation</id>
+            <properties>
+                <skip.documentation.generation>false</skip.documentation.generation>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
     </profiles>
     <build>
         <plugins>
@@ -122,6 +132,7 @@
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
+                            <skip>${skip.documentation.generation}</skip>
                             <backend>html5</backend>
                             <doctype>book</doctype>
                             <attributes>
