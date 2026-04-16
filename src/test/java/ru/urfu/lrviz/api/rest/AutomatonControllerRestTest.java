@@ -11,8 +11,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.IMAGE_PNG;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.dto.convert.BuildOptionsDtoConverter.END_TO_END_NUMERIC_STRATEGY_CODE;
-import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsBuildRequestBodyFor;
-import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsDto;
+import static ru.urfu.lrviz.GrammarDtoExamples.getAsBuildRequestBodyFor;
+import static ru.urfu.lrviz.GrammarDtoExamples.getAsDto;
 import static ru.urfu.lrviz.core.GrammarExamples.G_1;
 
 class AutomatonControllerRestTest extends AbstractRestTest {

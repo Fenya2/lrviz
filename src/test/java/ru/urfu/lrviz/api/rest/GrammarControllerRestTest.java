@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
-import static ru.urfu.lrviz.core.GrammarDtoExamples.getAsDto;
+import static ru.urfu.lrviz.GrammarDtoExamples.getAsDto;
 import static ru.urfu.lrviz.core.GrammarExamples.G_9;
 
 /**
@@ -19,7 +19,6 @@ import static ru.urfu.lrviz.core.GrammarExamples.G_9;
 class GrammarControllerRestTest extends AbstractRestTest {
     @Test
     void first() {
-
         getRestClient().post()
                 .uri("/grammar/first")
                 .apiVersion(V1)

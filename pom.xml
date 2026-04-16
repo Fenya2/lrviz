@@ -36,6 +36,8 @@
         <pathOfRenderedDocs>${project.build.directory}/generated-docs</pathOfRenderedDocs>
         <pathOfDocsImages>api/docs/images</pathOfDocsImages>
         <skip.documentation.generation>true</skip.documentation.generation>
+        <selenium-java.version>4.43.0</selenium-java.version>
+        <webdrivermanager.version>6.3.4</webdrivermanager.version>
     </properties>
     <dependencies>
         <dependency>
@@ -79,6 +81,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-restclient-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium-java.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${webdrivermanager.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
