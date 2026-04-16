@@ -47,6 +47,7 @@ class UITest {
     private static final String STEP_INPUT_ID = "stepInput";
     private static final String GO_STEP_BUTTON_ID = "goStepButton";
     private static final String GRAPH_CONTAINER_ID = "graphContainer";
+    private static final String PRESENTATION_SELECTOR_ID = "presentationSelector";
     private static final int WAIT_TIME = 10;
 
     private final WebDriver driver;
@@ -239,6 +240,29 @@ class UITest {
 
         assertEquals(totalStepsStr, currentStepStr,
                 "After clicking Last button, current step should equal total steps");
+    }
+
+    @Test
+    void testZipDownloadOptionPresent() {
+        var presentationSelector = new Select(driver.findElement(By.id(PRESENTATION_SELECTOR_ID)));
+        var options = presentationSelector.getOptions();
+        boolean zipOptionExists = options.stream()
+                .anyMatch(option -> option.getAttribute("value").equals("application/octet-stream"));
+        assertTrue(zipOptionExists, "Zip download option should exist in presentation selector");
+    }
+
+    @Test
+    void testZipDownload() {
+        GrammarDto g2 = GrammarDtoExamples.getAsDto(G_2);
+        fillGrammar(g2);
+        var presentationSelector = new Select(driver.findElement(By.id(PRESENTATION_SELECTOR_ID)));
+        presentationSelector.selectByValue("application/octet-stream");
+        driver.findElement(By.id(BUILD_BUTTON_ID)).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[contains(text(), 'ZIP-архив с картинками скачан')]")
+        ));
+        boolean noAlert = wait.until(ExpectedConditions.not(ExpectedConditions.alertIsPresent()));
+        assertTrue(noAlert, "Unexpected alert present after zip download");
     }
 
     private void fillGrammar(GrammarDto grammar) {
