@@ -58,7 +58,6 @@ public class GrammarDtoExamples {
                 List.of("D", "T", "L"),
                 List.of(new RuleDto("D", "TL"),
                         new RuleDto("T", "i"),
-                        new RuleDto("T", "i"),
                         new RuleDto("L", "L;a"),
                         new RuleDto("L", "a")),
                 "D"
