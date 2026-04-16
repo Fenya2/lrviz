@@ -1,7 +1,8 @@
-package ru.urfu.lrviz.core;
+package ru.urfu.lrviz;
 
 import ru.urfu.lrviz.api.dto.GrammarDto;
 import ru.urfu.lrviz.api.dto.RuleDto;
+import ru.urfu.lrviz.core.GrammarExamples;
 
 import java.net.URL;
 import java.nio.file.Files;
