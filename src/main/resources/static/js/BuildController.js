@@ -39,6 +39,8 @@ fetch('/api/v1/build/' + automatonType, {
         const contentType = response.headers.get('Content-Type');
         if (contentType && contentType.includes('image/png')) {
             return response.blob().then(blob => ({ type: 'image', data: blob }));
+        } else if (contentType && contentType.includes('application/octet-stream')) {
+            return response.blob().then(blob => ({ type: 'zip', data: blob }));
         } else {
             return response.json().then(data => ({ type: 'json', data: data }));
         }
@@ -56,6 +58,19 @@ fetch('/api/v1/build/' + automatonType, {
             img.alt = 'Automaton visualization';
             buildContainer.appendChild(img);
             img.onload = () => URL.revokeObjectURL(imageUrl);
+            return
+        }
+
+        if (result.type === 'zip') {
+            const url = URL.createObjectURL(result.data);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'buildLog.zip';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            buildContainer.innerHTML = '<p style="color: green; font-size: 18px;">ZIP-архив с картинками скачан: buildLog.zip</p>';
             return
         }
 
