@@ -75,15 +75,12 @@ fetch('/api/v1/build/' + automatonType, {
         }
         buildContainer.appendChild(buildLogContainer)
 
-        // Create graph container and navigation controls
+        createNavigationControls()
         graphContainer = document.createElement('div')
         graphContainer.id = 'graphContainer'
         graphContainer.style.width = '100%'
         graphContainer.style.height = window.innerHeight.toString() + 'px'
         buildContainer.appendChild(graphContainer)
-
-        // Create navigation controls
-        createNavigationControls()
 
         // Render initial step
         renderCurrentStep()
@@ -121,11 +118,40 @@ function createNavigationControls() {
     lastButton.textContent = '>|'
     lastButton.onclick = () => goToStep(totalSteps)
 
+    const stepInput = document.createElement('input')
+    stepInput.id = 'stepInput'
+    stepInput.type = 'number'
+    stepInput.min = '0'
+    stepInput.max = totalSteps.toString()
+    stepInput.placeholder = 'Номер операции'
+    stepInput.style.marginLeft = '10px'
+    stepInput.style.width = '120px'
+
+    const goButton = document.createElement('button')
+    goButton.id = 'goStepButton'
+    goButton.textContent = 'Перейти'
+    goButton.onclick = () => {
+        const stepNum = parseInt(stepInput.value)
+        if (!isNaN(stepNum) && stepNum >= 0 && stepNum <= totalSteps) {
+            goToStep(stepNum)
+        } else {
+            alert("Недопустимый номер операции")
+        }
+    }
+
+    stepInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            goButton.click()
+        }
+    })
+
     navigationControls.appendChild(firstButton)
     navigationControls.appendChild(prevButton)
     navigationControls.appendChild(stepCounterDisplay)
     navigationControls.appendChild(nextButton)
     navigationControls.appendChild(lastButton)
+    navigationControls.appendChild(stepInput)
+    navigationControls.appendChild(goButton)
 
     buildContainer.appendChild(navigationControls)
 }
@@ -144,6 +170,11 @@ function renderCurrentStep() {
     buttons[1].disabled = currentStep === 0  // Previous
     buttons[2].disabled = currentStep === totalSteps  // Next
     buttons[3].disabled = currentStep === totalSteps  // Last
+
+    const stepInput = document.getElementById('stepInput')
+    if (stepInput) {
+        stepInput.max = totalSteps.toString()
+    }
 }
 
 function reconstructAutomatonAtStep(stepIndex) {
