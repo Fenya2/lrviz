@@ -20,12 +20,13 @@ document.getElementById('buildButton').addEventListener('click', () => {
             return;
     }
 
-fetch('http://localhost:8080/api/v1/build/' + automatonType, {
+fetch('/api/v1/build/' + automatonType, {
         method: 'POST',
         headers: {
             'Accept': presentation,
             'Content-Type': 'application/json',
         },
+
         body: JSON.stringify({
             grammar: grammar,
             buildOptions: buildOptions
@@ -94,29 +95,29 @@ fetch('http://localhost:8080/api/v1/build/' + automatonType, {
 
 function createNavigationControls() {
     navigationControls = document.createElement('div')
+    navigationControls.id = 'navigationControls'
 
-    // First button (|<)
     const firstButton = document.createElement('button')
+    firstButton.id = 'firstStepButton'
     firstButton.textContent = '|<'
     firstButton.onclick = () => goToStep(0)
 
-    // Previous button (<)
     const prevButton = document.createElement('button')
+    prevButton.id = 'prevStepButton'
     prevButton.textContent = '<'
     prevButton.onclick = () => goToStep(currentStep - 1)
 
-    // Step counter
     stepCounterDisplay = document.createElement('span')
     stepCounterDisplay.id = 'stepCounter'
     stepCounterDisplay.textContent = 'Шаг 0 из 0'
 
-    // Next button (>)
     const nextButton = document.createElement('button')
+    nextButton.id = 'nextStepButton'
     nextButton.textContent = '>'
     nextButton.onclick = () => goToStep(currentStep + 1)
 
-    // Last button (>|)
     const lastButton = document.createElement('button')
+    lastButton.id = 'lastStepButton'
     lastButton.textContent = '>|'
     lastButton.onclick = () => goToStep(totalSteps)
 
@@ -215,6 +216,8 @@ function reconstructAutomatonAtStep(stepIndex) {
 
 function renderAutomaton(automatonState) {
     const graphContainer = document.getElementById('graphContainer')
+    graphContainer.style.visibility = 'hidden'
+
     if (window.cy && typeof window.cy.destroy === 'function') {
         window.cy.destroy()
     }
@@ -247,9 +250,8 @@ function renderAutomaton(automatonState) {
                 selector: 'node',
                 style: {
                     'shape': 'rectangle',
-                    'border-width': 0,
-                    'width': 60,
-                    'height': 80
+                    'background-opacity': 0,
+                    'border-opacity': 0
                 }
             },
             {
@@ -262,8 +264,9 @@ function renderAutomaton(automatonState) {
                     'target-arrow-shape': 'triangle',
                     'curve-style': 'unbundled-bezier',
                     'font-size': 20,
-                    'loop-direction': '90deg',
-                    'loop-sweep': '-45deg'
+                    'loop-direction': '0deg',
+                    'loop-sweep': '20deg',
+                    'text-margin-y': -15,
                 }
             }
         ],
@@ -279,7 +282,7 @@ function renderAutomaton(automatonState) {
             tpl: function(data) {
                 const state = automatonState.states.find(s => s.name === data.id);
                 if (!state) return '';
-                let html = '<table border="0" bgcolor="white" style="font-family: monospace; font-size: 12px;">';
+                let html = `<table id="table-${data.id}" style="border: 0; background-color: white; font-family: monospace; font-size: 14px;">`;
                 html += '<tr>';
                 html += '<td bgcolor="black" align="center">';
                 html += `<font color="white">${data.id}</font>`;
@@ -295,7 +298,7 @@ function renderAutomaton(automatonState) {
                         html += '<tr>';
                         html += '<td align="left">';
                         html += `<font color="black">`;
-                        html += `${left} -> ${beforeDot}•${afterDot}`;
+                        html += `[${left} → ${beforeDot}•${afterDot}]`;
                         if (item.lookAheadSymbols && item.lookAheadSymbols.length > 0) {
                             html += `, ${item.lookAheadSymbols.join('/')}`;
                         }
@@ -309,6 +312,35 @@ function renderAutomaton(automatonState) {
             }
         }
     ])
+
+    function waitForLabelsAndAdjust() {
+        const allTablesRendered = window.cy.nodes().every(node => {
+            const tableId = `table-${node.id()}`
+            return document.getElementById(tableId) !== null
+        })
+
+        if (allTablesRendered) {
+            window.cy.nodes().forEach(node => {
+                const tableId = `table-${node.id()}`
+                const table = document.getElementById(tableId)
+                node.style('width', table.offsetWidth)
+                node.style('height', table.offsetHeight)
+            })
+
+            window.cy.layout({
+                name: 'cose',
+                directed: true
+            }).run()
+
+            window.cy.one('layoutstop', () => {
+                graphContainer.style.visibility = 'visible'
+            })
+        } else {
+            requestAnimationFrame(waitForLabelsAndAdjust)
+        }
+    }
+
+    waitForLabelsAndAdjust()
 }
 
 function formatRuleText(rule) {
