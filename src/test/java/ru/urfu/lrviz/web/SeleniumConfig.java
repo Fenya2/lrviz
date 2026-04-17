@@ -12,11 +12,19 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROT
 
 @Configuration
 public class SeleniumConfig {
+    /**
+     * Свойство, отвечающее за запуск selenium тестов с отрисовкой GUI
+     */
+    public static final String SELENIUM_HEADLESS_PROPERTY = "selenium.headless";
+
     @Bean
     @Scope(SCOPE_PROTOTYPE)
     public WebDriver webDriver() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
+        if (Boolean.parseBoolean(System.getProperty(SELENIUM_HEADLESS_PROPERTY, Boolean.TRUE.toString()))) {
+            options.addArguments("--headless=new");
+        }
         return new ChromeDriver(options);
     }
 }

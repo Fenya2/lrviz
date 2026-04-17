@@ -119,7 +119,7 @@ function createSymbolSpan(symbol, onRemove) {
     const span = document.createElement('span');
     span.appendChild(document.createTextNode(symbol));
     const removeBtn = document.createElement('button');
-    removeBtn.textContent = '-';
+    removeBtn.textContent = '×';
     removeBtn.addEventListener('click', () => onRemove());
     span.appendChild(removeBtn);
     return span;
