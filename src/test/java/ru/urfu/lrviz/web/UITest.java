@@ -49,6 +49,8 @@ class UITest {
     private static final String GRAPH_CONTAINER_ID = "graphContainer";
     private static final String PRESENTATION_SELECTOR_ID = "presentationSelector";
     private static final int WAIT_TIME = 10;
+    private static final String GRAMMAR_IS_NOT_DEFINED_TEXT = "Грамматика не задана.";
+    private static final String ILLEGAL_OPERATION_NUMBER_TEXT = "Недопустимый номер операции.";
 
     private final WebDriver driver;
     private final WebDriverWait wait;
@@ -75,14 +77,14 @@ class UITest {
     @Test
     void testAlertWhenGrammarNotSet() {
         driver.findElement(By.id(BUILD_BUTTON_ID)).click();
-        assertAlertTextAndAccept("Грамматика не задана");
+        assertAlertTextAndAccept(GRAMMAR_IS_NOT_DEFINED_TEXT);
     }
 
     @Test
     void testAlertWithIncompleteGrammarOnlyTerminals() {
         addTerminal("a");
         driver.findElement(By.id(BUILD_BUTTON_ID)).click();
-        assertAlertTextAndAccept("Грамматика не задана");
+        assertAlertTextAndAccept(GRAMMAR_IS_NOT_DEFINED_TEXT);
     }
 
     @Test
@@ -91,7 +93,7 @@ class UITest {
         addNonTerminal("S");
         addRule("S", "a");
         driver.findElement(By.id(BUILD_BUTTON_ID)).click();
-        assertAlertTextAndAccept("Грамматика не задана");
+        assertAlertTextAndAccept(GRAMMAR_IS_NOT_DEFINED_TEXT);
     }
 
     @Test
@@ -195,7 +197,7 @@ class UITest {
         stepInput.clear();
         stepInput.sendKeys("-1");
         goButton.click();
-        assertAlertTextAndAccept("Недопустимый номер операции");
+        assertAlertTextAndAccept(ILLEGAL_OPERATION_NUMBER_TEXT);
     }
 
     @Test
