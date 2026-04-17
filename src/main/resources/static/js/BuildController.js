@@ -111,25 +111,29 @@ function createNavigationControls() {
 
     const firstButton = document.createElement('button')
     firstButton.id = 'firstStepButton'
+    firstButton.className = 'switchOperationButton'
     firstButton.textContent = '|<'
     firstButton.onclick = () => goToStep(0)
 
     const prevButton = document.createElement('button')
     prevButton.id = 'prevStepButton'
+    prevButton.className = 'switchOperationButton'
     prevButton.textContent = '<'
     prevButton.onclick = () => goToStep(currentStep - 1)
 
     stepCounterDisplay = document.createElement('span')
     stepCounterDisplay.id = 'stepCounter'
-    stepCounterDisplay.textContent = 'Шаг 0 из 0'
+    stepCounterDisplay.textContent = 'Операция 0 из 0'
 
     const nextButton = document.createElement('button')
     nextButton.id = 'nextStepButton'
+    nextButton.className = 'switchOperationButton'
     nextButton.textContent = '>'
     nextButton.onclick = () => goToStep(currentStep + 1)
 
     const lastButton = document.createElement('button')
     lastButton.id = 'lastStepButton'
+    lastButton.className = 'switchOperationButton'
     lastButton.textContent = '>|'
     lastButton.onclick = () => goToStep(totalSteps)
 
@@ -138,13 +142,13 @@ function createNavigationControls() {
     stepInput.type = 'number'
     stepInput.min = '0'
     stepInput.max = totalSteps.toString()
-    stepInput.placeholder = 'Номер операции'
+    stepInput.placeholder = '0'
     stepInput.style.marginLeft = '10px'
     stepInput.style.width = '120px'
 
     const goButton = document.createElement('button')
     goButton.id = 'goStepButton'
-    goButton.textContent = 'Перейти'
+    goButton.textContent = '✔'
     goButton.onclick = () => {
         const stepNum = parseInt(stepInput.value)
         if (!isNaN(stepNum) && stepNum >= 0 && stepNum <= totalSteps) {

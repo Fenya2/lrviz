@@ -1,7 +1,6 @@
 const TERMINAL = 'terminal'
 const NONTERMINAL = 'nonTerminal'
 
-// ========== Элементы DOM ==========
 const terminalInput = document.getElementById('terminalInputField');
 const terminalInputApplyButton = document.getElementById('addTerminalButton');
 const terminalsList = document.getElementById('terminalsList');
@@ -17,14 +16,14 @@ const rulesList = document.getElementById('rulesList');
 
 const startSymbolSelector = document.getElementById('startSymbolSelector');
 
-// Перерисовка списка правил на основе grammar.rules
 function renderRules() {
     rulesList.innerHTML = '';
     grammar.rules.forEach((rule, index) => {
         const ruleDiv = document.createElement('div');
-        ruleDiv.textContent = `${rule.left} → ${rule.right}`;
+        ruleDiv.textContent = `${rule.left}→${rule.right}`;
         const removeBtn = document.createElement('button');
         removeBtn.textContent = '✖';
+        removeBtn.className = 'removeRuleButton'
         removeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             removeRuleByIndex(index);
@@ -34,13 +33,11 @@ function renderRules() {
     });
 }
 
-// Удаление правила по индексу
 function removeRuleByIndex(index) {
     grammar.rules.splice(index, 1);
     renderRules();
 }
 
-// Удалить все правила, в которых встречается символ (в левой или правой части)
 function removeRulesContainingSymbol(symbol) {
     const initialLength = grammar.rules.length;
     grammar.rules = grammar.rules.filter(rule => rule.left !== symbol && !rule.right.includes(symbol));
@@ -49,14 +46,11 @@ function removeRulesContainingSymbol(symbol) {
     }
 }
 
-// Обновить селекторы, которые зависят от нетерминалов (левая часть правил и стартовый символ)
 function updateNonTerminalSelectors() {
-    // Сохраняем выбранные значения
     const selectedLeft = leftPartRuleSelector.value;
     const selectedStart = startSymbolSelector.value;
 
-    // Перестраиваем leftPartRuleSelector
-    leftPartRuleSelector.innerHTML = '<option value="" selected disabled>-- выберите нетерминал --</option>';
+    leftPartRuleSelector.innerHTML = '<option value="" selected disabled>---</option>';
     grammar.nonTerminals.forEach(nt => {
         const option = document.createElement('option');
         option.value = nt;
@@ -64,8 +58,7 @@ function updateNonTerminalSelectors() {
         leftPartRuleSelector.appendChild(option);
     });
 
-    // Перестраиваем startSymbolSelector
-    startSymbolSelector.innerHTML = '<option value="" selected disabled>-- выберите --</option>';
+    startSymbolSelector.innerHTML = '<option value="" selected disabled>Выберите</option>';
     grammar.nonTerminals.forEach(nt => {
         const option = document.createElement('option');
         option.value = nt;
@@ -73,7 +66,6 @@ function updateNonTerminalSelectors() {
         startSymbolSelector.appendChild(option);
     });
 
-    // Восстанавливаем выбранные значения, если они ещё существуют
     if (selectedLeft && grammar.nonTerminals.includes(selectedLeft)) {
         leftPartRuleSelector.value = selectedLeft;
     } else {
@@ -90,7 +82,6 @@ function updateNonTerminalSelectors() {
     }
 }
 
-// Добавление элемента (терминала или нетерминала) с проверкой дубликатов
 function addSymbol(type, value) {
     if (!value || value.trim() === '') return false;
 
@@ -119,20 +110,18 @@ function createSymbolSpan(symbol, onRemove) {
     const span = document.createElement('span');
     span.appendChild(document.createTextNode(symbol));
     const removeBtn = document.createElement('button');
-    removeBtn.textContent = '×';
+    removeBtn.className = 'removeSymbolButton';
+    removeBtn.textContent = '✖';
     removeBtn.addEventListener('click', () => onRemove());
     span.appendChild(removeBtn);
     return span;
 }
 
-// Удаление терминала
 function removeTerminal(value) {
     const index = grammar.terminals.indexOf(value);
     if (index !== -1) {
         grammar.terminals.splice(index, 1);
-        // Удаляем все правила, содержащие этот терминал
         removeRulesContainingSymbol(value);
-        // Удаляем визуальный элемент
         const items = terminalsList.querySelectorAll('span');
         for (let item of items) {
             if (item.firstChild?.textContent === value) {
@@ -143,14 +132,11 @@ function removeTerminal(value) {
     }
 }
 
-// Удаление нетерминала
 function removeNonTerminal(value) {
     const index = grammar.nonTerminals.indexOf(value);
     if (index !== -1) {
         grammar.nonTerminals.splice(index, 1);
-        // Удаляем правила, где участвует этот нетерминал
         removeRulesContainingSymbol(value);
-        // Удаляем визуальный элемент
         const items = nonTerminalsList.querySelectorAll('span');
         for (let item of items) {
             if (item.firstChild?.textContent === value) {
@@ -158,16 +144,13 @@ function removeNonTerminal(value) {
                 break;
             }
         }
-        // Если удалённый нетерминал был стартовым символом, сбрасываем
         if (grammar.startSymbol === value) {
             grammar.startSymbol = '';
         }
-        // Обновляем селекторы
         updateNonTerminalSelectors();
     }
 }
 
-// Валидация правой части: все символы должны быть либо терминалами, либо нетерминалами
 function isValidRightPart(rightStr) {
     if (rightStr === '') return false;
     const symbols = rightStr.split('');
@@ -179,7 +162,6 @@ function isValidRightPart(rightStr) {
     return true;
 }
 
-// Добавление правила
 function addRule() {
     const left = leftPartRuleSelector.value;
     const right = rightPartRuleInputField.value.trim();
@@ -208,7 +190,6 @@ function addRule() {
     rightPartRuleInputField.value = '';
 }
 
-// Выбор стартового символа (аксиомы)
 function selectStartSymbol(value) {
     if (!value) {
         grammar.startSymbol = '';
@@ -222,7 +203,6 @@ function selectStartSymbol(value) {
     grammar.startSymbol = value;
 }
 
-// ========== Обработчики событий ==========
 terminalInput.addEventListener('change', () => {
     addSymbol(TERMINAL, terminalInput.value);
     terminalInput.value = '';
