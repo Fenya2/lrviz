@@ -16,7 +16,7 @@ document.getElementById('buildButton').addEventListener('click', () => {
         || grammar.nonTerminals.length === 0
         || grammar.rules.length === 0
         || grammar.startSymbol === '') {
-            alert('Грамматика не задана');
+            alert('Грамматика не задана.');
             return;
     }
 
@@ -101,7 +101,7 @@ fetch('/api/v1/build/' + automatonType, {
         renderCurrentStep()
     })
     .catch(error => {
-        alert('Ошибка');
+        alert('Ошибка.');
     });
 });
 
@@ -150,7 +150,7 @@ function createNavigationControls() {
         if (!isNaN(stepNum) && stepNum >= 0 && stepNum <= totalSteps) {
             goToStep(stepNum)
         } else {
-            alert("Недопустимый номер операции")
+            alert("Недопустимый номер операции.")
         }
     }
 
