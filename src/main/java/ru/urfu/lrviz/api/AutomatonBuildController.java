@@ -26,7 +26,7 @@ import java.util.Objects;
 
 import static org.springframework.http.MediaType.*;
 import static ru.urfu.lrviz.api.VersionsConstants.FROM_V1;
-import static ru.urfu.lrviz.api.openapi.OpenApiConfig.DETAILED_API_DOCS_PATH;
+import static ru.urfu.lrviz.api.docs.OpenApiConfig.DETAILED_API_DOCS_PATH;
 import static ru.urfu.lrviz.core.lr.AutomatonType.*;
 
 /**
