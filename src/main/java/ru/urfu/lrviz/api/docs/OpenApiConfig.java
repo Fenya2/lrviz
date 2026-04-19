@@ -1,4 +1,4 @@
-package ru.urfu.lrviz.api.openapi;
+package ru.urfu.lrviz.api.docs;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.info.Contact;
