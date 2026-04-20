@@ -29,13 +29,13 @@ public class LRAutomatonVisualizer {
         this.reconstructor = reconstructor;
     }
 
-    public void visualize(LRAutomaton automaton, OutputStream outputStream, VisualizeOptions parameters) throws IOException {
-        renderer.render(automaton, outputStream, parameters);
+    public void visualize(LRAutomaton automaton, OutputStream outputStream, VisualizationContext context) throws IOException {
+        renderer.render(automaton, outputStream, context);
     }
 
-    public void visualizeBuildLog(BuildLog buildLog, OutputStream outputStream, VisualizeOptions options) throws IOException {
+    public void visualizeBuildLog(BuildLog buildLog, OutputStream outputStream, VisualizationContext context) throws IOException {
         List<BuildOperation> operations = buildLog.getOperations();
-        Set<Integer> visualizeOperations = options.getVisualizeOperations();
+        Set<Integer> visualizeOperations = context.getVisualizeOptions().getVisualizeOperations();
         try (ZipOutputStream zip = new ZipOutputStream(outputStream)) {
             for (int i = 0; i < operations.size(); i++) {
                 if (visualizeOperations != null && !visualizeOperations.contains(i)) {
@@ -44,12 +44,7 @@ public class LRAutomatonVisualizer {
                 LRAutomaton reconstructed = reconstructor.reconstructUntil(buildLog, i);
                 ZipEntry entry = new ZipEntry(i + ".png");
                 zip.putNextEntry(entry);
-
-                renderer.render(
-                        reconstructed,
-                        wrapInNonClosingStream(zip),
-                        options
-                );
+                renderer.render(reconstructed, wrapInNonClosingStream(zip), context);
                 zip.closeEntry();
             }
         }

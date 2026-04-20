@@ -6,64 +6,64 @@ import ru.urfu.lrviz.core.lr.lalr1.LALR1BuildAlgorithm;
 import ru.urfu.lrviz.core.lr.state.name.generation.StateNameGenerator;
 
 import java.util.Map;
+import java.util.Set;
 
 public final class BuildContext {
     /**
      * Лог построения автомата
      */
-    private BuildLog buildLog;
+    private final BuildLog buildLog;
     /**
      * Генератор имен состояний, использующийся при построении автомата
      */
-    private StateNameGenerator stateNamesGenerator;
+    private final StateNameGenerator stateNamesGenerator;
     /**
      * Состояния и их имена, которые будут заполняться в процессе построения автомата
      */
-    private Map<String, LRState> namedStates;
+    private final Map<String, LRState> namedStates;
     /**
      * Переходы между состояниями автомата, которые будут заполняться в процессе построения
      */
-    private Map<LRAutomaton.TransitionKey, String> definedTransitions;
+    private final Map<TransitionKey, String> definedTransitions;
+
+    /**
+     * Список переходов, через которые очередное состояние добавлялось в LR(0/1)-автомат впервые
+     */
+    private final Set<TransitionEntry> originTransitions;
+
+    @Nullable
+    private FirstCalculator firstCalculator;
+
+    @Nullable
+    private LALR1BuildAlgorithm lalr1BuildAlgorithm;
+
     /**
      * Начальный пункт
      */
     private LRItem startItem;
 
-    @Nullable
-    private FirstCalculator firstCalculator;
-    @Nullable
-    private LALR1BuildAlgorithm lalr1BuildAlgorithm;
+    public BuildContext(BuildLog buildLog, StateNameGenerator stateNamesGenerator, Map<String, LRState> namedStates, Map<TransitionKey, String> definedTransitions, Set<TransitionEntry> originTransitions) {
+        this.buildLog = buildLog;
+        this.stateNamesGenerator = stateNamesGenerator;
+        this.namedStates = namedStates;
+        this.definedTransitions = definedTransitions;
+        this.originTransitions = originTransitions;
+    }
 
     public BuildLog getBuildLog() {
         return buildLog;
-    }
-
-    public void setBuildLog(BuildLog buildLog) {
-        this.buildLog = buildLog;
     }
 
     public StateNameGenerator getStateNamesGenerator() {
         return stateNamesGenerator;
     }
 
-    public void setStateNamesGenerator(StateNameGenerator stateNamesGenerator) {
-        this.stateNamesGenerator = stateNamesGenerator;
-    }
-
     public Map<String, LRState> getNamedStates() {
         return namedStates;
     }
 
-    public void setNamedStates(Map<String, LRState> namedStates) {
-        this.namedStates = namedStates;
-    }
-
-    public Map<LRAutomaton.TransitionKey, String> getDefinedTransitions() {
+    public Map<TransitionKey, String> getDefinedTransitions() {
         return definedTransitions;
-    }
-
-    public void setDefinedTransitions(Map<LRAutomaton.TransitionKey, String> definedTransitions) {
-        this.definedTransitions = definedTransitions;
     }
 
     @Nullable
@@ -90,5 +90,9 @@ public final class BuildContext {
 
     public void setStartItem(LRItem startItem) {
         this.startItem = startItem;
+    }
+
+    public Set<TransitionEntry> getOriginTransitions() {
+        return originTransitions;
     }
 }

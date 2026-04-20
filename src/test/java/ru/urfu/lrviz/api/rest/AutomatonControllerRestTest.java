@@ -9,10 +9,10 @@ import ru.urfu.lrviz.api.dto.VisualizeOptionsDto;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.IMAGE_PNG;
-import static ru.urfu.lrviz.api.VersionsConstants.V1;
-import static ru.urfu.lrviz.api.dto.convert.BuildOptionsDtoConverter.END_TO_END_NUMERIC_STRATEGY_CODE;
 import static ru.urfu.lrviz.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.GrammarDtoExamples.getAsDto;
+import static ru.urfu.lrviz.api.VersionsConstants.V1;
+import static ru.urfu.lrviz.api.dto.convert.BuildOptionsDtoConverter.END_TO_END_NUMERIC_STRATEGY_CODE;
 import static ru.urfu.lrviz.core.GrammarExamples.G_1;
 
 class AutomatonControllerRestTest extends AbstractRestTest {
@@ -38,7 +38,7 @@ class AutomatonControllerRestTest extends AbstractRestTest {
                 .apiVersion(V1)
                 .accept(IMAGE_PNG)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new LRBuildRequestDto(getAsDto(G_1), new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE, null, false), new VisualizeOptionsDto(null)))
+                .body(new LRBuildRequestDto(getAsDto(G_1), new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE, null, false), new VisualizeOptionsDto(null, false)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(IMAGE_PNG)

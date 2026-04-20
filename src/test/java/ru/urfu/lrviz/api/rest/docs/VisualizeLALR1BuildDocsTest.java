@@ -13,9 +13,9 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.urfu.lrviz.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
-import static ru.urfu.lrviz.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.core.GrammarExamples.G_6;
 
 /**
@@ -58,7 +58,9 @@ class VisualizeLALR1BuildDocsTest extends AbstractMethodDocsTest {
                         requestHeaders(ACCEPT_ZIP_HEADER),
                         pathParameters(VERSION_PARAMETER),
                         BUILD_LALR_AUTOMATON_REQUEST
-                                .andWithPrefix("visualizeOperations", VISUALIZE_OPTION_VISUALIZE_OPERATIONS),
+                                .andWithPrefix(VISUALIZE_OPERATIONS_FIELD_NAME,
+                                        VISUALIZE_OPTION_VISUALIZE_OPERATIONS,
+                                        VISUALIZE_OPTION_COLORIZE_TRANSITIONS),
                         responseHeaders(CONTENT_TYPE_ZIP_HEADER)));
     }
 }

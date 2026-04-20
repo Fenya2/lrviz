@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.urfu.lrviz.core.GrammarExamples;
 import ru.urfu.lrviz.core.grammar.Grammar;
-import ru.urfu.lrviz.core.lr.BuildContextCreator;
-import ru.urfu.lrviz.core.lr.BuildOptions;
-import ru.urfu.lrviz.core.lr.LRAutomaton;
-import ru.urfu.lrviz.core.lr.LRAutomatonBuilders;
+import ru.urfu.lrviz.core.lr.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -39,52 +36,48 @@ class LRAutomationGraphRendererImplTest {
     private final LRAutomatonBuilders builders;
     private final BuildContextCreator contextCreator;
     private final LrAutomatonGraphRendererImpl renderer;
+    private final VisualizationContextCreator visualizationContextCreator;
 
     @Autowired
     LRAutomationGraphRendererImplTest(LRAutomatonBuilders builders,
                                       BuildContextCreator contextCreator,
-                                      LrAutomatonGraphRendererImpl renderer) {
+                                      LrAutomatonGraphRendererImpl renderer, VisualizationContextCreator visualizationContextCreator) {
         this.builders = builders;
         this.contextCreator = contextCreator;
         this.renderer = renderer;
+        this.visualizationContextCreator = visualizationContextCreator;
     }
 
     @Test
     void renderLR0() throws IOException {
         Grammar grammar = GrammarExamples.get(G_2);
-        LRAutomaton automaton = builders.build(
-                grammar,
-                LR_0,
-                contextCreator.createContext(LR_0, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_0, grammar, BuildOptions.createEmpty());
+        LRAutomaton automaton = builders.build(grammar, LR_0, context);
         Path renderPath = tempDir.resolve("renderLR0.png");
-        render(renderPath, automaton);
+        render(renderPath, automaton, context);
     }
 
     @Test
     void renderLR1() throws IOException {
         Grammar grammar = GrammarExamples.get(G_2);
-        LRAutomaton automaton = builders.build(
-                grammar,
-                LR_1,
-                contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
+        LRAutomaton automaton = builders.build(grammar, LR_1, context);
         Path renderPath = tempDir.resolve("renderLR1.png");
-        render(renderPath, automaton);
+        render(renderPath, automaton, context);
     }
 
     @Test
     void renderLALR1() throws IOException {
         Grammar grammar = GrammarExamples.get(G_2);
-        LRAutomaton automaton = builders.build(
-                grammar,
-                LALR,
-                contextCreator.createContext(LALR, grammar, BuildOptions.createEmpty()));
+        BuildContext context = contextCreator.createContext(LALR, grammar, BuildOptions.createEmpty());
+        LRAutomaton automaton = builders.build(grammar, LALR, context);
         Path renderPath = tempDir.resolve("renderLALR1.png");
-        render(renderPath, automaton);
+        render(renderPath, automaton, context);
     }
 
-    private void render(Path renderPath, LRAutomaton automaton) throws IOException {
+    private void render(Path renderPath, LRAutomaton automaton, BuildContext buildContext) throws IOException {
         try (OutputStream os = Files.newOutputStream(renderPath)) {
-            renderer.render(automaton, os, RENDER_PNG);
+            renderer.render(automaton, os, visualizationContextCreator.create(RENDER_PNG, buildContext));
             Assertions.assertTrue(Files.exists(renderPath));
         }
     }

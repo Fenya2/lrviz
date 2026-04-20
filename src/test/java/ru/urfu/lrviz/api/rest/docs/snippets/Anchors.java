@@ -16,6 +16,7 @@ public class Anchors {
     public static final String BUILD_OPTION_LALR1_BUILD_ALGORITHM = "buildOption2";
     public static final String BUILD_OPTION_ENABLE_BUILD_LOG = "buildOption3";
     public static final String VISUALIZE_OPTION_VISUALIZE_OPERATIONS = "visualizeOption1";
+    public static final String VISUALIZE_OPTION_COLORIZE_TRANSITIONS = "visualizeOption2";
     public static final String AUTOMATON = "automaton";
     public static final String AUTOMATON_STATES = "automatonStates";
     public static final String LR_ITEMS = "lrItems";
