@@ -14,10 +14,10 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.urfu.lrviz.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
 import static ru.urfu.lrviz.api.rest.docs.snippets.ImageSnippet.responseImagePng;
-import static ru.urfu.lrviz.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.core.GrammarExamples.G_6;
 
 /**
@@ -60,7 +60,8 @@ class RenderLR0DocsTest extends AbstractMethodDocsTest {
                         preprocessResponse(),
                         pathParameters(VERSION_PARAMETER),
                         requestHeaders(ACCEPT_PNG_HEADER),
-                        BUILD_LR_AUTOMATON_REQUEST,
+                        BUILD_LR_AUTOMATON_REQUEST.andWithPrefix(VISUALIZE_OPERATIONS_FIELD_NAME,
+                                VISUALIZE_OPTION_COLORIZE_TRANSITIONS),
                         responseHeaders(CONTENT_TYPE_PNG_HEADER),
                         responseImagePng("renderLr0")));
     }

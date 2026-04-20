@@ -7,7 +7,6 @@ package ru.urfu.lrviz.render;
  */
 public class VisializeParametersConstants {
     public static final VisualizeOptions RENDER_PNG = VisualizeOptions.builder()
-            .renderFormat(RenderFormat.PNG)
             .highLightBaseItems(false)
             .build();
 }

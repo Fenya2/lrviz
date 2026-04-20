@@ -48,6 +48,7 @@ class UITest {
     private static final String GO_STEP_BUTTON_ID = "goStepButton";
     private static final String GRAPH_CONTAINER_ID = "graphContainer";
     private static final String PRESENTATION_SELECTOR_ID = "presentationSelector";
+    private static final String COLORIZE_OPTIONS_CHECKBOX_ID = "colorizeOptionsCheckbox";
     private static final int WAIT_TIME = 10;
     private static final String GRAMMAR_IS_NOT_DEFINED_TEXT = "Грамматика не задана.";
     private static final String ILLEGAL_OPERATION_NUMBER_TEXT = "Недопустимый номер операции.";
@@ -265,6 +266,30 @@ class UITest {
         ));
         boolean noAlert = wait.until(ExpectedConditions.not(ExpectedConditions.alertIsPresent()));
         assertTrue(noAlert, "Unexpected alert present after zip download");
+    }
+
+    @Test
+    void testColorizeOptionsCheckboxExists() {
+        var checkbox = driver.findElement(By.id(COLORIZE_OPTIONS_CHECKBOX_ID));
+        assertNotNull(checkbox, "Colorize options checkbox should exist");
+        assertFalse(checkbox.isSelected(), "Colorize checkbox should be unchecked by default");
+    }
+
+    @Test
+    void testColorizeOptionsUpdatesModel() {
+        WebElement checkbox = driver.findElement(By.id(COLORIZE_OPTIONS_CHECKBOX_ID));
+        String getColorizeTransitionsValueScript = "return visualizeOptions.colorizeTransitions;";
+        Boolean initialValue = (Boolean) ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript(getColorizeTransitionsValueScript);
+        assertNotEquals(Boolean.TRUE, initialValue, "Initial colorizeTransitions value should be false");
+        checkbox.click();
+        Boolean updatedValue = (Boolean) ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript(getColorizeTransitionsValueScript);
+        assertEquals(Boolean.TRUE, updatedValue, "colorizeTransitions should be true after checking checkbox");
+        checkbox.click();
+        Boolean resetValue = (Boolean) ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript(getColorizeTransitionsValueScript);
+        assertNotEquals(Boolean.TRUE, resetValue, "colorizeTransitions should be false after unchecking checkbox");
     }
 
     private void fillGrammar(GrammarDto grammar) {

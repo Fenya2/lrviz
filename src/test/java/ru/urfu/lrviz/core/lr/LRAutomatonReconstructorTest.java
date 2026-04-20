@@ -62,7 +62,7 @@ class LRAutomatonReconstructorTest {
 
         LRAutomaton automaton = reconstructor.reconstruct(buildLog);
 
-        LRAutomaton.TransitionKey key = new LRAutomaton.TransitionKey(STATE_NAME_1, symbol);
+        TransitionKey key = new TransitionKey(STATE_NAME_1, symbol);
         assertTrue(automaton.transitions().containsKey(key));
         assertEquals(STATE_NAME_2, automaton.transitions().get(key));
     }
@@ -78,7 +78,7 @@ class LRAutomatonReconstructorTest {
 
         LRAutomaton automaton = reconstructor.reconstruct(buildLog);
 
-        LRAutomaton.TransitionKey key = new LRAutomaton.TransitionKey(STATE_NAME_1, symbol);
+        TransitionKey key = new TransitionKey(STATE_NAME_1, symbol);
         assertFalse(automaton.transitions().containsKey(key));
     }
 

@@ -56,7 +56,7 @@ public class ChannelLALR1AutomatonBuilder {
                         }
                         LookAheadSymbol lookAheadSymbol = item.getLookAheadSymbol();
                         if (!(lookAheadSymbol instanceof FictiveGrammarTerminalSymbol)) {
-                            String stateNameForGeneration = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(kernelName, symbol));
+                            String stateNameForGeneration = lr0Automaton.transitions().get(new TransitionKey(kernelName, symbol));
                             Set<LRItem> stateForGeneration = lalr1NamedKernels.get(stateNameForGeneration);
                             LALR1Item candidateForGeneration = (LALR1Item) findCandidate(item.shift(), stateForGeneration);
                             if (candidateForGeneration.addLookAhead(lookAheadSymbol)) {
@@ -84,7 +84,7 @@ public class ChannelLALR1AutomatonBuilder {
                             }
                             if (item.getLookAheadSymbol() instanceof FictiveGrammarTerminalSymbol) {
                                 Set<LookAheadSymbol> propagateSymbols = ((LALR1Item) kernelItem).getLookAheadSymbols();
-                                String stateNameForPropagation = lr0Automaton.transitions().get(new LRAutomaton.TransitionKey(namedLalr1Kernel.getKey(), symbol));
+                                String stateNameForPropagation = lr0Automaton.transitions().get(new TransitionKey(namedLalr1Kernel.getKey(), symbol));
                                 Set<LRItem> stateForPropagation = lalr1NamedKernels.get(stateNameForPropagation);
                                 LALR1Item candidateForPropagation = (LALR1Item) findCandidate(item.shift(), stateForPropagation);
                                 if (propagateSymbols(propagateSymbols, candidateForPropagation, stateNameForPropagation, context)) {

@@ -19,16 +19,16 @@ public class BuildLogUtils {
         }
     }
 
-    public static void logTransitionsDeletions(Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitions, BuildLog log) {
-        for (Map.Entry<LRAutomaton.TransitionKey, String> transition : transitions) {
-            LRAutomaton.TransitionKey transitionKey = transition.getKey();
+    public static void logTransitionsDeletions(Set<Map.Entry<TransitionKey, String>> transitions, BuildLog log) {
+        for (Map.Entry<TransitionKey, String> transition : transitions) {
+            TransitionKey transitionKey = transition.getKey();
             log.append(new DeleteTransitionOperation(transitionKey.stateName(), transition.getValue(), transitionKey.symbol()));
         }
     }
 
-    public static void logTransitionsAdditions(Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitions, BuildLog log) {
-        for (Map.Entry<LRAutomaton.TransitionKey, String> transition : transitions) {
-            LRAutomaton.TransitionKey transitionKey = transition.getKey();
+    public static void logTransitionsAdditions(Set<Map.Entry<TransitionKey, String>> transitions, BuildLog log) {
+        for (Map.Entry<TransitionKey, String> transition : transitions) {
+            TransitionKey transitionKey = transition.getKey();
             log.append(new AddTransitionOperation(transitionKey.stateName(), transition.getValue(), transitionKey.symbol()));
         }
     }
