@@ -5,5 +5,5 @@ package ru.urfu.lrviz.render;
  * @since 28.02.2026
  */
 public enum RenderFormat {
-    PNG, SVG
+    PNG
 }

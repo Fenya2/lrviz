@@ -5,16 +5,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 
 import static org.springframework.http.HttpHeaders.ACCEPT;
-import static org.springframework.http.MediaType.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.urfu.lrviz.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
-import static ru.urfu.lrviz.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.core.GrammarExamples.G_8;
 
 /**
@@ -56,7 +57,9 @@ class VisualizeLR1BuildDocsTest extends AbstractMethodDocsTest {
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestHeaders(ACCEPT_ZIP_HEADER),
                         pathParameters(VERSION_PARAMETER),
-                        BUILD_LR_AUTOMATON_REQUEST.andWithPrefix("visualizeOperations", VISUALIZE_OPTION_VISUALIZE_OPERATIONS),
+                        BUILD_LR_AUTOMATON_REQUEST.andWithPrefix(VISUALIZE_OPERATIONS_FIELD_NAME,
+                                VISUALIZE_OPTION_VISUALIZE_OPERATIONS,
+                                VISUALIZE_OPTION_COLORIZE_TRANSITIONS),
                         responseHeaders(CONTENT_TYPE_ZIP_HEADER)));
     }
 }

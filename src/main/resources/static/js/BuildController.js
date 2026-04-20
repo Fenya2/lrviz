@@ -29,7 +29,8 @@ fetch('/api/v1/build/' + automatonType, {
 
         body: JSON.stringify({
             grammar: grammar,
-            buildOptions: buildOptions
+            buildOptions: buildOptions,
+            visualizeOptions: visualizeOptions
         })
     })
     .then(response => {

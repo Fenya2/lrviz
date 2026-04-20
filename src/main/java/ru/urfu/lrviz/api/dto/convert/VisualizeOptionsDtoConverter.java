@@ -18,6 +18,7 @@ public class VisualizeOptionsDtoConverter implements Converter<VisualizeOptionsD
         }
         return VisualizeOptions.builder()
                 .visualizeSpecifiedBuildLogOperations(optionsDto.visualizeOperations())
+                .colorizeTransitions(optionsDto.colorizeTransitions())
                 .build();
     }
 }

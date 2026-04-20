@@ -10,5 +10,5 @@ import java.util.List;
  * @author fenya
  * @since 05.04.2026
  */
-public record VisualizeOptionsDto(@Nullable List<Integer> visualizeOperations) {
+public record VisualizeOptionsDto(@Nullable List<Integer> visualizeOperations, boolean colorizeTransitions) {
 }

@@ -13,4 +13,8 @@ const buildOptions = {
     enableBuildLog: true
 }
 
+const visualizeOptions = {
+    colorizeTransitions: false
+}
+
 presentation = 'application/json'

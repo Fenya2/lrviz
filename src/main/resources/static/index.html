@@ -78,12 +78,18 @@
     </div>
     <div class="visualizeOptionsSection">
         <h1>Параметры визуализации</h1>
-        <label for="presentationSelector">Представление</label>
-        <select id="presentationSelector">
-            <option value="application/json">Лог построения</option>
-            <option value="application/octet-stream">Лог построения в zip</option>
-            <option value="image/png">Картинка</option>
-        </select>
+        <p>
+            <label for="presentationSelector">Представление</label>
+            <select id="presentationSelector">
+                <option value="application/json">Лог построения</option>
+                <option value="application/octet-stream">Лог построения в zip</option>
+                <option value="image/png">Картинка</option>
+            </select>
+        </p>
+        <p>
+            <label for="colorizeOptionsCheckbox">Раскрашивать переходы</label>
+            <input type="checkbox" id="colorizeOptionsCheckbox">
+        </p>
     </div>
     <div class="buildSection">
         <button id="buildButton">Построить</button>

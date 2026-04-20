@@ -20,6 +20,7 @@ import ru.urfu.lrviz.api.dto.map.LrBuildResultMapper;
 import ru.urfu.lrviz.core.grammar.Grammar;
 import ru.urfu.lrviz.core.lr.*;
 import ru.urfu.lrviz.render.LRAutomatonVisualizer;
+import ru.urfu.lrviz.render.VisualizationContextCreator;
 import ru.urfu.lrviz.render.VisualizeOptions;
 
 import java.util.Objects;
@@ -45,17 +46,19 @@ public class AutomatonBuildController {
     private final LrBuildResultMapper buildResultMapper;
     private final BuildContextCreator contextCreator;
     private final LRAutomatonVisualizer visualizer;
+    private final VisualizationContextCreator visualizationContextCreator;
 
     public AutomatonBuildController(
             ConversionService conversionService,
             LRAutomatonBuilders builders,
             LrBuildResultMapper buildResultMapper,
-            BuildContextCreator contextCreator, LRAutomatonVisualizer visualizer) {
+            BuildContextCreator contextCreator, LRAutomatonVisualizer visualizer, VisualizationContextCreator visualizationContextCreator) {
         this.conversionService = conversionService;
         this.builders = builders;
         this.buildResultMapper = buildResultMapper;
         this.contextCreator = contextCreator;
         this.visualizer = visualizer;
+        this.visualizationContextCreator = visualizationContextCreator;
     }
 
     @PostMapping(value = "/lr0", version = FROM_V1, produces = APPLICATION_JSON_VALUE)
@@ -77,7 +80,8 @@ public class AutomatonBuildController {
         LRAutomaton automaton = builders.build(targetGrammar, LR_0, context);
         VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
                 conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
-        StreamingResponseBody stream = os -> visualizer.visualize(automaton, os, visualizeOptions);
+        StreamingResponseBody stream = os -> visualizer.visualize(
+                automaton, os, visualizationContextCreator.create(visualizeOptions, context));
         return ResponseEntity.ok().contentType(IMAGE_PNG).body(stream);
     }
 
@@ -89,7 +93,8 @@ public class AutomatonBuildController {
         builders.build(targetGrammar, LR_0, context);
         VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
                 conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
-        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(context.getBuildLog(), os, visualizeOptions);
+        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(
+                context.getBuildLog(), os, visualizationContextCreator.create(visualizeOptions, context));
         return ResponseEntity.ok()
                 .contentType(APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(BUILD_LOG_FILENAME).build().toString())
@@ -115,7 +120,8 @@ public class AutomatonBuildController {
         LRAutomaton automaton = builders.build(targetGrammar, LR_1, context);
         VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
                 conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
-        StreamingResponseBody stream = os -> visualizer.visualize(automaton, os, visualizeOptions);
+        StreamingResponseBody stream = os -> visualizer.visualize(
+                automaton, os, visualizationContextCreator.create(visualizeOptions, context));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(stream);
     }
 
@@ -127,7 +133,8 @@ public class AutomatonBuildController {
         builders.build(targetGrammar, LR_1, context);
         VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
                 conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
-        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(context.getBuildLog(), os, visualizeOptions);
+        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(
+                context.getBuildLog(), os, visualizationContextCreator.create(visualizeOptions, context));
         return ResponseEntity.ok()
                 .contentType(APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(BUILD_LOG_FILENAME).build().toString())
@@ -152,8 +159,10 @@ public class AutomatonBuildController {
         BuildOptions buildOptions = extractBuildOptions(buildRequest);
         BuildContext context = createLalr1BuildContext(targetGrammar, buildOptions);
         LRAutomaton automaton = builders.build(targetGrammar, LALR, context);
+        VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
+                conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
         StreamingResponseBody stream = os -> visualizer.visualize(
-                automaton, os, VisualizeOptions.builder().build());
+                automaton, os, visualizationContextCreator.create(visualizeOptions, context));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(stream);
     }
 
@@ -165,7 +174,8 @@ public class AutomatonBuildController {
         builders.build(targetGrammar, LALR, context);
         VisualizeOptions visualizeOptions = Objects.requireNonNullElse(
                 conversionService.convert(buildRequest.visualizeOptions(), VisualizeOptions.class), VisualizeOptions.createDefault());
-        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(context.getBuildLog(), os, visualizeOptions);
+        StreamingResponseBody stream = os -> visualizer.visualizeBuildLog(
+                context.getBuildLog(), os, visualizationContextCreator.create(visualizeOptions, context));
         return ResponseEntity.ok()
                 .contentType(APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(BUILD_LOG_FILENAME).build().toString())

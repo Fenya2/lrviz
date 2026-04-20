@@ -2,7 +2,7 @@ package ru.urfu.lrviz.api.dto.map;
 
 import org.springframework.stereotype.Component;
 import ru.urfu.lrviz.api.dto.TransitionDto;
-import ru.urfu.lrviz.core.lr.LRAutomaton;
+import ru.urfu.lrviz.core.lr.TransitionKey;
 
 /**
  * @author fenya
@@ -10,7 +10,7 @@ import ru.urfu.lrviz.core.lr.LRAutomaton;
  */
 @Component
 public class TransitionMapper {
-    public TransitionDto map(LRAutomaton.TransitionKey from, String to) {
+    public TransitionDto map(TransitionKey from, String to) {
         return new TransitionDto(from.stateName(), to, from.symbol().asString());
     }
 }
