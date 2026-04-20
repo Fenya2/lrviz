@@ -84,6 +84,7 @@
 :optionEnableBuildLog: enableBuildLog
 
 :visualizeOptionVisualizeOperations: visualizeOperations
+:visualizeOptionColorizeTransitions: colorizeTransitions
 
 == Введение
 
@@ -485,4 +486,11 @@ link:https://linux-doc.ru/programming/assembler/book/compilers.pdf[Эффект�
 === {visualizeOptionVisualizeOperations}
 
 Массив номеров операций <<buildLog,лога построения>>, которые нужно визуализировать.
-Операции нумеруются с 0
+Операции нумеруются с 0.
+
+[#visualizeOption2]
+=== {visualizeOptionColorizeTransitions}
+
+Окрашивать ли переходы автомата в разные цвета. С каждым символом перехода связан свой цвет.
+
+IMPORTANT: Поддерживается 20 цветов. После исчерпания палитры цвета начинают повторяться.

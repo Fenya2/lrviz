@@ -9,6 +9,7 @@ import ru.urfu.lrviz.api.dto.map.LRStateMapper;
 import ru.urfu.lrviz.api.dto.map.TransitionMapper;
 import ru.urfu.lrviz.core.lr.LRAutomaton;
 import ru.urfu.lrviz.core.lr.LRState;
+import ru.urfu.lrviz.core.lr.TransitionKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +39,10 @@ public class LRAutomatonConverter implements Converter<LRAutomaton, LRAutomatonD
             convertedStates.add(convertedState);
         }
 
-        Map<LRAutomaton.TransitionKey, String> transitions = automaton.transitions();
+        Map<TransitionKey, String> transitions = automaton.transitions();
         List<TransitionDto> convertedTransitions = new ArrayList<>(transitions.size());
-        for (Map.Entry<LRAutomaton.TransitionKey, String> transition : transitions.entrySet()) {
-            LRAutomaton.TransitionKey transitionKey = transition.getKey();
+        for (Map.Entry<TransitionKey, String> transition : transitions.entrySet()) {
+            TransitionKey transitionKey = transition.getKey();
             TransitionDto convertedTransition = transitionMapper.map(transitionKey, transition.getValue());
             convertedTransitions.add(convertedTransition);
         }

@@ -131,17 +131,17 @@ class ClassicLALR1AutomatonBuilderTest {
         states.put(A3A4StateName, A3A4State);
         states.put(bStateName, bState);
 
-        Map<LRAutomaton.TransitionKey, String> transitions = HashMap.newHashMap(11);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, a), aStateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, b), bStateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, A), A1StateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, S), S1StateName);
-        transitions.put(new LRAutomaton.TransitionKey(aStateName, a), aStateName);
-        transitions.put(new LRAutomaton.TransitionKey(aStateName, b), bStateName);
-        transitions.put(new LRAutomaton.TransitionKey(aStateName, A), A3A4StateName);
-        transitions.put(new LRAutomaton.TransitionKey(A1StateName, a), aStateName);
-        transitions.put(new LRAutomaton.TransitionKey(A1StateName, b), bStateName);
-        transitions.put(new LRAutomaton.TransitionKey(A1StateName, A), A2StateName);
+        Map<TransitionKey, String> transitions = HashMap.newHashMap(11);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, a), aStateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, b), bStateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, A), A1StateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, S), S1StateName);
+        transitions.put(new TransitionKey(aStateName, a), aStateName);
+        transitions.put(new TransitionKey(aStateName, b), bStateName);
+        transitions.put(new TransitionKey(aStateName, A), A3A4StateName);
+        transitions.put(new TransitionKey(A1StateName, a), aStateName);
+        transitions.put(new TransitionKey(A1StateName, b), bStateName);
+        transitions.put(new TransitionKey(A1StateName, A), A2StateName);
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
@@ -201,12 +201,12 @@ class ClassicLALR1AutomatonBuilderTest {
         states.put(S2StateName, S2State);
         states.put(RPARENStateName, RPARENState);
 
-        Map<LRAutomaton.TransitionKey, String> transitions = HashMap.newHashMap(5);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, LPAREN), LPARENStateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, S), S1StateName);
-        transitions.put(new LRAutomaton.TransitionKey(LPARENStateName, LPAREN), LPARENStateName);
-        transitions.put(new LRAutomaton.TransitionKey(LPARENStateName, S), S2StateName);
-        transitions.put(new LRAutomaton.TransitionKey(S2StateName, RPAREN), RPARENStateName);
+        Map<TransitionKey, String> transitions = HashMap.newHashMap(5);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, LPAREN), LPARENStateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, S), S1StateName);
+        transitions.put(new TransitionKey(LPARENStateName, LPAREN), LPARENStateName);
+        transitions.put(new TransitionKey(LPARENStateName, S), S2StateName);
+        transitions.put(new TransitionKey(S2StateName, RPAREN), RPARENStateName);
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
@@ -326,21 +326,21 @@ class ClassicLALR1AutomatonBuilderTest {
         states.put(E1StateName, E1State);
         states.put(E2E3StateName, E2E3State);
 
-        Map<LRAutomaton.TransitionKey, String> transitions = HashMap.newHashMap(15);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, i), iStateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, lParen), lParenStateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, T), T1T2StateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, E), E1StateName);
-        transitions.put(new LRAutomaton.TransitionKey(lParenStateName, i), iStateName);
-        transitions.put(new LRAutomaton.TransitionKey(lParenStateName, lParen), lParenStateName);
-        transitions.put(new LRAutomaton.TransitionKey(lParenStateName, T), T1T2StateName);
-        transitions.put(new LRAutomaton.TransitionKey(lParenStateName, E), E2E3StateName);
-        transitions.put(new LRAutomaton.TransitionKey(E2E3StateName, rParen), rParenStateName);
-        transitions.put(new LRAutomaton.TransitionKey(E2E3StateName, plus), plusStateName);
-        transitions.put(new LRAutomaton.TransitionKey(E1StateName, plus), plusStateName);
-        transitions.put(new LRAutomaton.TransitionKey(plusStateName, i), iStateName);
-        transitions.put(new LRAutomaton.TransitionKey(plusStateName, lParen), lParenStateName);
-        transitions.put(new LRAutomaton.TransitionKey(plusStateName, T), T3T4StateName);
+        Map<TransitionKey, String> transitions = HashMap.newHashMap(15);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, i), iStateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, lParen), lParenStateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, T), T1T2StateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, E), E1StateName);
+        transitions.put(new TransitionKey(lParenStateName, i), iStateName);
+        transitions.put(new TransitionKey(lParenStateName, lParen), lParenStateName);
+        transitions.put(new TransitionKey(lParenStateName, T), T1T2StateName);
+        transitions.put(new TransitionKey(lParenStateName, E), E2E3StateName);
+        transitions.put(new TransitionKey(E2E3StateName, rParen), rParenStateName);
+        transitions.put(new TransitionKey(E2E3StateName, plus), plusStateName);
+        transitions.put(new TransitionKey(E1StateName, plus), plusStateName);
+        transitions.put(new TransitionKey(plusStateName, i), iStateName);
+        transitions.put(new TransitionKey(plusStateName, lParen), lParenStateName);
+        transitions.put(new TransitionKey(plusStateName, T), T3T4StateName);
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);
@@ -443,21 +443,21 @@ class ClassicLALR1AutomatonBuilderTest {
         states.put(R3StateName, R3State);
         states.put(S1StateName, S1State);
 
-        Map<LRAutomaton.TransitionKey, String> transitions = HashMap.newHashMap(15);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, x), xStateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, star), starStateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, L), L1StateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, R), R1StateName);
-        transitions.put(new LRAutomaton.TransitionKey(INIT_AUTOMATON_STATE_NAME, S), S1StateName);
-        transitions.put(new LRAutomaton.TransitionKey(L1StateName, eq), eqStateName);
-        transitions.put(new LRAutomaton.TransitionKey(eqStateName, x), xStateName);
-        transitions.put(new LRAutomaton.TransitionKey(eqStateName, star), starStateName);
-        transitions.put(new LRAutomaton.TransitionKey(eqStateName, L), L2L3StateName);
-        transitions.put(new LRAutomaton.TransitionKey(eqStateName, R), R3StateName);
-        transitions.put(new LRAutomaton.TransitionKey(starStateName, x), xStateName);
-        transitions.put(new LRAutomaton.TransitionKey(starStateName, star), starStateName);
-        transitions.put(new LRAutomaton.TransitionKey(starStateName, L), L2L3StateName);
-        transitions.put(new LRAutomaton.TransitionKey(starStateName, R), R2R4StateName);
+        Map<TransitionKey, String> transitions = HashMap.newHashMap(15);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, x), xStateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, star), starStateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, L), L1StateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, R), R1StateName);
+        transitions.put(new TransitionKey(INIT_AUTOMATON_STATE_NAME, S), S1StateName);
+        transitions.put(new TransitionKey(L1StateName, eq), eqStateName);
+        transitions.put(new TransitionKey(eqStateName, x), xStateName);
+        transitions.put(new TransitionKey(eqStateName, star), starStateName);
+        transitions.put(new TransitionKey(eqStateName, L), L2L3StateName);
+        transitions.put(new TransitionKey(eqStateName, R), R3StateName);
+        transitions.put(new TransitionKey(starStateName, x), xStateName);
+        transitions.put(new TransitionKey(starStateName, star), starStateName);
+        transitions.put(new TransitionKey(starStateName, L), L2L3StateName);
+        transitions.put(new TransitionKey(starStateName, R), R2R4StateName);
 
         LRAutomaton expected = new LRAutomaton(states, transitions);
         assertEquals(expected, actual);

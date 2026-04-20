@@ -48,7 +48,6 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
      */
     private String initStartState(Grammar grammar, BuildContext context) {
         checkGrammarIsExtended(grammar);
-
         Set<Rule> initRules = grammar.getAlternativesFor(grammar.getStartSymbol());
         Rule startRule = initRules.iterator().next();
         LRItem initialItem = getInitialItem(startRule);
@@ -86,9 +85,10 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
         for (Map.Entry<GrammarSymbol, Set<LRItem>> entry : groupedByDotSymbol.entrySet()) {
             GrammarSymbol transitionSymbol = entry.getKey();
             LRState toState = buildTargetState(grammar, entry.getValue(), context);
+            TransitionKey newTransitionKey = new TransitionKey(stateName, transitionSymbol);
             if (context.getNamedStates().containsValue(toState)) {
                 String toStateName = getToStateName(toState, context.getNamedStates());
-                context.getDefinedTransitions().put(new LRAutomaton.TransitionKey(stateName, transitionSymbol), toStateName);
+                context.getDefinedTransitions().put(newTransitionKey, toStateName);
                 context.getBuildLog().append(new AddTransitionOperation(stateName, toStateName, transitionSymbol));
                 continue;
             }
@@ -96,8 +96,9 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
             context.getNamedStates().put(newStateName, toState);
             context.getBuildLog().append(new AddStateOperation(newStateName));
             logNewItemsAddition(newStateName, toState.items(), context.getBuildLog());
-            context.getDefinedTransitions().put(new LRAutomaton.TransitionKey(stateName, transitionSymbol), newStateName);
+            context.getDefinedTransitions().put(newTransitionKey, newStateName);
             context.getBuildLog().append(new AddTransitionOperation(stateName, newStateName, transitionSymbol));
+            context.getOriginTransitions().add(new TransitionEntry(newTransitionKey, newStateName));
             newStates.add(newStateName);
         }
         return newStates;

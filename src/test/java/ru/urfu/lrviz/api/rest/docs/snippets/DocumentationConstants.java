@@ -24,6 +24,7 @@ import static ru.urfu.lrviz.api.rest.docs.snippets.Anchors.*;
  * @since 04.03.2026
  */
 public class DocumentationConstants {
+    public static final String VISUALIZE_OPERATIONS_FIELD_NAME = "visualizeOperations";
 
     public static final String IS_REQUIRED_ATTRIBUTE_KEY = "isRequired";
     public static final Attributes.Attribute IS_REQUIRED = Attributes.key(IS_REQUIRED_ATTRIBUTE_KEY).value("Да");
@@ -50,6 +51,7 @@ public class DocumentationConstants {
     public static final FieldDescriptor OPTION_ENABLE_BUILD_LOG = fieldWithPath(".enableBuildLog").optional().type(BOOLEAN).description("Передавать ли в ответе %s".formatted(createHyperLink(BUILD_OPTION_ENABLE_BUILD_LOG, "лог построения"))).attributes(IS_OPTIONAL);
 
     public static final FieldDescriptor VISUALIZE_OPTION_VISUALIZE_OPERATIONS = fieldWithPath(".visualizeOperations").optional().type(ARRAY).description("%s, которые нужно визуализировать. Если не указаны, то визуализируются все операции".formatted(createHyperLink(Anchors.VISUALIZE_OPTION_VISUALIZE_OPERATIONS, "Номера операций"))).attributes(IS_OPTIONAL);
+    public static final FieldDescriptor VISUALIZE_OPTION_COLORIZE_TRANSITIONS = fieldWithPath(".colorizeTransitions").optional().type(BOOLEAN).description(createHyperLink(Anchors.VISUALIZE_OPTION_VISUALIZE_OPERATIONS, "Нужно ли окрашивать переходы автомата. " + "По умолчанию не окрашиваются.")).attributes(IS_OPTIONAL);
 
     public static final RequestFieldsSnippet BUILD_LR_AUTOMATON_REQUEST = requestFields()
             .andWithPrefix(".grammar",

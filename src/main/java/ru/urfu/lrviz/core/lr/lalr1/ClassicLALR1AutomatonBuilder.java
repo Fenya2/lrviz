@@ -30,12 +30,12 @@ public class ClassicLALR1AutomatonBuilder {
         context.getBuildLog().append(new CompactLRAutomatonOperation());
         Map<String, LRState> lr1States = lr1Automaton.namedStates();
         Map<String, Set<LR0Item>> kernelSets = createKernelSets(lr1States);
-        Map<LRAutomaton.TransitionKey, String> lr1Transitions = lr1Automaton.transitions();
+        Map<TransitionKey, String> lr1Transitions = lr1Automaton.transitions();
         Map<Set<LR0Item>, Set<String>> groupedByKernel = groupByKernelSets(kernelSets);
 
         Map<String, String> newStateNames = getRenamedStates(context, lr1States, groupedByKernel);
         Map<String, LRState> lalr1States = mergeStates(lr1States, newStateNames);
-        Map<LRAutomaton.TransitionKey, String> lalr1Transitions = updateTransitions(lr1Transitions, newStateNames);
+        Map<TransitionKey, String> lalr1Transitions = updateTransitions(lr1Transitions, newStateNames);
         log(context, lr1Transitions, newStateNames, lalr1States, lalr1Transitions);
         return new LRAutomaton(lalr1States, lalr1Transitions);
     }
@@ -125,15 +125,15 @@ public class ClassicLALR1AutomatonBuilder {
      * @param newStateNames  новые имена состояний
      * @return переходы lalr(1)-автомата
      */
-    private static Map<LRAutomaton.TransitionKey, String> updateTransitions(Map<LRAutomaton.TransitionKey, String> lr1Transitions, Map<String, String> newStateNames) {
-        Map<LRAutomaton.TransitionKey, String> lalr1Transitions = HashMap.newHashMap(lr1Transitions.size());
-        for (Map.Entry<LRAutomaton.TransitionKey, String> lr1Transition : lr1Transitions.entrySet()) {
-            LRAutomaton.TransitionKey transitionKey = lr1Transition.getKey();
+    private static Map<TransitionKey, String> updateTransitions(Map<TransitionKey, String> lr1Transitions, Map<String, String> newStateNames) {
+        Map<TransitionKey, String> lalr1Transitions = HashMap.newHashMap(lr1Transitions.size());
+        for (Map.Entry<TransitionKey, String> lr1Transition : lr1Transitions.entrySet()) {
+            TransitionKey transitionKey = lr1Transition.getKey();
             String fromStateName = transitionKey.stateName();
             String toStateName = lr1Transition.getValue();
             String newFromStateName = newStateNames.getOrDefault(fromStateName, fromStateName);
             String newToStateName = newStateNames.getOrDefault(toStateName, toStateName);
-            lalr1Transitions.put(new LRAutomaton.TransitionKey(newFromStateName, transitionKey.symbol()), newToStateName);
+            lalr1Transitions.put(new TransitionKey(newFromStateName, transitionKey.symbol()), newToStateName);
         }
         return lalr1Transitions;
     }
@@ -141,8 +141,8 @@ public class ClassicLALR1AutomatonBuilder {
     /**
      * Логирует операции, приводящие к построению lalr(1)-автомата
      */
-    private static void log(BuildContext context, Map<LRAutomaton.TransitionKey, String> lr1Transitions, Map<String, String> newStateNames, Map<String, LRState> lalr1States, Map<LRAutomaton.TransitionKey, String> lalr1Transitions) {
-        Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsToRemove = lr1Transitions.entrySet().stream()
+    private static void log(BuildContext context, Map<TransitionKey, String> lr1Transitions, Map<String, String> newStateNames, Map<String, LRState> lalr1States, Map<TransitionKey, String> lalr1Transitions) {
+        Set<Map.Entry<TransitionKey, String>> transitionsToRemove = lr1Transitions.entrySet().stream()
                 .filter(entry -> newStateNames.containsKey(entry.getKey().stateName()) || newStateNames.containsKey(entry.getValue()))
                 .collect(Collectors.toSet());
         BuildLogUtils.logTransitionsDeletions(transitionsToRemove, context.getBuildLog());
@@ -156,7 +156,7 @@ public class ClassicLALR1AutomatonBuilder {
             }
         }
 
-        Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsToAdd = lalr1Transitions.entrySet().stream()
+        Set<Map.Entry<TransitionKey, String>> transitionsToAdd = lalr1Transitions.entrySet().stream()
                 .filter(entry -> mergedStateNames.contains(entry.getKey().stateName()) || mergedStateNames.contains(entry.getValue()))
                 .collect(Collectors.toSet());
         BuildLogUtils.logTransitionsAdditions(transitionsToAdd, context.getBuildLog());

@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.urfu.lrviz.core.GrammarExamples;
 import ru.urfu.lrviz.core.grammar.Grammar;
-import ru.urfu.lrviz.core.lr.*;
+import ru.urfu.lrviz.core.lr.BuildContext;
+import ru.urfu.lrviz.core.lr.BuildContextCreator;
+import ru.urfu.lrviz.core.lr.BuildOptions;
+import ru.urfu.lrviz.core.lr.LRAutomatonBuilders;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,14 +30,16 @@ class LRAutomatonVisualizerTest {
     private final BuildContextCreator contextCreator;
     private final LRAutomatonBuilders builders;
     private final LRAutomatonVisualizer visualizer;
+    private final VisualizationContextCreator visualizationContextCreator;
 
     @Autowired
     LRAutomatonVisualizerTest(BuildContextCreator contextCreator,
                               LRAutomatonBuilders builders,
-                              LRAutomatonVisualizer visualizer) {
+                              LRAutomatonVisualizer visualizer, VisualizationContextCreator visualizationContextCreator) {
         this.contextCreator = contextCreator;
         this.builders = builders;
         this.visualizer = visualizer;
+        this.visualizationContextCreator = visualizationContextCreator;
     }
 
     @Test
@@ -43,12 +48,12 @@ class LRAutomatonVisualizerTest {
         BuildContext context = contextCreator.createContext(LR_1, grammar, BuildOptions.createEmpty());
         builders.build(grammar, LR_1, context);
         Path renderPath = tempDir.resolve("buildLog.zip");
-        visualizeBuildLog(renderPath, context.getBuildLog());
+        visualizeBuildLog(renderPath, context);
     }
 
-    private void visualizeBuildLog(Path renderPath, BuildLog buildLog) throws IOException {
+    private void visualizeBuildLog(Path renderPath, BuildContext context) throws IOException {
         try (OutputStream os = Files.newOutputStream(renderPath)) {
-            visualizer.visualizeBuildLog(buildLog, os, RENDER_PNG);
+            visualizer.visualizeBuildLog(context.getBuildLog(), os, visualizationContextCreator.create(RENDER_PNG, context));
             Assertions.assertTrue(Files.exists(renderPath));
         }
     }

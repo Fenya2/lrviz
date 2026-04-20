@@ -74,13 +74,13 @@ class ChannelLALR1AutomatonBuilderTest {
             String kernelNameInExpected = findKernelName(expectedLalrKernels, checkingKernel);
             String kernelNameInActual = findKernelName(actualLalrKernels, checkingKernel);
 
-            Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsFromExpectedKernel = getTransitionsFromKernel(classicLalr, kernelNameInExpected);
-            Set<Map.Entry<LRAutomaton.TransitionKey, String>> transitionsFromActualKernel = getTransitionsFromKernel(channelLalr, kernelNameInActual);
+            Set<Map.Entry<TransitionKey, String>> transitionsFromExpectedKernel = getTransitionsFromKernel(classicLalr, kernelNameInExpected);
+            Set<Map.Entry<TransitionKey, String>> transitionsFromActualKernel = getTransitionsFromKernel(channelLalr, kernelNameInActual);
             assertEquals(transitionsFromExpectedKernel.size(), transitionsFromActualKernel.size(), CHECK_TRANSITIONS_COUNT_MESSAGE.formatted(kernelNameInExpected, kernelNameInActual));
 
-            for (Map.Entry<LRAutomaton.TransitionKey, String> transitionInExpectedKernel : transitionsFromExpectedKernel) {
+            for (Map.Entry<TransitionKey, String> transitionInExpectedKernel : transitionsFromExpectedKernel) {
                 TransitionSymbol transitionSymbol = transitionInExpectedKernel.getKey().symbol();
-                Map.Entry<LRAutomaton.TransitionKey, String> transitionWithSameSymbolInActualKernel = transitionsFromActualKernel.stream()
+                Map.Entry<TransitionKey, String> transitionWithSameSymbolInActualKernel = transitionsFromActualKernel.stream()
                         .filter(actualTransition -> transitionSymbol.equals(actualTransition.getKey().symbol()))
                         .findFirst()
                         .orElseThrow();
@@ -95,7 +95,7 @@ class ChannelLALR1AutomatonBuilderTest {
         }
     }
 
-    private static Set<Map.Entry<LRAutomaton.TransitionKey, String>> getTransitionsFromKernel(LRAutomaton classicLalr, String kernelName) {
+    private static Set<Map.Entry<TransitionKey, String>> getTransitionsFromKernel(LRAutomaton classicLalr, String kernelName) {
         return classicLalr.transitions().entrySet().stream()
                 .filter(transition -> kernelName.equals(transition.getKey().stateName()))
                 .collect(Collectors.toSet());

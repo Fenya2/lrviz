@@ -57,7 +57,9 @@ class VisualizeLR0BuildDocsTest extends AbstractMethodDocsTest {
                 .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
                         requestHeaders(ACCEPT_ZIP_HEADER),
                         pathParameters(VERSION_PARAMETER),
-                        BUILD_LR_AUTOMATON_REQUEST.andWithPrefix("visualizeOperations", VISUALIZE_OPTION_VISUALIZE_OPERATIONS),
+                        BUILD_LR_AUTOMATON_REQUEST.andWithPrefix(VISUALIZE_OPERATIONS_FIELD_NAME,
+                                VISUALIZE_OPTION_VISUALIZE_OPERATIONS,
+                                VISUALIZE_OPTION_COLORIZE_TRANSITIONS),
                         responseHeaders(CONTENT_TYPE_ZIP_HEADER)));
     }
 }

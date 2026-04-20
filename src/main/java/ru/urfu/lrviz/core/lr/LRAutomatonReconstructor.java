@@ -28,7 +28,7 @@ public class LRAutomatonReconstructor {
             throw new IllegalArgumentException("Illegal final operation number.");
         }
         Map<String, LRState> namedStates = new LinkedHashMap<>();
-        Map<LRAutomaton.TransitionKey, String> transitions = new LinkedHashMap<>();
+        Map<TransitionKey, String> transitions = new LinkedHashMap<>();
         for (int i = 0; i < operationNumber; i++) {
             BuildOperation buildOperation = operations.get(i);
             if (OperationLevel.COMMENT.equals(buildOperation.level)) {
@@ -39,14 +39,14 @@ public class LRAutomatonReconstructor {
         return new LRAutomaton(namedStates, transitions);
     }
 
-    private static void processActionOperation(int operationNumber, BuildOperation buildOperation, Map<LRAutomaton.TransitionKey, String> transitions, Map<String, LRState> namedStates) {
+    private static void processActionOperation(int operationNumber, BuildOperation buildOperation, Map<TransitionKey, String> transitions, Map<String, LRState> namedStates) {
         switch (buildOperation) {
             case AddStateOperation addState -> namedStates.put(addState.stateName, new LRState());
             case DeleteStateOperation deleteState -> namedStates.remove(deleteState.stateName);
             case AddTransitionOperation addTransition ->
-                    transitions.put(new LRAutomaton.TransitionKey(addTransition.from, addTransition.through), addTransition.to);
+                    transitions.put(new TransitionKey(addTransition.from, addTransition.through), addTransition.to);
             case DeleteTransitionOperation deleteTransition ->
-                    transitions.remove(new LRAutomaton.TransitionKey(deleteTransition.from, deleteTransition.through));
+                    transitions.remove(new TransitionKey(deleteTransition.from, deleteTransition.through));
             case AddItemInStateOperation addItem -> {
                 checkStateExist(addItem.stateName, namedStates, operationNumber, buildOperation);
                 LRState state = namedStates.get(addItem.stateName);

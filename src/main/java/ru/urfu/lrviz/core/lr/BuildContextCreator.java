@@ -57,12 +57,12 @@ public class BuildContextCreator {
      * @return контекст для построения LR(0)-автомата
      */
     private BuildContext createLR0Context(BuildOptions buildOptions) {
-        BuildContext buildContext = new BuildContext();
-        buildContext.setBuildLog(new BuildLog());
-        buildContext.setStateNamesGenerator(getNameGenerator(buildOptions.namesGenerationStrategy()));
-        buildContext.setNamedStates(new HashMap<>());
-        buildContext.setDefinedTransitions(new HashMap<>());
-        return buildContext;
+        return new BuildContext(
+                new BuildLog(),
+                getNameGenerator(buildOptions.namesGenerationStrategy()),
+                new HashMap<>(),
+                new HashMap<>(),
+                new HashSet<>());
     }
 
     private StateNameGenerator getNameGenerator(@Nullable StateNamesGenerationStrategy stateNamesGenerationStrategy) {
