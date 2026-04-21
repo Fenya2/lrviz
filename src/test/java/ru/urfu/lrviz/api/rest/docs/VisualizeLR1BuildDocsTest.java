@@ -59,7 +59,8 @@ class VisualizeLR1BuildDocsTest extends AbstractMethodDocsTest {
                         pathParameters(VERSION_PARAMETER),
                         BUILD_LR_AUTOMATON_REQUEST.andWithPrefix(VISUALIZE_OPERATIONS_FIELD_NAME,
                                 VISUALIZE_OPTION_VISUALIZE_OPERATIONS,
-                                VISUALIZE_OPTION_COLORIZE_TRANSITIONS),
+                                VISUALIZE_OPTION_COLORIZE_TRANSITIONS,
+                                VISUALIZE_OPTION_COLORIZE_STATE_NAMES),
                         responseHeaders(CONTENT_TYPE_ZIP_HEADER)));
     }
 }

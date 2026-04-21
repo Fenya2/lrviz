@@ -19,13 +19,20 @@ public class VisualizationContext {
     private final LRItem startItem;
     private final ColorGenerator colorGenerator;
     private final Map<TransitionSymbol, String> colorizedSymbols;
+    private final String startStateName;
 
-    public VisualizationContext(VisualizeOptions visualizeOptions, Set<TransitionEntry> originTransitions, LRItem startItem, ColorGenerator colorGenerator, Map<TransitionSymbol, String> colorizedSymbols) {
+    public VisualizationContext(VisualizeOptions visualizeOptions,
+                                Set<TransitionEntry> originTransitions,
+                                LRItem startItem,
+                                ColorGenerator colorGenerator,
+                                Map<TransitionSymbol, String> colorizedSymbols,
+                                String startStateName) {
         this.visualizeOptions = visualizeOptions;
         this.originTransitions = originTransitions;
         this.startItem = startItem;
         this.colorGenerator = colorGenerator;
         this.colorizedSymbols = colorizedSymbols;
+        this.startStateName = startStateName;
     }
 
     public VisualizeOptions getVisualizeOptions() {
@@ -46,5 +53,9 @@ public class VisualizationContext {
 
     public Map<TransitionSymbol, String> getColorizedSymbols() {
         return colorizedSymbols;
+    }
+
+    public String getStartStateName() {
+        return startStateName;
     }
 }

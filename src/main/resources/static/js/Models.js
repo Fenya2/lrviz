@@ -14,7 +14,8 @@ const buildOptions = {
 }
 
 const visualizeOptions = {
-    colorizeTransitions: false
+    colorizeTransitions: false,
+    colorizeStateNames: false
 }
 
 presentation = 'application/json'
