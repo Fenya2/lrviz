@@ -24,7 +24,8 @@ public class VisualizationContextCreator {
                 buildContext.getOriginTransitions(),
                 buildContext.getStartItem(),
                 getColorGenerator(options),
-                new HashMap<>());
+                new HashMap<>(),
+                buildContext.getStartStateName());
     }
 
     private ColorGenerator getColorGenerator(VisualizeOptions options) {

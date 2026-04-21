@@ -38,7 +38,9 @@ class AutomatonControllerRestTest extends AbstractRestTest {
                 .apiVersion(V1)
                 .accept(IMAGE_PNG)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new LRBuildRequestDto(getAsDto(G_1), new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE, null, false), new VisualizeOptionsDto(null, false)))
+                .body(new LRBuildRequestDto(getAsDto(G_1),
+                        new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE, null, false),
+                        new VisualizeOptionsDto(null, false, false)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(IMAGE_PNG)

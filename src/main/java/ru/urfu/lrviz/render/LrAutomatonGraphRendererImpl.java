@@ -12,10 +12,7 @@ import j2html.tags.DomContent;
 import j2html.tags.Tag;
 import j2html.tags.specialized.TableTag;
 import org.springframework.stereotype.Service;
-import ru.urfu.lrviz.core.lr.LRAutomaton;
-import ru.urfu.lrviz.core.lr.LRItem;
-import ru.urfu.lrviz.core.lr.LRState;
-import ru.urfu.lrviz.core.lr.TransitionKey;
+import ru.urfu.lrviz.core.lr.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,16 +73,35 @@ public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
                 .attr("border", "0")
                 .attr("bgcolor", LR_STATE_BACKGROUND_COLOR).with(
                         Stream.concat(
-                                createTitleTag(stateName),
+                                createTitleTag(stateName, context),
                                 createItemTags(state, context)));
         return node.render();
     }
 
-    private static Stream<? extends DomContent> createTitleTag(String stateName) {
+    private static Stream<? extends DomContent> createTitleTag(String stateName, VisualizationContext context) {
         return Stream.of(tr().with(td()
                 .attr("bgcolor", LR_STATE_TITLE_BACKGROUND_COLOR)
                 .attr("align", "center")
-                .with(tag("font").withText(stateName).attr("color", LR_STATE_BACKGROUND_COLOR))));
+                .with(tag("font").withText(stateName).attr("color", getLrStateNameColor(stateName, context)))));
+    }
+
+    private static String getLrStateNameColor(String stateName, VisualizationContext context) {
+        if (!context.getVisualizeOptions().isColorizeTransitions()) {
+            return LR_STATE_BACKGROUND_COLOR;
+        }
+        if (!context.getVisualizeOptions().isColorizeStateNames()) {
+            return LR_STATE_BACKGROUND_COLOR;
+        }
+        if (stateName.equals(context.getStartStateName())) {
+            return LR_STATE_BACKGROUND_COLOR;
+        }
+        TransitionSymbol transitionSymbol = context.getOriginTransitions().stream()
+                .filter(transitionEntry -> stateName.equals(transitionEntry.toStateName()))
+                .map(transitionEntry -> transitionEntry.key().symbol())
+                .findFirst()
+                .orElseThrow();
+        String stateNameColor = context.getColorizedSymbols().computeIfAbsent(transitionSymbol, _ -> context.getColorGenerator().next());
+        return "#" + stateNameColor;
     }
 
     private static Stream<? extends DomContent> createItemTags(LRState state, VisualizationContext context) {

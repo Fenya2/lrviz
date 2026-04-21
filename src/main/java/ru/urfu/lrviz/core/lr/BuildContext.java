@@ -38,6 +38,11 @@ public final class BuildContext {
     private LALR1BuildAlgorithm lalr1BuildAlgorithm;
 
     /**
+     * Имя начального состояния
+     */
+    private String startStateName;
+
+    /**
      * Начальный пункт
      */
     private LRItem startItem;
@@ -94,5 +99,13 @@ public final class BuildContext {
 
     public Set<TransitionEntry> getOriginTransitions() {
         return originTransitions;
+    }
+
+    public String getStartStateName() {
+        return startStateName;
+    }
+
+    public void setStartStateName(String startStateName) {
+        this.startStateName = startStateName;
     }
 }

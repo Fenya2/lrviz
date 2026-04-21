@@ -56,6 +56,7 @@ public abstract class AbstractLRAutomatonBuilder implements LrAutomatonBuilder {
         String stateName = context.getStateNamesGenerator().getInitAutomatonStateName();
         context.getBuildLog().append(new AddStateOperation(stateName));
         context.getBuildLog().append(new AddItemInStateOperation(stateName, initialItem));
+        context.setStartStateName(stateName);
         LRState closedState = closureState(startState, grammar, context);
         logNewItemsAddition(stateName, LRState.diff(startState, closedState), context.getBuildLog());
         context.getNamedStates().put(stateName, closedState);
