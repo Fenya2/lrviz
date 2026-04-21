@@ -1,0 +1,42 @@
+{
+  "grammar": {
+    "terminals": [
+      "x",
+      "(",
+      ")",
+      "¬",
+      "∧",
+      "∨"
+    ],
+    "nonTerminals": [
+      "S"
+    ],
+    "rules": [
+      {
+        "left": "S",
+        "right": "(S)"
+      },
+      {
+        "left": "S",
+        "right": "S∧S"
+      },
+      {
+        "left": "S",
+        "right": "S∨S"
+      },
+      {
+        "left": "S",
+        "right": "x"
+      },
+      {
+        "left": "S",
+        "right": "¬S"
+      }
+    ],
+    "startSymbol": "S"
+  },
+  "visualizeOptions": {
+    "colorizeTransitions": true,
+    "colorizeStateNames": true
+  }
+}

@@ -85,6 +85,7 @@
 
 :visualizeOptionVisualizeOperations: visualizeOperations
 :visualizeOptionColorizeTransitions: colorizeTransitions
+:visualizeOptionColorizeStateNames: colorizeStateNames
 
 == Введение
 
@@ -494,3 +495,13 @@ link:https://linux-doc.ru/programming/assembler/book/compilers.pdf[Эффект�
 Окрашивать ли переходы автомата в разные цвета. С каждым символом перехода связан свой цвет.
 
 IMPORTANT: Поддерживается 20 цветов. После исчерпания палитры цвета начинают повторяться.
+
+[#visualizeOption3]
+=== {visualizeOptionColorizeStateNames}
+
+Окрашивать ли имена состояний в цвет перехода, по которому это состояние было впервые добавлено в автомат.
+
+IMPORTANT: Применяется только с включенным параметром <<visualizeOption2,{visualizeOptionColorizeTransitions}>>
+
+CAUTION: Не поддерживается методами <<renderLalr1>>, <<visualizeLalr1Build>> при использовании <<buildOption2, алгоритма _{optionLalr1BuildAlgorithmClassic}_>>.
+

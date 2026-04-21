@@ -16,9 +16,14 @@ public class VisualizeOptionsDtoConverter implements Converter<VisualizeOptionsD
         if (optionsDto == null) {
             return null;
         }
-        return VisualizeOptions.builder()
-                .visualizeSpecifiedBuildLogOperations(optionsDto.visualizeOperations())
-                .colorizeTransitions(optionsDto.colorizeTransitions())
-                .build();
+        VisualizeOptions.VisualizeParametersBuilder builder = VisualizeOptions.builder()
+                .visualizeSpecifiedBuildLogOperations(optionsDto.visualizeOperations());
+        if (optionsDto.colorizeTransitions() != null) {
+            builder.colorizeTransitions(optionsDto.colorizeTransitions());
+        }
+        if (optionsDto.colorizeStateNames() != null) {
+            builder.colorizeStateNames(optionsDto.colorizeStateNames());
+        }
+        return builder.build();
     }
 }
