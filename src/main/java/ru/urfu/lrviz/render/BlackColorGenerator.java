@@ -6,7 +6,7 @@ package ru.urfu.lrviz.render;
  * @author fenya
  * @since 21.04.2026
  */
-public class BlackColorGenerator implements ColorGenerator {
+public class BlackColorGenerator extends SingleColorGenerator {
     private static final BlackColorGenerator INSTANCE = new BlackColorGenerator();
 
     public static BlackColorGenerator create() {
@@ -18,7 +18,7 @@ public class BlackColorGenerator implements ColorGenerator {
     }
 
     @Override
-    public String next() {
+    protected String getColor() {
         return "000000";
     }
 }
