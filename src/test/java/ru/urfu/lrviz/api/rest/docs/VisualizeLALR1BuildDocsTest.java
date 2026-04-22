@@ -61,7 +61,8 @@ class VisualizeLALR1BuildDocsTest extends AbstractMethodDocsTest {
                                 .andWithPrefix(VISUALIZE_OPERATIONS_FIELD_NAME,
                                         VISUALIZE_OPTION_VISUALIZE_OPERATIONS,
                                         VISUALIZE_OPTION_COLORIZE_TRANSITIONS,
-                                        VISUALIZE_OPTION_COLORIZE_STATE_NAMES),
+                                        VISUALIZE_OPTION_COLORIZE_STATE_NAMES,
+                                        VISUALIZE_OPTION_STATE_NAME_STYLE),
                         responseHeaders(CONTENT_TYPE_ZIP_HEADER)));
     }
 }

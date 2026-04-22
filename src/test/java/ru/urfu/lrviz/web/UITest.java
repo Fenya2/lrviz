@@ -50,6 +50,7 @@ class UITest {
     private static final String PRESENTATION_SELECTOR_ID = "presentationSelector";
     private static final String COLORIZE_OPTIONS_CHECKBOX_ID = "colorizeTransitionsCheckbox";
     private static final String COLORIZE_STATE_NAMES_CHECKBOX_ID = "colorizeStateNamesCheckbox";
+    private static final String STATE_NAME_STYLE_SELECTOR_ID = "stateNameStyleSelector";
     private static final int WAIT_TIME = 10;
     private static final String GRAMMAR_IS_NOT_DEFINED_TEXT = "Грамматика не задана.";
     private static final String ILLEGAL_OPERATION_NUMBER_TEXT = "Недопустимый номер операции.";
@@ -309,6 +310,46 @@ class UITest {
         Boolean resetValue = (Boolean) ((org.openqa.selenium.JavascriptExecutor) driver)
                 .executeScript(getColorizeStateNamesValueScript);
         assertNotEquals(Boolean.TRUE, resetValue, "colorizeTransitions should be false after unchecking checkbox");
+    }
+
+    @Test
+    void testStateNameStyleSelectorExists() {
+        var selector = new Select(driver.findElement(By.id(STATE_NAME_STYLE_SELECTOR_ID)));
+        assertNotNull(selector, "State name style selector should exist");
+        var options = selector.getOptions();
+        assertEquals(2, options.size(), "State name style selector should have 2 options");
+        assertEquals("onBlackBackground", options.get(0).getAttribute("value"),
+                "First option should be 'onBlackBackground'");
+        assertEquals("boldOnWhiteBackground", options.get(1).getAttribute("value"),
+                "Second option should be 'boldOnWhiteBackground'");
+    }
+
+    @Test
+    void testStateNameStyleSelectorDefault() {
+        var selector = new Select(driver.findElement(By.id(STATE_NAME_STYLE_SELECTOR_ID)));
+        var firstSelectedOption = selector.getFirstSelectedOption();
+        assertEquals("onBlackBackground", firstSelectedOption.getAttribute("value"),
+                "Default state name style should be 'onBlackBackground'");
+    }
+
+    @Test
+    void testStateNameStyleUpdatesModel() {
+        var selector = new Select(driver.findElement(By.id(STATE_NAME_STYLE_SELECTOR_ID)));
+        String getStateNameStyleValueScript = "return visualizeOptions.stateNameStyle;";
+        String initialValue = (String) ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript(getStateNameStyleValueScript);
+        assertEquals("onBlackBackground", initialValue,
+                "Initial stateNameStyle value should be 'onBlackBackground'");
+        selector.selectByValue("boldOnWhiteBackground");
+        String updatedValue = (String) ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript(getStateNameStyleValueScript);
+        assertEquals("boldOnWhiteBackground", updatedValue,
+                "stateNameStyle should be 'boldOnWhiteBackground' after selecting option");
+        selector.selectByValue("onBlackBackground");
+        String resetValue = (String) ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript(getStateNameStyleValueScript);
+        assertEquals("onBlackBackground", resetValue,
+                "stateNameStyle should be 'onBlackBackground' after selecting option");
     }
 
     private void fillGrammar(GrammarDto grammar) {
