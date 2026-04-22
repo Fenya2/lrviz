@@ -99,10 +99,10 @@ public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
 
     private static String getLrStateNameColor(String stateName, VisualizationContext context) {
         if (!context.getVisualizeOptions().isColorizeTransitions()) {
-            getLrStateNameContrastColor(context);
+            return getLrStateNameContrastColor(context);
         }
         if (!context.getVisualizeOptions().isColorizeStateNames()) {
-            getLrStateNameContrastColor(context);
+            return getLrStateNameContrastColor(context);
         }
         if (stateName.equals(context.getStartStateName())) {
             return getLrStateNameContrastColor(context);
