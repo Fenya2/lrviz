@@ -9,3 +9,7 @@ document.getElementById('colorizeTransitionsCheckbox').addEventListener('change'
 document.getElementById('colorizeStateNamesCheckbox').addEventListener('change', (e) => {
     visualizeOptions.colorizeStateNames = e.target.checked
 });
+
+document.getElementById('stateNameStyleSelector').addEventListener('change', (e) => {
+    visualizeOptions.stateNameStyle = e.target.value
+});

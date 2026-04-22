@@ -13,6 +13,7 @@ import static ru.urfu.lrviz.GrammarDtoExamples.getAsBuildRequestBodyFor;
 import static ru.urfu.lrviz.GrammarDtoExamples.getAsDto;
 import static ru.urfu.lrviz.api.VersionsConstants.V1;
 import static ru.urfu.lrviz.api.dto.convert.BuildOptionsDtoConverter.END_TO_END_NUMERIC_STRATEGY_CODE;
+import static ru.urfu.lrviz.api.dto.convert.VisualizeOptionsDtoConverter.STATE_NAME_STYLE_ON_BLACK_BACKGROUND;
 import static ru.urfu.lrviz.core.GrammarExamples.G_1;
 
 class AutomatonControllerRestTest extends AbstractRestTest {
@@ -40,7 +41,7 @@ class AutomatonControllerRestTest extends AbstractRestTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new LRBuildRequestDto(getAsDto(G_1),
                         new BuildOptionsDto(END_TO_END_NUMERIC_STRATEGY_CODE, null, false),
-                        new VisualizeOptionsDto(null, false, false)))
+                        new VisualizeOptionsDto(null, false, false, STATE_NAME_STYLE_ON_BLACK_BACKGROUND)))
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(IMAGE_PNG)

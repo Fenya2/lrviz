@@ -63,7 +63,8 @@ class RenderLALR1DocsTest extends AbstractMethodDocsTest {
                         requestHeaders(CONTENT_TYPE_PNG_HEADER),
                         BUILD_LALR_AUTOMATON_REQUEST.andWithPrefix(VISUALIZE_OPERATIONS_FIELD_NAME,
                                 VISUALIZE_OPTION_COLORIZE_TRANSITIONS,
-                                VISUALIZE_OPTION_COLORIZE_STATE_NAMES),
+                                VISUALIZE_OPTION_COLORIZE_STATE_NAMES,
+                                VISUALIZE_OPTION_STATE_NAME_STYLE),
                         responseHeaders(CONTENT_TYPE_JSON_HEADER),
                         responseImagePng("renderLalr1")));
     }

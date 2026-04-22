@@ -86,6 +86,9 @@
 :visualizeOptionVisualizeOperations: visualizeOperations
 :visualizeOptionColorizeTransitions: colorizeTransitions
 :visualizeOptionColorizeStateNames: colorizeStateNames
+:visualizeOptionStateNameStyle: stateNameStyle
+:visualizeOptionStateNameStyleOnBlackBackground: onBlackBackground
+:visualizeOptionStateNameStyleBoldOnWhiteBackground: boldOnWhiteBackground
 
 == Введение
 
@@ -504,4 +507,17 @@ IMPORTANT: Поддерживается 20 цветов. После исчерп
 IMPORTANT: Применяется только с включенным параметром <<visualizeOption2,{visualizeOptionColorizeTransitions}>>
 
 CAUTION: Не поддерживается методами <<renderLalr1>>, <<visualizeLalr1Build>> при использовании <<buildOption2, алгоритма _{optionLalr1BuildAlgorithmClassic}_>>.
+
+[#visualizeOption4]
+=== {visualizeOptionStateNameStyle}
+
+Стиль оформления названия состояния.
+
+Поддерживается 2 стиля:
+
+*{visualizeOptionStateNameStyleOnBlackBackground}* - название состояния на чёрном фоне.
+
+IMPORTANT: используется по умолчанию
+
+*{visualizeOptionStateNameStyleBoldOnWhiteBackground}* - название состояния жирным шрифтом на белом фоне.
 
