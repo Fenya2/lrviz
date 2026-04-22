@@ -62,7 +62,8 @@ class RenderLR0DocsTest extends AbstractMethodDocsTest {
                         requestHeaders(ACCEPT_PNG_HEADER),
                         BUILD_LR_AUTOMATON_REQUEST.andWithPrefix(VISUALIZE_OPERATIONS_FIELD_NAME,
                                 VISUALIZE_OPTION_COLORIZE_TRANSITIONS,
-                                VISUALIZE_OPTION_COLORIZE_STATE_NAMES),
+                                VISUALIZE_OPTION_COLORIZE_STATE_NAMES,
+                                VISUALIZE_OPTION_STATE_NAME_STYLE),
                         responseHeaders(CONTENT_TYPE_PNG_HEADER),
                         responseImagePng("renderLr0")));
     }

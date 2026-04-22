@@ -53,6 +53,7 @@ public class DocumentationConstants {
     public static final FieldDescriptor VISUALIZE_OPTION_VISUALIZE_OPERATIONS = fieldWithPath(".visualizeOperations").optional().type(ARRAY).description("%s, которые нужно визуализировать. Если не указаны, то визуализируются все операции".formatted(createHyperLink(Anchors.VISUALIZE_OPTION_VISUALIZE_OPERATIONS, "Номера операций"))).attributes(IS_OPTIONAL);
     public static final FieldDescriptor VISUALIZE_OPTION_COLORIZE_TRANSITIONS = fieldWithPath(".colorizeTransitions").optional().type(BOOLEAN).description(createHyperLink(Anchors.VISUALIZE_OPTION_COLORIZE_TRANSITIONS, "Нужно ли окрашивать переходы автомата. " + "По умолчанию не окрашиваются.")).attributes(IS_OPTIONAL);
     public static final FieldDescriptor VISUALIZE_OPTION_COLORIZE_STATE_NAMES = fieldWithPath(".colorizeStateNames").optional().type(BOOLEAN).description(createHyperLink(Anchors.VISUALIZE_OPTION_COLORIZE_STATE_NAMES, "Окрашивать ли имена состояний. " + "По умолчанию не окрашиваются.")).attributes(IS_OPTIONAL);
+    public static final FieldDescriptor VISUALIZE_OPTION_STATE_NAME_STYLE = fieldWithPath(".stateNameStyle").optional().type(STRING).description(createHyperLink(Anchors.VISUALIZE_OPTION_STATE_NAME_STYLE, "Стиль оформления названия состояния. " + "По умолчанию 'onBlackBackground'.")).attributes(IS_OPTIONAL);
 
     public static final RequestFieldsSnippet BUILD_LR_AUTOMATON_REQUEST = requestFields()
             .andWithPrefix(".grammar",
