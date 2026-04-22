@@ -37,10 +37,10 @@ import static j2html.TagCreator.*;
  */
 @Service
 public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
-    public static final int TRANSITION_ARROW_WIDTH = 2;
-    public static final String LR_STATE_TITLE_BACKGROUND_COLOR = "black";
-    public static final String LR_STATE_BACKGROUND_COLOR = "white";
-    public static final String KERNEL_ITEM_COLOR = "red";
+    private static final int TRANSITION_ARROW_WIDTH = 2;
+    private static final String WHITE_COLOR = "white";
+    private static final String RED_COLOR = "red";
+    private static final String BLACK_COLOR = "black";
 
     @Override
     public void render(LRAutomaton automaton, OutputStream outputStream, VisualizationContext context) throws IOException {
@@ -71,7 +71,7 @@ public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
     private static String lrStateToHtml(String stateName, LRState state, VisualizationContext context) {
         TableTag node = table()
                 .attr("border", "0")
-                .attr("bgcolor", LR_STATE_BACKGROUND_COLOR).with(
+                .attr("bgcolor", WHITE_COLOR).with(
                         Stream.concat(
                                 createTitleTag(stateName, context),
                                 createItemTags(state, context)));
@@ -79,21 +79,33 @@ public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
     }
 
     private static Stream<? extends DomContent> createTitleTag(String stateName, VisualizationContext context) {
+        ContainerTag<? extends Tag<?>> stateTitleTag = tag("font").attr("color", getLrStateNameColor(stateName, context));
+        switch (context.getVisualizeOptions().getStateNameStyle()) {
+            case ON_BLACK_BACKGROUND -> stateTitleTag.withText(stateName);
+            case BOLD_ON_WHITE_BACKGROUND -> stateTitleTag.with(b().withText(stateName));
+        }
         return Stream.of(tr().with(td()
-                .attr("bgcolor", LR_STATE_TITLE_BACKGROUND_COLOR)
+                .attr("bgcolor", getLrStateTitleBackgroundColor(context))
                 .attr("align", "center")
-                .with(tag("font").withText(stateName).attr("color", getLrStateNameColor(stateName, context)))));
+                .with(stateTitleTag)));
+    }
+
+    private static String getLrStateTitleBackgroundColor(VisualizationContext context) {
+        return switch (context.getVisualizeOptions().getStateNameStyle()) {
+            case ON_BLACK_BACKGROUND -> BLACK_COLOR;
+            case BOLD_ON_WHITE_BACKGROUND -> WHITE_COLOR;
+        };
     }
 
     private static String getLrStateNameColor(String stateName, VisualizationContext context) {
         if (!context.getVisualizeOptions().isColorizeTransitions()) {
-            return LR_STATE_BACKGROUND_COLOR;
+            return getLrStateNameContrastColor(context);
         }
         if (!context.getVisualizeOptions().isColorizeStateNames()) {
-            return LR_STATE_BACKGROUND_COLOR;
+            return getLrStateNameContrastColor(context);
         }
         if (stateName.equals(context.getStartStateName())) {
-            return LR_STATE_BACKGROUND_COLOR;
+            return getLrStateNameContrastColor(context);
         }
         TransitionSymbol transitionSymbol = context.getOriginTransitions().stream()
                 .filter(transitionEntry -> stateName.equals(transitionEntry.toStateName()))
@@ -104,12 +116,19 @@ public class LrAutomatonGraphRendererImpl implements LRAutomationGraphRenderer {
         return "#" + stateNameColor;
     }
 
+    private static String getLrStateNameContrastColor(VisualizationContext context) {
+        return switch (context.getVisualizeOptions().getStateNameStyle()) {
+            case ON_BLACK_BACKGROUND -> WHITE_COLOR;
+            case BOLD_ON_WHITE_BACKGROUND -> BLACK_COLOR;
+        };
+    }
+
     private static Stream<? extends DomContent> createItemTags(LRState state, VisualizationContext context) {
         return state.items().stream()
                 .map(item -> {
                     ContainerTag<? extends Tag<?>> itemTag = tag("font").withText(item.asString());
                     if (context.getVisualizeOptions().isHighLightBaseItems() && isBaseItem(item, context)) {
-                        itemTag.attr("color", KERNEL_ITEM_COLOR);
+                        itemTag.attr("color", RED_COLOR);
                     }
                     return tr().with(td().attr("align", "left").with(itemTag));
                 });

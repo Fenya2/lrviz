@@ -18,6 +18,7 @@ public class Anchors {
     public static final String VISUALIZE_OPTION_VISUALIZE_OPERATIONS = "visualizeOption1";
     public static final String VISUALIZE_OPTION_COLORIZE_TRANSITIONS = "visualizeOption2";
     public static final String VISUALIZE_OPTION_COLORIZE_STATE_NAMES = "visualizeOption3";
+    public static final String VISUALIZE_OPTION_STATE_NAME_STYLE = "visualizeOption4";
     public static final String AUTOMATON = "automaton";
     public static final String AUTOMATON_STATES = "automatonStates";
     public static final String LR_ITEMS = "lrItems";

@@ -13,5 +13,6 @@ import java.util.List;
 public record VisualizeOptionsDto(
         @Nullable List<Integer> visualizeOperations,
         @Nullable Boolean colorizeTransitions,
-        @Nullable Boolean colorizeStateNames) {
+        @Nullable Boolean colorizeStateNames,
+        @Nullable String stateNameStyle) {
 }

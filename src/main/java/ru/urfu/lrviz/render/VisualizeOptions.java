@@ -14,6 +14,8 @@ public final class VisualizeOptions {
     private final boolean colorizeTransitions;
     private final boolean highLightBaseItems;
     private final boolean colorizeStateNames;
+    private final StateNameStyle stateNameStyle;
+
     @Nullable
     private final Set<Integer> visualizeOperations;
 
@@ -21,6 +23,7 @@ public final class VisualizeOptions {
         private boolean highLightBaseItems = false;
         private boolean colorizeTransitions = false;
         private boolean colorizeStateNames = false;
+        private StateNameStyle stateNameStyle = StateNameStyle.ON_BLACK_BACKGROUND;
         private List<Integer> visualizeOperations;
 
         private VisualizeParametersBuilder() {
@@ -46,20 +49,27 @@ public final class VisualizeOptions {
             return this;
         }
 
+        public VisualizeParametersBuilder stateNameStyle(StateNameStyle stateNameStyle) {
+            this.stateNameStyle = stateNameStyle;
+            return this;
+        }
+
         public VisualizeOptions build() {
-            return new VisualizeOptions(colorizeTransitions, highLightBaseItems, colorizeStateNames, visualizeOperations);
+            return new VisualizeOptions(colorizeTransitions, highLightBaseItems, colorizeStateNames, stateNameStyle, visualizeOperations);
         }
     }
 
     /**
      * @param colorizeTransitions окрашивать ли переходы в разные цвета
      * @param highLightBaseItems  подсвечивать ли базовые пункты автомата
+     * @param stateNameStyle      стиль оформления названия состояния
      * @param visualizeOperations номера операций, которые нужно визуализировать
      */
-    private VisualizeOptions(boolean colorizeTransitions, boolean highLightBaseItems, boolean colorizeStateNames, @Nullable List<Integer> visualizeOperations) {
+    private VisualizeOptions(boolean colorizeTransitions, boolean highLightBaseItems, boolean colorizeStateNames, StateNameStyle stateNameStyle, @Nullable List<Integer> visualizeOperations) {
         this.colorizeTransitions = colorizeTransitions;
         this.highLightBaseItems = highLightBaseItems;
         this.colorizeStateNames = colorizeStateNames;
+        this.stateNameStyle = stateNameStyle;
         this.visualizeOperations = visualizeOperations == null ? null : new HashSet<>(visualizeOperations);
     }
 
@@ -82,6 +92,10 @@ public final class VisualizeOptions {
 
     public boolean isColorizeStateNames() {
         return colorizeStateNames;
+    }
+
+    public StateNameStyle getStateNameStyle() {
+        return stateNameStyle;
     }
 
     @Nullable
