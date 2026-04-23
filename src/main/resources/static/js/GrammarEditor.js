@@ -22,7 +22,7 @@ function renderRules() {
         const ruleDiv = document.createElement('div');
         ruleDiv.textContent = `${rule.left}→${rule.right}`;
         const removeBtn = document.createElement('button');
-        removeBtn.textContent = '✖';
+        removeBtn.textContent = '&#10006;';
         removeBtn.className = 'removeRuleButton'
         removeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -111,7 +111,7 @@ function createSymbolSpan(symbol, onRemove) {
     span.appendChild(document.createTextNode(symbol));
     const removeBtn = document.createElement('button');
     removeBtn.className = 'removeSymbolButton';
-    removeBtn.textContent = '✖';
+    removeBtn.textContent = '&#10006;';
     removeBtn.addEventListener('click', () => onRemove());
     span.appendChild(removeBtn);
     return span;
