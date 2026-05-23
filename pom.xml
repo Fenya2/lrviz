@@ -24,7 +24,7 @@
     <properties>
         <java.version>25</java.version>
         <selenium.headless>true</selenium.headless>
-        <springdoc-openapi-starter-webmvc-ui.version>3.0.2</springdoc-openapi-starter-webmvc-ui.version>
+        <springdoc-openapi-starter-webmvc-ui.version>3.0.3</springdoc-openapi-starter-webmvc-ui.version>
         <spring-restdocs.version>4.0.0</spring-restdocs.version>
         <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
         <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
@@ -34,7 +34,7 @@
         <pathOfRenderedDocs>${project.build.directory}/generated-docs</pathOfRenderedDocs>
         <pathOfDocsImages>api/docs/images</pathOfDocsImages>
         <skip.documentation.generation>true</skip.documentation.generation>
-        <selenium-java.version>4.43.0</selenium-java.version>
+        <selenium-java.version>4.44.0</selenium-java.version>
         <webdrivermanager.version>6.3.4</webdrivermanager.version>
     </properties>
     <dependencies>

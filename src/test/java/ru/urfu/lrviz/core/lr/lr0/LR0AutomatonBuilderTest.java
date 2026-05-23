@@ -32,6 +32,13 @@ class LR0AutomatonBuilderTest {
         this.reconstructor = reconstructor;
     }
 
+    /**
+     * <pre>
+     * D => T L
+     * T => i | r
+     * L => L ; a | a
+     * </pre>
+     */
     @Test
     void build1() {
         Grammar grammar = get(G_1);
