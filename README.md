@@ -5,10 +5,8 @@
 
 Ниже представлен LR(1)-автомат, построенный для грамматики:
 
-```
-S -> AA
-A -> aA | b
-```
+>S -> AA 
+>A -> aA | b
 
 ![LR1](docs/LR1.png)
 
@@ -79,3 +77,6 @@ java -jar PATH_TO_APP
 
 - *Email:* [fenya74.09@gmail.com](mailto:fenya74.09@gmail.com)
 - *Telegram:* [@fenya00](https://t.me/fenya00)
+
+>[!TIP]
+>Проект вдохновлен https://github.com/schnorr/ellerre
