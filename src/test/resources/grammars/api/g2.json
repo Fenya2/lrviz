@@ -1,0 +1,27 @@
+{
+  "grammar": {
+    "terminals": [
+      "a",
+      "b"
+    ],
+    "nonTerminals": [
+      "S",
+      "A"
+    ],
+    "rules": [
+      {
+        "left": "S",
+        "right": "AA"
+      },
+      {
+        "left": "A",
+        "right": "aA"
+      },
+      {
+        "left": "A",
+        "right": "b"
+      }
+    ],
+    "startSymbol": "S"
+  }
+}

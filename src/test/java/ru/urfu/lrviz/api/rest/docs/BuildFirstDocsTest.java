@@ -1,0 +1,66 @@
+package ru.urfu.lrviz.api.rest.docs;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpMethod;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.urfu.lrviz.api.VersionsConstants.V1;
+import static ru.urfu.lrviz.api.rest.docs.snippets.DocumentationConstants.*;
+import static ru.urfu.lrviz.GrammarDtoExamples.getAsDto;
+import static ru.urfu.lrviz.core.GrammarExamples.G_2;
+
+/**
+ *
+ * @author fenya
+ * @since 28.03.2026
+ */
+class BuildFirstDocsTest extends AbstractMethodDocsTest {
+    private static final String DOCUMENTED_PATH = "/api/{version}/grammar/first";
+
+    @Override
+    protected HttpMethod getDocumentedMethod() {
+        return HttpMethod.POST;
+    }
+
+    @Override
+    protected String getDocumentedVersion() {
+        return V1;
+    }
+
+    @Override
+    protected String getDocumentedPath() {
+        return DOCUMENTED_PATH;
+    }
+
+    @Override
+    protected String getProduces() {
+        return APPLICATION_JSON_VALUE;
+    }
+
+    @Test
+    void document() throws Exception {
+        this.mockMvc.perform(post(DOCUMENTED_PATH, V1)
+                        .header(ACCEPT, APPLICATION_JSON_VALUE)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(getAsDto(G_2))))
+                .andExpect(status().isOk())
+                .andDo(MockMvcRestDocumentation.document(getSnippetPath(), preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+                        requestHeaders(ACCEPT_JSON_HEADER),
+                        pathParameters(VERSION_PARAMETER),
+                        requestFields(GRAMMAR_DTO),
+                        responseHeaders(CONTENT_TYPE_JSON_HEADER),
+                        responseFields(
+                                fieldWithPath("*").description("Символы грамматики").attributes(IS_REQUIRED),
+                                fieldWithPath("*.[]").description("Множество FIRST для соответствующего символа грамматики").attributes(IS_REQUIRED))));
+    }
+}
