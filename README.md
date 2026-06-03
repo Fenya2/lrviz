@@ -1,46 +1,82 @@
-Веб приложение, предоставляющее API и веб-интерфейс для изучения алгоритмов построения различных LR-автоматов.
+# LRVIZ
+Веб приложение, предоставляющее API и веб-интерфейс для изучения алгоритмов построения LR-автоматов.
 
-# Сборка
+## Примеры визуализации
 
-```bash
-git clone git@github.com:Fenya2/lrviz-back.git
-cd ./lrviz-back
-mvn install
+Ниже представлен LR(1)-автомат, построенный для грамматики:
+
+>S -> AA  
+>A -> aA | b
+
+![LR1](docs/LR1.png)
+
+Лог построения этого автомата:
+
+```
+[0] COMMENT buildLrAutomaton: Построим LR-автомат lr(1)
+[1] COMMENT extendGrammar: Расширяем исходную грамматику.
+[2] ACTION addState: Добавляем состояние '∇'.
+...
+[58] ACTION addTransition: Добавляем переход из состояния 'a2' в состояние 'a2' по символу 'a'.
+[59] COMMENT startAddNewTransitions: Просматриваем состояние 'A3'
+[60] COMMENT startAddNewTransitions: Просматриваем состояние 'A4'
 ```
 
-# Запуск
+LALR-автомат, построенный по той же грамматике:
 
-Для экспортирования картинок на сервере с развернутым приложением требуется установленное ПО для визуализации
-графов [graphviz](https://graphviz.org/)
+![LALR](docs/LALR.png)
+
+## Сборка
+
+Чтобы собрать программу, нужно предварительно установить:
+
+- [JDK 25](https://jdk.java.net/25/)
+- [Apache Maven](https://maven.apache.org/download.cgi)
+
+```bash
+git clone git@github.com:Fenya2/lrviz.git
+cd lrviz
+mvn package
+```
+
+После успешной сборки исполняемый jar-файл будет находиться в директории `target/`.
+
+## Запуск
+
+Для экспорта изображений графов на сервере должен быть установлен пакет [Graphviz](https://graphviz.org/).
 
 ```bash
 sudo apt install graphviz
 ```
 
+Приложение запускается следующей командой:
+
 ```bash
-java -jar ./target/*.jar
+java -jar PATH_TO_APP
 ```
 
-# Веб-интерфейс
+где PATH_TO_APP - путь к исполняемому jar-файлу приложения
 
-```
-http://localhost:8080
-```
+> [!NOTE]
+> jar-файл приложения можно [собрать самостоятельно](#сборка) или же
+> загрузить [со страницы релизов приложения](https://github.com/Fenya2/lrviz/releases)
 
-# Документация к API
+## Использование
 
-```
-http://localhost:8080/api/docs/guide.html
-```
+По умолчанию запущенное приложение доступно из браузера по адресу http://localhost:8080.
 
-# Источники
+Веб-интерфейс приложения представляет собой SPA-приложение, использующее REST API. Документация к API находится на
+странице http://localhost:8080/api/docs/guide.html.
 
-- https://kadm.kmath.ru/files/loi7sem5.pdf
-- https://kadm.kmath.ru/files/loi7sem9_1.pdf
-- [компиляторы](https://github.com/lehaSVV2009/Compiler/blob/master/books/%D0%90%D1%85%D0%BE,%20%D0%A1%D0%B5%D1%82%D0%B8,%20%D0%A3%D0%BB%D1%8C%D0%BC%D0%B0%D0%BD.%20%D0%9A%D0%BE%D0%BC%D0%BF%D0%B8%D0%BB%D1%8F%D1%82%D0%BE%D1%80%D1%8B.%20%D0%9F%D1%80%D0%B8%D0%BD%D1%86%D0%B8%D0%BF%D1%8B,%20%D1%82%D0%B5%D1%85%D0%BD%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D0%B8,%20%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B.2ed.2008.pdf)
-- https://rahul.gopinath.org/post/2024/07/01/lr-parsing/#lalr1-automata
-- https://sourceforge.net/projects/jsmachines/
-- https://www.cs.cornell.edu/courses/cs4120/2022sp/notes.html?id=lr
-- https://www.dickgrune.com/Books/PTAPG_1st_Edition/BookBody.pdf
-- https://dpvipracollege.ac.in/wp-content/uploads/2023/01/Alfred-V.-Aho-Monica-S.-Lam-Ravi-Sethi-Jeffrey-D.-Ullman-Compilers-Principles-Techniques-and-Tools-Pearson_Addison-Wesley-2007.pdf
-- https://simondlevy.academic.wlu.edu/files/courses/cs332w2004/lectures/23_FEB_2004.pdf
+> [!NOTE]
+> Также приложение развернуто в публичной сети и доступно по адресу https://llr.su.
+
+## Контакты
+
+При возникновении вопросов можно создать issue или связаться со мной:
+
+- *Email:* [fenya74.09@gmail.com](mailto:fenya74.09@gmail.com)
+- *Telegram:* [@fenya00](https://t.me/fenya00)
+
+>[!TIP]
+>Проект вдохновлен https://github.com/schnorr/ellerre
