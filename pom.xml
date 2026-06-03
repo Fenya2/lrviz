@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.urfu.lrviz</groupId>
     <artifactId>core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-test</version>
     <name>lrviz-back</name>
     <description>lrviz-back</description>
     <url>lrviz.urfu.ru</url>
