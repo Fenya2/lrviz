@@ -232,7 +232,7 @@
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
-                            <headerType>gui</headerType>
+                            <headerType>console</headerType>
                             <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
                             <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
                             <errTitle>${project.name}</errTitle>
