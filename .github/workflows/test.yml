@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  pull_request:
+    branches: ["dev"]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            artifact-name: test-jar
+            artifact-path: target/*.jar
+          - runner: windows-latest
+            artifact-name: test-windows-exe
+            artifact-path: target/*.exe
+
+    uses: ./.github/workflows/build.yml
+    with:
+      runner: ${{ matrix.runner }}
+      artifact-name: ${{ matrix.artifact-name }}
+      artifact-path: ${{ matrix.artifact-path }}

@@ -136,6 +136,62 @@
                 <selenium.headless>false</selenium.headless>
             </properties>
         </profile>
+        <profile>
+            <id>windows-launcher</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>${launch4j-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>create-executable</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <configuration>
+                                    <headerType>console</headerType>
+                                    <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+                                    <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
+
+                                    <errTitle>${project.name}</errTitle>
+                                    <chdir>.</chdir>
+
+                                    <jre>
+                                        <path>runtime</path>
+                                        <minVersion>${java.version}</minVersion>
+                                        <requires64Bit>true</requires64Bit>
+                                        <opts>
+                                            <opt>-Xms256m</opt>
+                                            <opt>-Xmx1024m</opt>
+                                        </opts>
+                                    </jre>
+
+                                    <versionInfo>
+                                        <fileVersion>${project.version}.0</fileVersion>
+                                        <txtFileVersion>${project.version}</txtFileVersion>
+                                        <productVersion>${project.version}.0</productVersion>
+                                        <txtProductVersion>${project.version}</txtProductVersion>
+                                        <fileDescription>${project.name}</fileDescription>
+                                        <productName>${project.name}</productName>
+                                        <companyName>fenya</companyName>
+                                        <internalName>${project.artifactId}</internalName>
+                                        <originalFilename>${project.build.finalName}.exe</originalFilename>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
     <build>
         <plugins>
@@ -219,47 +275,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>${launch4j-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>create-executable</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <headerType>console</headerType>
-                            <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
-                            <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
-                            <errTitle>${project.name}</errTitle>
-                            <chdir>.</chdir>
-                            <jre>
-                                <path>runtime</path>
-                                <minVersion>${java.version}</minVersion>
-                                <requires64Bit>true</requires64Bit>
-                                <opts>
-                                    <opt>-Xms256m</opt>
-                                    <opt>-Xmx1024m</opt>
-                                </opts>
-                            </jre>
-                            <versionInfo>
-                                <fileVersion>${project.version}.0</fileVersion>
-                                <txtFileVersion>${project.version}</txtFileVersion>
-                                <productVersion>${project.version}.0</productVersion>
-                                <txtProductVersion>${project.version}</txtProductVersion>
-                                <fileDescription>${project.name}</fileDescription>
-                                <productName>${project.name}</productName>
-                                <companyName>fenya</companyName>
-                                <internalName>${project.artifactId}</internalName>
-                                <originalFilename>${project.build.finalName}.exe</originalFilename>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
