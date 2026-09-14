@@ -19,7 +19,9 @@ jobs:
       artifact-name: windows-exe
       artifact-path: target/*.exe
   release:
-    needs: [build-jar, build-windows-launcher]
+    needs:
+      - build-jar
+      - build-windows-launcher
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -29,7 +31,7 @@ jobs:
         with:
           java-version: "25"
           distribution: temurin
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: release-files
       - name: Extract version
