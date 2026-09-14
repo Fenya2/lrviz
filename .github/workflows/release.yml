@@ -2,8 +2,7 @@
 name: Release
 
 on:
-  push:
-    branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build-jar:
@@ -19,7 +18,6 @@ jobs:
       runner: windows-latest
       artifact-name: windows-exe
       artifact-path: target/*.exe
-
   release:
     needs: [build-jar, build-windows-launcher]
     runs-on: ubuntu-latest
