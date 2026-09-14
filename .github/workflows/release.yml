@@ -19,7 +19,9 @@ jobs:
       artifact-name: windows-exe
       artifact-path: target/*.exe
   release:
-    needs: [build-jar, build-windows-launcher]
+    needs:
+      - build-jar
+      - build-windows-launcher
     runs-on: ubuntu-latest
     permissions:
       contents: write
