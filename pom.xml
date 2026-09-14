@@ -34,7 +34,7 @@
         <pathOfRenderedDocs>${project.build.directory}/generated-docs</pathOfRenderedDocs>
         <pathOfDocsImages>api/docs/images</pathOfDocsImages>
         <skip.documentation.generation>true</skip.documentation.generation>
-        <selenium-java.version>4.44.0</selenium-java.version>
+        <selenium-java.version>4.49.0</selenium-java.version>
         <webdrivermanager.version>6.3.4</webdrivermanager.version>
         <launch4j-maven-plugin.version>2.7.0</launch4j-maven-plugin.version>
     </properties>
