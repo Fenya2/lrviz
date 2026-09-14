@@ -25,12 +25,12 @@ public class StartupListener {
      * Запущено ли приложение локально для индивидуального использования
      */
     private final boolean localStartup;
-    private final WebServerApplicationContext webContext;
+    private final int appPort;
 
     public StartupListener(@Value("${lrviz.local-run}") boolean localStartup,
-                           WebServerApplicationContext webContext) {
+                           @Value("${server.port}") int appPort) {
         this.localStartup = localStartup;
-        this.webContext = webContext;
+        this.appPort = appPort;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -40,13 +40,9 @@ public class StartupListener {
                 || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
             return;
         }
-        WebServer webServer = webContext.getWebServer();
-        if (webServer == null) {
-            return;
-        }
         URI url;
         try {
-            url = new URI("http://localhost:" + webServer.getPort() + "/");
+            url = new URI("http://localhost:" + appPort + "/");
         } catch (URISyntaxException e) {
             LOG.warn("Unexpected web context equals null");
             return;
